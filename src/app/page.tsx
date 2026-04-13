@@ -362,19 +362,6 @@ export default function Home() {
         />
 
         <motion.div style={{ opacity: heroOpacity, scale: heroScale, y: heroY }} className="relative z-10 text-center px-6">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-blue/5 border border-blue/10 mb-12"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue" />
-            </span>
-            <span className="text-sm font-semibold text-blue tracking-wide">DELIVERING 50,000+ FRESH LEADS WEEKLY</span>
-          </motion.div>
-
           <div className="overflow-hidden">
             <motion.h1
               className="text-6xl md:text-8xl lg:text-[10rem] font-black tracking-[-0.05em] leading-[0.85]"
