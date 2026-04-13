@@ -9,9 +9,29 @@ import {
 } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
+import Lenis from "lenis";
 import { leadCategories as productCategories } from "@/lib/products";
 
-/* ─── ANIMATE ON SCROLL WRAPPER ─── */
+/* ─── LENIS SMOOTH SCROLL ─── */
+function useSmoothScroll() {
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.4,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      touchMultiplier: 1.5,
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    return () => lenis.destroy();
+  }, []);
+}
+
+/* ─── ANIMATE ON SCROLL ─── */
 function AnimateIn({
   children,
   className,
@@ -37,141 +57,188 @@ function AnimateIn({
   );
 }
 
+/* ─── DISTINCT ICONS PER CATEGORY ─── */
+function ContractorIcon() {
+  return (
+    <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8">
+      <rect x="4" y="26" width="32" height="10" rx="2" fill="currentColor" opacity="0.15" />
+      <rect x="8" y="18" width="24" height="10" rx="1" fill="currentColor" opacity="0.25" />
+      <path d="M20 4L6 18h28L20 4z" fill="currentColor" opacity="0.9" />
+      <rect x="16" y="28" width="8" height="8" rx="1" fill="currentColor" opacity="0.5" />
+      <circle cx="20" cy="12" r="2" fill="white" />
+    </svg>
+  );
+}
+
+function RealEstateIcon() {
+  return (
+    <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8">
+      <rect x="3" y="12" width="16" height="24" rx="2" fill="currentColor" opacity="0.9" />
+      <rect x="21" y="6" width="16" height="30" rx="2" fill="currentColor" opacity="0.6" />
+      <rect x="6" y="16" width="4" height="4" rx="0.5" fill="white" opacity="0.7" />
+      <rect x="12" y="16" width="4" height="4" rx="0.5" fill="white" opacity="0.7" />
+      <rect x="6" y="24" width="4" height="4" rx="0.5" fill="white" opacity="0.7" />
+      <rect x="12" y="24" width="4" height="4" rx="0.5" fill="white" opacity="0.7" />
+      <rect x="24" y="10" width="4" height="4" rx="0.5" fill="white" opacity="0.5" />
+      <rect x="30" y="10" width="4" height="4" rx="0.5" fill="white" opacity="0.5" />
+      <rect x="24" y="18" width="4" height="4" rx="0.5" fill="white" opacity="0.5" />
+      <rect x="30" y="18" width="4" height="4" rx="0.5" fill="white" opacity="0.5" />
+      <rect x="24" y="26" width="4" height="4" rx="0.5" fill="white" opacity="0.5" />
+      <rect x="30" y="26" width="4" height="4" rx="0.5" fill="white" opacity="0.5" />
+    </svg>
+  );
+}
+
+function InsuranceIcon() {
+  return (
+    <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8">
+      <path d="M20 2L4 10v12c0 9 7 15 16 18 9-3 16-9 16-18V10L20 2z" fill="currentColor" opacity="0.15" />
+      <path d="M20 6L8 12v10c0 7 5.5 12 12 14.5 6.5-2.5 12-7.5 12-14.5V12L20 6z" fill="currentColor" opacity="0.9" />
+      <path d="M17 20l3 3 6-7" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function MortgageIcon() {
+  return (
+    <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8">
+      <circle cx="20" cy="20" r="16" fill="currentColor" opacity="0.15" />
+      <circle cx="20" cy="20" r="12" fill="currentColor" opacity="0.9" />
+      <text x="20" y="26" textAnchor="middle" fill="white" fontSize="16" fontWeight="900" fontFamily="system-ui">$</text>
+    </svg>
+  );
+}
+
+function NewBusinessIcon() {
+  return (
+    <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8">
+      <rect x="4" y="14" width="32" height="22" rx="3" fill="currentColor" opacity="0.15" />
+      <rect x="8" y="18" width="24" height="14" rx="2" fill="currentColor" opacity="0.9" />
+      <rect x="14" y="8" width="12" height="10" rx="2" fill="currentColor" opacity="0.6" />
+      <path d="M18 8V6a2 2 0 012-2h0a2 2 0 012 2v2" stroke="currentColor" strokeWidth="2" opacity="0.9" />
+      <circle cx="20" cy="25" r="3" fill="white" opacity="0.7" />
+    </svg>
+  );
+}
+
+function AutomotiveIcon() {
+  return (
+    <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8">
+      <rect x="2" y="16" width="36" height="14" rx="4" fill="currentColor" opacity="0.9" />
+      <path d="M8 16l3-8h18l3 8" fill="currentColor" opacity="0.4" />
+      <circle cx="10" cy="30" r="4" fill="currentColor" opacity="0.15" />
+      <circle cx="10" cy="30" r="2.5" fill="currentColor" opacity="0.7" />
+      <circle cx="30" cy="30" r="4" fill="currentColor" opacity="0.15" />
+      <circle cx="30" cy="30" r="2.5" fill="currentColor" opacity="0.7" />
+      <rect x="6" y="20" width="6" height="3" rx="1" fill="white" opacity="0.5" />
+      <rect x="28" y="20" width="6" height="3" rx="1" fill="white" opacity="0.5" />
+      <rect x="15" y="20" width="10" height="3" rx="1" fill="white" opacity="0.3" />
+    </svg>
+  );
+}
+
+const categoryIcons: Record<string, React.ReactNode> = {
+  contractors: <ContractorIcon />,
+  realestate: <RealEstateIcon />,
+  insurance: <InsuranceIcon />,
+  mortgage: <MortgageIcon />,
+  newbusiness: <NewBusinessIcon />,
+  automotive: <AutomotiveIcon />,
+};
+
+/* ─── NAV DROPDOWN ICONS (smaller) ─── */
+const navIcons: Record<string, React.ReactNode> = {
+  contractors: (
+    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+      <path d="M12 3L3 11h18L12 3z" fill="currentColor" opacity="0.8" />
+      <rect x="5" y="11" width="14" height="9" rx="1" fill="currentColor" opacity="0.3" />
+    </svg>
+  ),
+  realestate: (
+    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+      <rect x="2" y="7" width="9" height="14" rx="1" fill="currentColor" opacity="0.8" />
+      <rect x="13" y="3" width="9" height="18" rx="1" fill="currentColor" opacity="0.5" />
+    </svg>
+  ),
+  insurance: (
+    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+      <path d="M12 2L4 6v6c0 5.5 3.5 9 8 11 4.5-2 8-5.5 8-11V6l-8-4z" fill="currentColor" opacity="0.8" />
+      <path d="M9 12l2 2 4-5" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ),
+  mortgage: (
+    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+      <circle cx="12" cy="12" r="9" fill="currentColor" opacity="0.8" />
+      <text x="12" y="16" textAnchor="middle" fill="white" fontSize="11" fontWeight="900" fontFamily="system-ui">$</text>
+    </svg>
+  ),
+  newbusiness: (
+    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+      <rect x="3" y="9" width="18" height="12" rx="2" fill="currentColor" opacity="0.8" />
+      <rect x="8" y="5" width="8" height="6" rx="1" fill="currentColor" opacity="0.4" />
+    </svg>
+  ),
+  automotive: (
+    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+      <rect x="1" y="10" width="22" height="8" rx="3" fill="currentColor" opacity="0.8" />
+      <path d="M5 10l2-5h10l2 5" fill="currentColor" opacity="0.4" />
+      <circle cx="6" cy="18" r="2" fill="currentColor" opacity="0.6" />
+      <circle cx="18" cy="18" r="2" fill="currentColor" opacity="0.6" />
+    </svg>
+  ),
+};
+
 /* ─── REVIEWS DATA ─── */
 const reviews = [
-  {
-    name: "Marcus T.",
-    role: "Insurance Agency Owner",
-    text: "Switched from another lead provider 3 months ago. The data quality is night and day. We went from a 2% close rate to almost 9%. Worth every penny.",
-    stars: 5,
-  },
-  {
-    name: "Jennifer L.",
-    role: "Mortgage Broker",
-    text: "I was skeptical at first but decided to try the starter pack. Got 3 closed loans from 50 leads in the first week. Already ordered the enterprise bundle.",
-    stars: 5,
-  },
-  {
-    name: "David R.",
-    role: "Real Estate Investor",
-    text: "The motivated seller leads are legit. These are actual distressed properties, not recycled lists from 2019. I've done 4 deals this month from their data.",
-    stars: 5,
-  },
-  {
-    name: "Sarah K.",
-    role: "Roofing Contractor",
-    text: "Building permit leads changed our business. Instead of door knocking random neighborhoods, we're calling homeowners who literally just filed for roof work. Game changer.",
-    stars: 5,
-  },
-  {
-    name: "Michael P.",
-    role: "Commercial Auto Insurance",
-    text: "We buy the 5,000 pack every month. At $0.20 per lead it's basically free compared to what we were paying. The DOT data is always fresh and accurate.",
-    stars: 5,
-  },
-  {
-    name: "Rachel W.",
-    role: "Business Services Consultant",
-    text: "New business filing leads are gold. These companies just incorporated and need EVERYTHING — insurance, payroll, websites, accounting. Easy conversations.",
-    stars: 5,
-  },
-  {
-    name: "Anthony G.",
-    role: "Solar Sales Manager",
-    text: "My team was struggling with aged leads from other vendors. LeadHubData sends us homeowners with active permits. Our reps are actually excited to make calls now.",
-    stars: 4,
-  },
-  {
-    name: "Lisa M.",
-    role: "Health Insurance Agent",
-    text: "The data is clean. No disconnected numbers, no wrong emails. I can actually focus on selling instead of cleaning up garbage spreadsheets.",
-    stars: 5,
-  },
-  {
-    name: "Carlos D.",
-    role: "HVAC Company Owner",
-    text: "Tried the 200-lead pack for our HVAC business. Booked 14 appointments the first week. My install crew is fully booked through next month.",
-    stars: 5,
-  },
-  {
-    name: "Nicole F.",
-    role: "Loan Officer",
-    text: "I've used 4 different lead companies in the past year. This is the only one where the phone numbers actually work and people pick up. Not even close to the others.",
-    stars: 5,
-  },
-  {
-    name: "Brandon H.",
-    role: "Fleet Insurance Specialist",
-    text: "The commercial auto leads with fleet size data let me prioritize the big accounts. Closed a 47-truck fleet policy last week from their list.",
-    stars: 5,
-  },
-  {
-    name: "Amanda S.",
-    role: "Property Manager",
-    text: "We use the real estate leads to find new properties to manage. Owner contact info is always accurate. Saves us hours of skip tracing.",
-    stars: 4,
-  },
+  { name: "Marcus T.", role: "Insurance Agency Owner", text: "Switched from another lead provider 3 months ago. The data quality is night and day. We went from a 2% close rate to almost 9%. Worth every penny.", stars: 5 },
+  { name: "Jennifer L.", role: "Mortgage Broker", text: "I was skeptical at first but decided to try the starter pack. Got 3 closed loans from 50 leads in the first week. Already ordered the enterprise bundle.", stars: 5 },
+  { name: "David R.", role: "Real Estate Investor", text: "The motivated seller leads are legit. These are actual distressed properties, not recycled lists from 2019. I've done 4 deals this month from their data.", stars: 5 },
+  { name: "Sarah K.", role: "Roofing Contractor", text: "Building permit leads changed our business. Instead of door knocking random neighborhoods, we're calling homeowners who literally just filed for roof work. Game changer.", stars: 5 },
+  { name: "Michael P.", role: "Commercial Auto Insurance", text: "We buy the 5,000 pack every month. At $0.20 per lead it's basically free compared to what we were paying. The DOT data is always fresh and accurate.", stars: 5 },
+  { name: "Rachel W.", role: "Business Services Consultant", text: "New business filing leads are gold. These companies just incorporated and need EVERYTHING — insurance, payroll, websites, accounting. Easy conversations.", stars: 5 },
+  { name: "Anthony G.", role: "Solar Sales Manager", text: "My team was struggling with aged leads from other vendors. LeadHubData sends us homeowners with active permits. Our reps are actually excited to make calls now.", stars: 4 },
+  { name: "Lisa M.", role: "Health Insurance Agent", text: "The data is clean. No disconnected numbers, no wrong emails. I can actually focus on selling instead of cleaning up garbage spreadsheets.", stars: 5 },
+  { name: "Carlos D.", role: "HVAC Company Owner", text: "Tried the 200-lead pack for our HVAC business. Booked 14 appointments the first week. My install crew is fully booked through next month.", stars: 5 },
+  { name: "Nicole F.", role: "Loan Officer", text: "I've used 4 different lead companies in the past year. This is the only one where the phone numbers actually work and people pick up. Not even close to the others.", stars: 5 },
+  { name: "Brandon H.", role: "Fleet Insurance Specialist", text: "The commercial auto leads with fleet size data let me prioritize the big accounts. Closed a 47-truck fleet policy last week from their list.", stars: 5 },
+  { name: "Amanda S.", role: "Property Manager", text: "We use the real estate leads to find new properties to manage. Owner contact info is always accurate. Saves us hours of skip tracing.", stars: 4 },
 ];
 
-/* ─── LEAD TYPE ICONS (simple SVGs) ─── */
-const categoryMeta: Record<string, { icon: React.ReactNode; color: string }> = {
-  contractors: {
-    color: "#0055FF",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-7 h-7">
-        <path d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-  },
-  realestate: {
-    color: "#0055FF",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-7 h-7">
-        <path d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-  },
-  insurance: {
-    color: "#0055FF",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-7 h-7">
-        <path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-  },
-  mortgage: {
-    color: "#0055FF",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-7 h-7">
-        <path d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-  },
-  newbusiness: {
-    color: "#0055FF",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-7 h-7">
-        <path d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016A3.001 3.001 0 0021 9.349m-18 0a2.999 2.999 0 01.62-1.853L5.25 5.25A2.25 2.25 0 017.5 3h9a2.25 2.25 0 012.25 2.25l1.63 2.246A2.999 2.999 0 0121 9.349" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-  },
-  automotive: {
-    color: "#0055FF",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-7 h-7">
-        <path d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-  },
-};
+/* ─── COUNTER ANIMATION ─── */
+function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!isInView) return;
+    let start = 0;
+    const duration = 2000;
+    const startTime = Date.now();
+    const timer = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      start = Math.floor(eased * target);
+      setCount(start);
+      if (progress >= 1) clearInterval(timer);
+    }, 16);
+    return () => clearInterval(timer);
+  }, [isInView, target]);
+
+  return <span ref={ref}>{count.toLocaleString()}{suffix}</span>;
+}
 
 /* ─── MAIN PAGE ─── */
 export default function Home() {
   const [leadsOpen, setLeadsOpen] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.95]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.12], [1, 0.92]);
+  const heroY = useTransform(scrollYProgress, [0, 0.12], [0, -60]);
+
+  useSmoothScroll();
 
   useEffect(() => {
     const close = () => setLeadsOpen(false);
@@ -190,7 +257,7 @@ export default function Home() {
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-blue rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-blue rounded-lg flex items-center justify-center shadow-[0_2px_10px_rgba(0,85,255,0.3)]">
               <span className="text-white font-black text-sm">L</span>
             </div>
             <span className="text-lg font-extrabold tracking-tight">
@@ -199,38 +266,29 @@ export default function Home() {
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
-            {/* LEADS dropdown */}
             <div className="relative" onClick={(e) => e.stopPropagation()}>
               <button
                 onClick={() => setLeadsOpen(!leadsOpen)}
                 className="flex items-center gap-1 text-sm font-bold text-foreground/60 hover:text-blue transition-colors"
               >
                 LEADS
-                <svg
-                  className={`w-4 h-4 transition-transform duration-200 ${leadsOpen ? "rotate-180" : ""}`}
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
+                <svg className={`w-4 h-4 transition-transform duration-200 ${leadsOpen ? "rotate-180" : ""}`} viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
                 </svg>
               </button>
               <AnimatePresence>
                 {leadsOpen && (
                   <motion.div
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,85,255,0.12)] border border-blue/10 overflow-hidden"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,85,255,0.15)] border border-blue/10 overflow-hidden"
                     initial={{ opacity: 0, y: -8, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -8, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
                   >
                     {productCategories.map((cat) => (
-                      <Link
-                        key={cat.id}
-                        href={`/leads/${cat.id}`}
-                        className="flex items-center gap-3 px-5 py-3.5 hover:bg-blue/5 transition-colors group"
-                      >
-                        <div className="w-9 h-9 rounded-lg bg-blue/5 flex items-center justify-center text-blue group-hover:bg-blue group-hover:text-white transition-colors">
-                          {categoryMeta[cat.id]?.icon}
+                      <Link key={cat.id} href={`/leads/${cat.id}`} className="flex items-center gap-3 px-5 py-3.5 hover:bg-blue/5 transition-colors group">
+                        <div className="w-9 h-9 rounded-lg bg-blue/10 flex items-center justify-center text-blue group-hover:bg-blue group-hover:text-white transition-all duration-200">
+                          {navIcons[cat.id]}
                         </div>
                         <div>
                           <div className="text-sm font-bold text-foreground">{cat.name}</div>
@@ -243,123 +301,149 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            <a href="#demo" className="text-sm font-bold text-foreground/60 hover:text-blue transition-colors">
-              DEMO
-            </a>
-            <a href="#reviews" className="text-sm font-bold text-foreground/60 hover:text-blue transition-colors">
-              REVIEWS
-            </a>
-            <Link
-              href="#choose"
-              className="text-sm font-bold text-white bg-blue px-6 py-2.5 rounded-full hover:bg-blue-dark transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,85,255,0.3)]"
-            >
+            <a href="#demo" className="text-sm font-bold text-foreground/60 hover:text-blue transition-colors">DEMO</a>
+            <a href="#reviews" className="text-sm font-bold text-foreground/60 hover:text-blue transition-colors">REVIEWS</a>
+            <Link href="#choose" className="text-sm font-bold text-white bg-blue px-6 py-2.5 rounded-full hover:bg-blue-dark transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,85,255,0.3)]">
               Get Leads
             </Link>
           </div>
         </div>
       </motion.nav>
 
-      {/* ─── HERO — FULL VIEWPORT ─── */}
+      {/* ─── HERO ─── */}
       <section ref={heroRef} className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
-        {/* Floating blue orbs */}
-        <div className="absolute inset-0 pointer-events-none">
+        {/* Animated background grid */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute inset-0 opacity-[0.03]" style={{
+            backgroundImage: "radial-gradient(circle, #0055FF 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }} />
           <motion.div
-            className="absolute top-[15%] left-[10%] w-72 h-72 bg-blue/5 rounded-full blur-3xl"
-            animate={{ y: [0, -30, 0], x: [0, 15, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="absolute bottom-[20%] right-[10%] w-96 h-96 bg-blue/4 rounded-full blur-3xl"
-            animate={{ y: [0, 20, 0], x: [0, -20, 0] }}
+            className="absolute top-[10%] left-[5%] w-[500px] h-[500px] rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(0,85,255,0.08) 0%, transparent 70%)" }}
+            animate={{ y: [0, -40, 0], x: [0, 20, 0], scale: [1, 1.1, 1] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
-            className="absolute top-[40%] right-[30%] w-48 h-48 bg-blue/3 rounded-full blur-2xl"
-            animate={{ y: [0, -15, 0] }}
+            className="absolute bottom-[10%] right-[5%] w-[600px] h-[600px] rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(0,85,255,0.06) 0%, transparent 70%)" }}
+            animate={{ y: [0, 30, 0], x: [0, -25, 0], scale: [1.1, 1, 1.1] }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(0,85,255,0.05) 0%, transparent 70%)" }}
+            animate={{ scale: [1, 1.3, 1] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           />
         </div>
 
-        {/* Blue line accents */}
+        {/* Decorative blue lines */}
         <motion.div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-32 bg-gradient-to-b from-transparent via-blue/20 to-transparent"
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-40"
+          style={{ background: "linear-gradient(to bottom, transparent, rgba(0,85,255,0.2), transparent)" }}
           initial={{ scaleY: 0 }}
           animate={{ scaleY: 1 }}
-          transition={{ duration: 1.2, delay: 0.8 }}
+          transition={{ duration: 1.5, delay: 0.5 }}
+        />
+        <motion.div
+          className="absolute left-0 top-1/2 -translate-y-1/2 h-px w-32"
+          style={{ background: "linear-gradient(to right, transparent, rgba(0,85,255,0.15), transparent)" }}
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.5, delay: 0.8 }}
+        />
+        <motion.div
+          className="absolute right-0 top-1/2 -translate-y-1/2 h-px w-32"
+          style={{ background: "linear-gradient(to left, transparent, rgba(0,85,255,0.15), transparent)" }}
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.5, delay: 0.8 }}
         />
 
-        <motion.div style={{ opacity: heroOpacity, scale: heroScale }} className="relative z-10 text-center px-6">
+        <motion.div style={{ opacity: heroOpacity, scale: heroScale, y: heroY }} className="relative z-10 text-center px-6">
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-blue/5 border border-blue/10 mb-10"
+            initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-blue/5 border border-blue/10 mb-12"
           >
-            <span className="w-2 h-2 bg-blue rounded-full animate-pulse" />
-            <span className="text-sm font-semibold text-blue">DELIVERING 50,000+ FRESH LEADS WEEKLY</span>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue" />
+            </span>
+            <span className="text-sm font-semibold text-blue tracking-wide">DELIVERING 50,000+ FRESH LEADS WEEKLY</span>
           </motion.div>
 
-          <motion.h1
-            className="text-6xl md:text-8xl lg:text-9xl font-black tracking-[-0.04em] leading-[0.85]"
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          >
-            WE SELL THE
-            <br />
-            <span className="text-blue">BEST LEADS.</span>
-          </motion.h1>
+          <div className="overflow-hidden">
+            <motion.h1
+              className="text-6xl md:text-8xl lg:text-[10rem] font-black tracking-[-0.05em] leading-[0.85]"
+              initial={{ y: 120, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            >
+              WE SELL THE
+            </motion.h1>
+          </div>
+          <div className="overflow-hidden">
+            <motion.h1
+              className="text-6xl md:text-8xl lg:text-[10rem] font-black tracking-[-0.05em] leading-[0.85] text-blue"
+              initial={{ y: 120, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 1, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            >
+              BEST LEADS.
+            </motion.h1>
+          </div>
 
           <motion.p
-            className="mt-8 text-lg md:text-xl text-foreground/40 max-w-lg mx-auto font-medium leading-relaxed"
-            initial={{ opacity: 0, y: 30 }}
+            className="mt-10 text-lg md:text-xl text-foreground/35 max-w-lg mx-auto font-medium leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
           >
             Fresh. Verified. Exclusive. Sourced from public records daily.
           </motion.p>
         </motion.div>
 
-        {/* Animated arrow */}
+        {/* Scroll indicator */}
         <motion.a
           href="#choose"
-          className="absolute bottom-12 z-10 flex flex-col items-center gap-2 text-blue/60 hover:text-blue transition-colors cursor-pointer"
+          className="absolute bottom-10 z-10 flex flex-col items-center gap-3 cursor-pointer group"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
+          transition={{ delay: 1.5, duration: 0.6 }}
         >
-          <span className="text-xs font-bold tracking-widest uppercase">Scroll</span>
-          <motion.svg
-            className="w-6 h-6"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-blue/40 group-hover:text-blue transition-colors">Scroll</span>
+          <motion.div
+            className="w-6 h-10 rounded-full border-2 border-blue/20 flex items-start justify-center p-1.5 group-hover:border-blue/40 transition-colors"
+            animate={{}}
           >
-            <path d="M19 14l-7 7m0 0l-7-7" strokeLinecap="round" strokeLinejoin="round" />
-          </motion.svg>
+            <motion.div
+              className="w-1.5 h-1.5 rounded-full bg-blue"
+              animate={{ y: [0, 16, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </motion.div>
         </motion.a>
 
-        {/* Bottom blue gradient line */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue/15 to-transparent" />
       </section>
 
       {/* ─── CHOOSE YOUR LEADS ─── */}
-      <section id="choose" className="relative py-32 md:py-40 px-6 overflow-hidden">
-        {/* Parallax blue accent */}
+      <section id="choose" className="relative py-32 md:py-44 px-6 overflow-hidden">
         <motion.div
-          className="absolute -top-20 -right-40 w-[600px] h-[600px] bg-blue/[0.03] rounded-full blur-3xl pointer-events-none"
-          style={{ y: useTransform(scrollYProgress, [0.1, 0.4], [100, -100]) }}
+          className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full pointer-events-none"
+          style={{
+            background: "radial-gradient(circle, rgba(0,85,255,0.04) 0%, transparent 70%)",
+            y: useTransform(scrollYProgress, [0.08, 0.35], [120, -120]),
+          }}
         />
 
         <div className="relative max-w-6xl mx-auto">
           <AnimateIn className="text-center mb-20">
-            <p className="text-sm font-bold text-blue uppercase tracking-[0.2em] mb-5">
-              Choose Your Leads
-            </p>
-            <h2 className="text-4xl md:text-6xl font-black tracking-[-0.03em] leading-[0.95]">
+            <p className="text-sm font-bold text-blue uppercase tracking-[0.25em] mb-5">Choose Your Leads</p>
+            <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.9]">
               What are you
               <br />
               <span className="text-blue">looking for?</span>
@@ -371,32 +455,47 @@ export default function Home() {
               <AnimateIn key={cat.id} delay={i * 0.08}>
                 <Link href={`/leads/${cat.id}`}>
                   <motion.div
-                    className="group relative p-8 rounded-2xl border-2 border-blue/5 bg-white cursor-pointer overflow-hidden"
-                    whileHover={{
-                      y: -8,
-                      borderColor: "rgba(0,85,255,0.2)",
-                      boxShadow: "0 20px 60px rgba(0,85,255,0.1)",
-                    }}
-                    transition={{ duration: 0.3 }}
+                    className="group relative rounded-2xl cursor-pointer overflow-hidden"
+                    whileHover={{ y: -10, scale: 1.02 }}
+                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    {/* Hover glow */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    {/* Blue gradient background */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue via-blue-dark to-[#0022AA] opacity-90" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
 
-                    <div className="relative">
-                      <div className="w-14 h-14 rounded-xl bg-blue/5 flex items-center justify-center text-blue group-hover:bg-blue group-hover:text-white transition-all duration-300">
-                        {categoryMeta[cat.id]?.icon}
+                    {/* Animated shimmer on hover */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                      style={{
+                        background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.1) 45%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.1) 55%, transparent 60%)",
+                        backgroundSize: "200% 100%",
+                        animation: "shimmer 2s infinite",
+                      }}
+                    />
+
+                    {/* Glow effect */}
+                    <div className="absolute -inset-1 bg-blue/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+
+                    <div className="relative p-8 md:p-9">
+                      <div className="w-16 h-16 rounded-xl bg-white/15 backdrop-blur-sm flex items-center justify-center text-white mb-6 group-hover:bg-white/25 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)]">
+                        {categoryIcons[cat.id]}
                       </div>
-                      <h3 className="mt-5 text-xl font-extrabold tracking-tight">
+                      <h3 className="text-xl font-extrabold text-white tracking-tight">
                         {cat.name}
                       </h3>
-                      <p className="mt-2 text-sm text-foreground/40 font-medium leading-relaxed">
+                      <p className="mt-2 text-sm text-white/60 font-medium leading-relaxed">
                         {cat.tagline}
                       </p>
-                      <div className="mt-5 flex items-center gap-2 text-blue text-sm font-bold opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                        View bundles
-                        <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
-                        </svg>
+
+                      <div className="mt-6 pt-5 border-t border-white/10 flex items-center justify-between">
+                        <span className="text-xs font-bold text-white/40 uppercase tracking-widest">
+                          From ${cat.bundles[0].price}
+                        </span>
+                        <div className="flex items-center gap-1.5 text-white text-sm font-bold opacity-60 group-hover:opacity-100 translate-x-0 group-hover:translate-x-1 transition-all duration-300">
+                          View
+                          <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
+                          </svg>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -407,19 +506,45 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── DEMO SECTION ─── */}
-      <section id="demo" className="relative py-32 md:py-40 px-6 overflow-hidden">
+      {/* ─── STATS BAR ─── */}
+      <section className="py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <AnimateIn>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
+              {[
+                { value: 2000000, suffix: "+", label: "Leads Delivered" },
+                { value: 98, suffix: "%", label: "Data Accuracy" },
+                { value: 500, suffix: "+", label: "Happy Clients" },
+                { value: 50, suffix: "+", label: "Data Sources" },
+              ].map((stat) => (
+                <div key={stat.label} className="text-center">
+                  <div className="text-4xl md:text-5xl font-black text-blue tracking-tight">
+                    <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                  </div>
+                  <div className="mt-2 text-sm font-semibold text-foreground/25 uppercase tracking-widest">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </AnimateIn>
+        </div>
+      </section>
+
+      {/* ─── DEMO ─── */}
+      <section id="demo" className="relative py-32 md:py-44 px-6 overflow-hidden">
         <motion.div
-          className="absolute -bottom-32 -left-40 w-[500px] h-[500px] bg-blue/[0.03] rounded-full blur-3xl pointer-events-none"
-          style={{ y: useTransform(scrollYProgress, [0.2, 0.5], [80, -80]) }}
+          className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full pointer-events-none"
+          style={{
+            background: "radial-gradient(circle, rgba(0,85,255,0.04) 0%, transparent 70%)",
+            y: useTransform(scrollYProgress, [0.2, 0.5], [100, -100]),
+          }}
         />
 
         <div className="relative max-w-6xl mx-auto">
           <AnimateIn className="text-center mb-20">
-            <p className="text-sm font-bold text-blue uppercase tracking-[0.2em] mb-5">
-              See It In Action
-            </p>
-            <h2 className="text-4xl md:text-6xl font-black tracking-[-0.03em] leading-[0.95]">
+            <p className="text-sm font-bold text-blue uppercase tracking-[0.25em] mb-5">See It In Action</p>
+            <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.9]">
               Real data.
               <br />
               <span className="text-blue">Real results.</span>
@@ -428,40 +553,41 @@ export default function Home() {
 
           <AnimateIn delay={0.15}>
             <div className="relative max-w-4xl mx-auto">
-              <div className="rounded-2xl border-2 border-blue/10 overflow-hidden bg-white shadow-[0_20px_80px_rgba(0,85,255,0.08)]">
-                {/* Fake browser bar */}
-                <div className="flex items-center gap-2 px-5 py-3.5 border-b border-blue/5">
+              <div className="absolute -inset-4 bg-blue/5 rounded-3xl blur-2xl" />
+              <div className="relative rounded-2xl border border-blue/10 overflow-hidden bg-white shadow-[0_30px_100px_rgba(0,85,255,0.1)]">
+                <div className="flex items-center gap-2 px-5 py-3.5 border-b border-blue/5 bg-blue/[0.02]">
                   <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-foreground/10" />
-                    <div className="w-3 h-3 rounded-full bg-foreground/10" />
-                    <div className="w-3 h-3 rounded-full bg-foreground/10" />
+                    <div className="w-3 h-3 rounded-full bg-blue/10" />
+                    <div className="w-3 h-3 rounded-full bg-blue/10" />
+                    <div className="w-3 h-3 rounded-full bg-blue/10" />
                   </div>
                   <div className="flex-1 mx-4 h-7 rounded-lg bg-blue/[0.03] flex items-center px-3">
                     <span className="text-xs text-foreground/30 font-medium">leadhubdata.com/leads/contractors</span>
                   </div>
                 </div>
 
-                {/* Data preview table */}
                 <div className="p-6 md:p-8">
                   <div className="flex items-center justify-between mb-6">
                     <div>
                       <h4 className="text-lg font-extrabold">Contractor Leads</h4>
                       <p className="text-sm text-foreground/40 font-medium">Sample data — updated today</p>
                     </div>
-                    <div className="px-3 py-1.5 bg-blue/5 rounded-full">
-                      <span className="text-xs font-bold text-blue">LIVE DATA</span>
+                    <div className="px-3 py-1.5 bg-blue/5 rounded-full flex items-center gap-2">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-blue" />
+                      </span>
+                      <span className="text-xs font-bold text-blue">LIVE</span>
                     </div>
                   </div>
 
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto -mx-2">
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-blue/5">
-                          <th className="text-left py-3 px-4 font-bold text-foreground/30 text-xs uppercase tracking-wider">Name</th>
-                          <th className="text-left py-3 px-4 font-bold text-foreground/30 text-xs uppercase tracking-wider">Address</th>
-                          <th className="text-left py-3 px-4 font-bold text-foreground/30 text-xs uppercase tracking-wider">Permit</th>
-                          <th className="text-left py-3 px-4 font-bold text-foreground/30 text-xs uppercase tracking-wider">Value</th>
-                          <th className="text-left py-3 px-4 font-bold text-foreground/30 text-xs uppercase tracking-wider">Date</th>
+                          {["Name", "Address", "Permit", "Value", "Date"].map((h) => (
+                            <th key={h} className="text-left py-3 px-4 font-bold text-foreground/25 text-xs uppercase tracking-wider">{h}</th>
+                          ))}
                         </tr>
                       </thead>
                       <tbody>
@@ -470,7 +596,7 @@ export default function Home() {
                           { name: "Maria ████████", addr: "892 Palm Ave, Tampa FL", permit: "HVAC Install", value: "$12,200", date: "Apr 12" },
                           { name: "Robert ████████", addr: "3301 Lake Rd, Orlando FL", permit: "Solar Panel", value: "$24,800", date: "Apr 11" },
                           { name: "Susan ████████", addr: "567 Bay St, Jacksonville FL", permit: "Plumbing", value: "$8,400", date: "Apr 11" },
-                          { name: "Kevin ████████", addr: "2140 Pine Ln, Fort Lauderdale FL", permit: "Electrical", value: "$6,900", date: "Apr 10" },
+                          { name: "Kevin ████████", addr: "2140 Pine Ln, Ft Lauderdale FL", permit: "Electrical", value: "$6,900", date: "Apr 10" },
                         ].map((row, i) => (
                           <motion.tr
                             key={i}
@@ -478,13 +604,11 @@ export default function Home() {
                             initial={{ opacity: 0, x: -20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
-                            transition={{ delay: 0.3 + i * 0.08 }}
+                            transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
                           >
                             <td className="py-3.5 px-4 font-semibold">{row.name}</td>
                             <td className="py-3.5 px-4 text-foreground/50">{row.addr}</td>
-                            <td className="py-3.5 px-4">
-                              <span className="px-2.5 py-1 bg-blue/5 rounded-full text-xs font-bold text-blue">{row.permit}</span>
-                            </td>
+                            <td className="py-3.5 px-4"><span className="px-2.5 py-1 bg-blue/5 rounded-full text-xs font-bold text-blue">{row.permit}</span></td>
                             <td className="py-3.5 px-4 font-bold text-blue">{row.value}</td>
                             <td className="py-3.5 px-4 text-foreground/30">{row.date}</td>
                           </motion.tr>
@@ -494,11 +618,8 @@ export default function Home() {
                   </div>
 
                   <div className="mt-6 flex items-center justify-between">
-                    <p className="text-xs text-foreground/30 font-medium">Showing 5 of 2,847 available leads</p>
-                    <Link
-                      href="/leads/contractors"
-                      className="text-sm font-bold text-blue hover:text-blue-dark transition-colors"
-                    >
+                    <p className="text-xs text-foreground/25 font-medium">Showing 5 of 2,847 available leads</p>
+                    <Link href="/leads/contractors" className="text-sm font-bold text-blue hover:text-blue-dark transition-colors">
                       View all bundles →
                     </Link>
                   </div>
@@ -510,18 +631,19 @@ export default function Home() {
       </section>
 
       {/* ─── REVIEWS ─── */}
-      <section id="reviews" className="relative py-32 md:py-40 px-6 overflow-hidden">
+      <section id="reviews" className="relative py-32 md:py-44 px-6 overflow-hidden">
         <motion.div
-          className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue/[0.03] rounded-full blur-3xl pointer-events-none"
-          style={{ y: useTransform(scrollYProgress, [0.4, 0.7], [60, -60]) }}
+          className="absolute top-20 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
+          style={{
+            background: "radial-gradient(circle, rgba(0,85,255,0.04) 0%, transparent 70%)",
+            y: useTransform(scrollYProgress, [0.45, 0.75], [80, -80]),
+          }}
         />
 
         <div className="relative max-w-6xl mx-auto">
           <AnimateIn className="text-center mb-6">
-            <p className="text-sm font-bold text-blue uppercase tracking-[0.2em] mb-5">
-              Reviews
-            </p>
-            <h2 className="text-4xl md:text-6xl font-black tracking-[-0.03em] leading-[0.95]">
+            <p className="text-sm font-bold text-blue uppercase tracking-[0.25em] mb-5">Reviews</p>
+            <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.9]">
               Don&apos;t take our word
               <br />
               <span className="text-blue">for it.</span>
@@ -529,7 +651,7 @@ export default function Home() {
           </AnimateIn>
 
           <AnimateIn className="text-center mb-16" delay={0.1}>
-            <div className="inline-flex items-center gap-3 mt-4">
+            <div className="inline-flex items-center gap-3 mt-6">
               <div className="flex">
                 {[...Array(5)].map((_, i) => (
                   <svg key={i} className="w-5 h-5 text-blue" viewBox="0 0 20 20" fill="currentColor">
@@ -537,15 +659,17 @@ export default function Home() {
                   </svg>
                 ))}
               </div>
-              <span className="text-foreground/40 font-semibold text-sm">4.9 / 5 from 500+ customers</span>
+              <span className="text-foreground/30 font-semibold text-sm">4.9 / 5 from 500+ customers</span>
             </div>
           </AnimateIn>
 
-          {/* Reviews grid — 3 columns, staggered */}
           <div className="columns-1 md:columns-2 lg:columns-3 gap-5 space-y-5">
             {reviews.map((review, i) => (
-              <AnimateIn key={i} delay={i * 0.05}>
-                <div className="break-inside-avoid rounded-2xl border-2 border-blue/5 p-7 hover:border-blue/15 transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,85,255,0.06)] bg-white">
+              <AnimateIn key={i} delay={i * 0.04}>
+                <motion.div
+                  className="break-inside-avoid rounded-2xl border border-blue/8 p-7 bg-white transition-all duration-300 hover:border-blue/20 hover:shadow-[0_15px_50px_rgba(0,85,255,0.08)]"
+                  whileHover={{ y: -4 }}
+                >
                   <div className="flex mb-3">
                     {[...Array(review.stars)].map((_, j) => (
                       <svg key={j} className="w-4 h-4 text-blue" viewBox="0 0 20 20" fill="currentColor">
@@ -553,32 +677,29 @@ export default function Home() {
                       </svg>
                     ))}
                   </div>
-                  <p className="text-foreground/70 text-sm leading-relaxed font-medium">
-                    &ldquo;{review.text}&rdquo;
-                  </p>
+                  <p className="text-foreground/60 text-sm leading-relaxed font-medium">&ldquo;{review.text}&rdquo;</p>
                   <div className="mt-5 flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-blue/10 flex items-center justify-center">
-                      <span className="text-xs font-bold text-blue">
-                        {review.name.split(" ").map((n) => n[0]).join("")}
-                      </span>
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue to-blue-dark flex items-center justify-center shadow-[0_2px_8px_rgba(0,85,255,0.3)]">
+                      <span className="text-xs font-bold text-white">{review.name.split(" ").map((n) => n[0]).join("")}</span>
                     </div>
                     <div>
                       <div className="text-sm font-bold">{review.name}</div>
                       <div className="text-xs text-foreground/30 font-medium">{review.role}</div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </AnimateIn>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── FINAL CTA ─── */}
-      <section className="relative py-32 md:py-40 px-6 overflow-hidden">
+      {/* ─── CTA ─── */}
+      <section className="relative py-32 md:py-44 px-6 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue/[0.04] rounded-full blur-3xl"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(0,85,255,0.06) 0%, transparent 60%)" }}
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           />
@@ -586,18 +707,18 @@ export default function Home() {
 
         <div className="relative max-w-3xl mx-auto text-center">
           <AnimateIn>
-            <h2 className="text-4xl md:text-7xl font-black tracking-[-0.03em] leading-[0.9]">
+            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-[-0.04em] leading-[0.85]">
               READY TO
               <br />
               <span className="text-blue">START CLOSING?</span>
             </h2>
-            <p className="mt-8 text-lg text-foreground/40 font-medium max-w-md mx-auto leading-relaxed">
+            <p className="mt-8 text-lg text-foreground/35 font-medium max-w-md mx-auto leading-relaxed">
               Pick your leads. Choose a bundle. Start closing deals tomorrow.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="#choose"
-                className="inline-flex items-center justify-center h-14 px-10 text-base font-bold text-white bg-blue rounded-full hover:bg-blue-dark transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,85,255,0.35)] hover:scale-105"
+                className="inline-flex items-center justify-center h-14 px-10 text-base font-bold text-white bg-blue rounded-full hover:bg-blue-dark transition-all duration-300 hover:shadow-[0_8px_40px_rgba(0,85,255,0.35)] hover:scale-105"
               >
                 Browse Leads
               </Link>
@@ -625,16 +746,22 @@ export default function Home() {
               </span>
             </div>
             <div className="flex items-center gap-8">
-              <a href="#choose" className="text-sm text-foreground/30 hover:text-blue transition-colors font-medium">Leads</a>
-              <a href="#demo" className="text-sm text-foreground/30 hover:text-blue transition-colors font-medium">Demo</a>
-              <a href="#reviews" className="text-sm text-foreground/30 hover:text-blue transition-colors font-medium">Reviews</a>
+              <a href="#choose" className="text-sm text-foreground/25 hover:text-blue transition-colors font-medium">Leads</a>
+              <a href="#demo" className="text-sm text-foreground/25 hover:text-blue transition-colors font-medium">Demo</a>
+              <a href="#reviews" className="text-sm text-foreground/25 hover:text-blue transition-colors font-medium">Reviews</a>
             </div>
-            <p className="text-xs text-foreground/20 font-medium">
-              © 2026 LeadHubData. All rights reserved.
-            </p>
+            <p className="text-xs text-foreground/15 font-medium">© 2026 LeadHubData</p>
           </div>
         </div>
       </footer>
+
+      {/* Shimmer keyframe */}
+      <style jsx global>{`
+        @keyframes shimmer {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      `}</style>
     </div>
   );
 }
