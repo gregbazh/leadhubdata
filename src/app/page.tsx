@@ -57,17 +57,39 @@ function AnimateIn({
   );
 }
 
-/* ─── CATEGORY EMOJI/SYMBOLS ─── */
-const categoryEmoji: Record<string, string> = {
-  contractors: "🏗",
-  realestate: "🏠",
-  insurance: "🛡",
-  mortgage: "💰",
-  newbusiness: "🚀",
-  automotive: "🚛",
+/* ─── CATEGORY ICONS (clean line SVGs) ─── */
+const categoryIcons: Record<string, React.ReactNode> = {
+  contractors: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6">
+      <path d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  realestate: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6">
+      <path d="M2.25 21h19.5M3.75 21V7.5L12 3l8.25 4.5V21M8.25 21V13.5h7.5V21M8.25 10.5h.008v.008H8.25V10.5zm3.75 0h.008v.008H12V10.5zm3.75 0h.008v.008h-.008V10.5z" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  insurance: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6">
+      <path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  mortgage: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6">
+      <path d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  newbusiness: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6">
+      <path d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  automotive: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6">
+      <path d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
 };
-
-/* ─── NAV DROPDOWN uses emoji ─── */
 
 /* ─── REVIEWS DATA ─── */
 const reviews = [
@@ -172,8 +194,8 @@ export default function Home() {
                   >
                     {productCategories.map((cat) => (
                       <Link key={cat.id} href={`/leads/${cat.id}`} className="flex items-center gap-3 px-5 py-3.5 hover:bg-blue/5 transition-colors group">
-                        <div className="w-9 h-9 rounded-lg bg-blue/5 flex items-center justify-center text-lg group-hover:bg-blue/10 transition-all duration-200">
-                          {categoryEmoji[cat.id]}
+                        <div className="w-9 h-9 rounded-lg bg-blue/5 flex items-center justify-center text-blue group-hover:bg-blue group-hover:text-white transition-all duration-200">
+                          {categoryIcons[cat.id]}
                         </div>
                         <div>
                           <div className="text-sm font-bold text-foreground">{cat.name}</div>
@@ -329,9 +351,9 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {productCategories.map((cat, i) => (
               <AnimateIn key={cat.id} delay={i * 0.08}>
-                <Link href={`/leads/${cat.id}`}>
+                <Link href={`/leads/${cat.id}`} className="block h-full">
                   <motion.div
-                    className="group relative rounded-2xl cursor-pointer overflow-hidden bg-[#0a0f1e]"
+                    className="group relative rounded-2xl cursor-pointer overflow-hidden bg-[#0a0f1e] h-full"
                     whileHover={{ y: -10, scale: 1.02 }}
                     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                   >
@@ -347,7 +369,7 @@ export default function Home() {
                     </div>
 
                     {/* Inner card */}
-                    <div className="relative m-px rounded-2xl bg-gradient-to-br from-[#0a0f1e] via-[#0d1429] to-[#0a1235] overflow-hidden">
+                    <div className="relative m-px rounded-2xl bg-gradient-to-br from-[#0a0f1e] via-[#0d1429] to-[#0a1235] overflow-hidden h-full flex flex-col">
                       {/* Grid pattern overlay */}
                       <div className="absolute inset-0 opacity-[0.04]" style={{
                         backgroundImage: "linear-gradient(rgba(0,85,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0,85,255,0.3) 1px, transparent 1px)",
@@ -360,15 +382,15 @@ export default function Home() {
                       {/* Hover glow orb */}
                       <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-60 h-60 bg-blue/0 group-hover:bg-blue/10 rounded-full blur-3xl transition-all duration-700" />
 
-                      <div className="relative p-8 md:p-9">
-                        <div className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300 w-fit">
-                          {categoryEmoji[cat.id]}
+                      <div className="relative p-8 md:p-9 flex flex-col flex-1">
+                        <div className="w-12 h-12 rounded-xl bg-blue/10 border border-blue/20 flex items-center justify-center text-blue mb-6 group-hover:bg-blue/20 group-hover:border-blue/40 group-hover:scale-110 transition-all duration-300">
+                          {categoryIcons[cat.id]}
                         </div>
 
                         <h3 className="text-xl font-extrabold text-white tracking-tight">
                           {cat.name}
                         </h3>
-                        <p className="mt-2 text-sm text-white/35 font-medium leading-relaxed">
+                        <p className="mt-2 text-sm text-white/35 font-medium leading-relaxed flex-1">
                           {cat.tagline}
                         </p>
 
