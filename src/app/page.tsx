@@ -57,136 +57,17 @@ function AnimateIn({
   );
 }
 
-/* ─── DISTINCT ICONS PER CATEGORY ─── */
-function ContractorIcon() {
-  return (
-    <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8">
-      <rect x="4" y="26" width="32" height="10" rx="2" fill="currentColor" opacity="0.15" />
-      <rect x="8" y="18" width="24" height="10" rx="1" fill="currentColor" opacity="0.25" />
-      <path d="M20 4L6 18h28L20 4z" fill="currentColor" opacity="0.9" />
-      <rect x="16" y="28" width="8" height="8" rx="1" fill="currentColor" opacity="0.5" />
-      <circle cx="20" cy="12" r="2" fill="white" />
-    </svg>
-  );
-}
-
-function RealEstateIcon() {
-  return (
-    <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8">
-      <rect x="3" y="12" width="16" height="24" rx="2" fill="currentColor" opacity="0.9" />
-      <rect x="21" y="6" width="16" height="30" rx="2" fill="currentColor" opacity="0.6" />
-      <rect x="6" y="16" width="4" height="4" rx="0.5" fill="white" opacity="0.7" />
-      <rect x="12" y="16" width="4" height="4" rx="0.5" fill="white" opacity="0.7" />
-      <rect x="6" y="24" width="4" height="4" rx="0.5" fill="white" opacity="0.7" />
-      <rect x="12" y="24" width="4" height="4" rx="0.5" fill="white" opacity="0.7" />
-      <rect x="24" y="10" width="4" height="4" rx="0.5" fill="white" opacity="0.5" />
-      <rect x="30" y="10" width="4" height="4" rx="0.5" fill="white" opacity="0.5" />
-      <rect x="24" y="18" width="4" height="4" rx="0.5" fill="white" opacity="0.5" />
-      <rect x="30" y="18" width="4" height="4" rx="0.5" fill="white" opacity="0.5" />
-      <rect x="24" y="26" width="4" height="4" rx="0.5" fill="white" opacity="0.5" />
-      <rect x="30" y="26" width="4" height="4" rx="0.5" fill="white" opacity="0.5" />
-    </svg>
-  );
-}
-
-function InsuranceIcon() {
-  return (
-    <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8">
-      <path d="M20 2L4 10v12c0 9 7 15 16 18 9-3 16-9 16-18V10L20 2z" fill="currentColor" opacity="0.15" />
-      <path d="M20 6L8 12v10c0 7 5.5 12 12 14.5 6.5-2.5 12-7.5 12-14.5V12L20 6z" fill="currentColor" opacity="0.9" />
-      <path d="M17 20l3 3 6-7" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function MortgageIcon() {
-  return (
-    <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8">
-      <circle cx="20" cy="20" r="16" fill="currentColor" opacity="0.15" />
-      <circle cx="20" cy="20" r="12" fill="currentColor" opacity="0.9" />
-      <text x="20" y="26" textAnchor="middle" fill="white" fontSize="16" fontWeight="900" fontFamily="system-ui">$</text>
-    </svg>
-  );
-}
-
-function NewBusinessIcon() {
-  return (
-    <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8">
-      <rect x="4" y="14" width="32" height="22" rx="3" fill="currentColor" opacity="0.15" />
-      <rect x="8" y="18" width="24" height="14" rx="2" fill="currentColor" opacity="0.9" />
-      <rect x="14" y="8" width="12" height="10" rx="2" fill="currentColor" opacity="0.6" />
-      <path d="M18 8V6a2 2 0 012-2h0a2 2 0 012 2v2" stroke="currentColor" strokeWidth="2" opacity="0.9" />
-      <circle cx="20" cy="25" r="3" fill="white" opacity="0.7" />
-    </svg>
-  );
-}
-
-function AutomotiveIcon() {
-  return (
-    <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8">
-      <rect x="2" y="16" width="36" height="14" rx="4" fill="currentColor" opacity="0.9" />
-      <path d="M8 16l3-8h18l3 8" fill="currentColor" opacity="0.4" />
-      <circle cx="10" cy="30" r="4" fill="currentColor" opacity="0.15" />
-      <circle cx="10" cy="30" r="2.5" fill="currentColor" opacity="0.7" />
-      <circle cx="30" cy="30" r="4" fill="currentColor" opacity="0.15" />
-      <circle cx="30" cy="30" r="2.5" fill="currentColor" opacity="0.7" />
-      <rect x="6" y="20" width="6" height="3" rx="1" fill="white" opacity="0.5" />
-      <rect x="28" y="20" width="6" height="3" rx="1" fill="white" opacity="0.5" />
-      <rect x="15" y="20" width="10" height="3" rx="1" fill="white" opacity="0.3" />
-    </svg>
-  );
-}
-
-const categoryIcons: Record<string, React.ReactNode> = {
-  contractors: <ContractorIcon />,
-  realestate: <RealEstateIcon />,
-  insurance: <InsuranceIcon />,
-  mortgage: <MortgageIcon />,
-  newbusiness: <NewBusinessIcon />,
-  automotive: <AutomotiveIcon />,
+/* ─── CATEGORY EMOJI/SYMBOLS ─── */
+const categoryEmoji: Record<string, string> = {
+  contractors: "🏗",
+  realestate: "🏠",
+  insurance: "🛡",
+  mortgage: "💰",
+  newbusiness: "🚀",
+  automotive: "🚛",
 };
 
-/* ─── NAV DROPDOWN ICONS (smaller) ─── */
-const navIcons: Record<string, React.ReactNode> = {
-  contractors: (
-    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-      <path d="M12 3L3 11h18L12 3z" fill="currentColor" opacity="0.8" />
-      <rect x="5" y="11" width="14" height="9" rx="1" fill="currentColor" opacity="0.3" />
-    </svg>
-  ),
-  realestate: (
-    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-      <rect x="2" y="7" width="9" height="14" rx="1" fill="currentColor" opacity="0.8" />
-      <rect x="13" y="3" width="9" height="18" rx="1" fill="currentColor" opacity="0.5" />
-    </svg>
-  ),
-  insurance: (
-    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-      <path d="M12 2L4 6v6c0 5.5 3.5 9 8 11 4.5-2 8-5.5 8-11V6l-8-4z" fill="currentColor" opacity="0.8" />
-      <path d="M9 12l2 2 4-5" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  ),
-  mortgage: (
-    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-      <circle cx="12" cy="12" r="9" fill="currentColor" opacity="0.8" />
-      <text x="12" y="16" textAnchor="middle" fill="white" fontSize="11" fontWeight="900" fontFamily="system-ui">$</text>
-    </svg>
-  ),
-  newbusiness: (
-    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-      <rect x="3" y="9" width="18" height="12" rx="2" fill="currentColor" opacity="0.8" />
-      <rect x="8" y="5" width="8" height="6" rx="1" fill="currentColor" opacity="0.4" />
-    </svg>
-  ),
-  automotive: (
-    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-      <rect x="1" y="10" width="22" height="8" rx="3" fill="currentColor" opacity="0.8" />
-      <path d="M5 10l2-5h10l2 5" fill="currentColor" opacity="0.4" />
-      <circle cx="6" cy="18" r="2" fill="currentColor" opacity="0.6" />
-      <circle cx="18" cy="18" r="2" fill="currentColor" opacity="0.6" />
-    </svg>
-  ),
-};
+/* ─── NAV DROPDOWN uses emoji ─── */
 
 /* ─── REVIEWS DATA ─── */
 const reviews = [
@@ -291,8 +172,8 @@ export default function Home() {
                   >
                     {productCategories.map((cat) => (
                       <Link key={cat.id} href={`/leads/${cat.id}`} className="flex items-center gap-3 px-5 py-3.5 hover:bg-blue/5 transition-colors group">
-                        <div className="w-9 h-9 rounded-lg bg-blue/10 flex items-center justify-center text-blue group-hover:bg-blue group-hover:text-white transition-all duration-200">
-                          {navIcons[cat.id]}
+                        <div className="w-9 h-9 rounded-lg bg-blue/5 flex items-center justify-center text-lg group-hover:bg-blue/10 transition-all duration-200">
+                          {categoryEmoji[cat.id]}
                         </div>
                         <div>
                           <div className="text-sm font-bold text-foreground">{cat.name}</div>
@@ -450,49 +331,63 @@ export default function Home() {
               <AnimateIn key={cat.id} delay={i * 0.08}>
                 <Link href={`/leads/${cat.id}`}>
                   <motion.div
-                    className="group relative rounded-2xl cursor-pointer overflow-hidden"
+                    className="group relative rounded-2xl cursor-pointer overflow-hidden bg-[#0a0f1e]"
                     whileHover={{ y: -10, scale: 1.02 }}
                     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    {/* Blue gradient background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue via-blue-dark to-[#0022AA] opacity-90" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                    {/* Animated gradient border */}
+                    <div className="absolute inset-0 rounded-2xl p-px overflow-hidden">
+                      <div
+                        className="absolute inset-[-200%] opacity-40 group-hover:opacity-80 transition-opacity duration-700"
+                        style={{
+                          background: "conic-gradient(from 0deg, transparent 0%, #0055FF 10%, transparent 20%, transparent 80%, #3377FF 90%, transparent 100%)",
+                          animation: "spin 4s linear infinite",
+                        }}
+                      />
+                    </div>
 
-                    {/* Animated shimmer on hover */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                      style={{
-                        background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.1) 45%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.1) 55%, transparent 60%)",
-                        backgroundSize: "200% 100%",
-                        animation: "shimmer 2s infinite",
-                      }}
-                    />
+                    {/* Inner card */}
+                    <div className="relative m-px rounded-2xl bg-gradient-to-br from-[#0a0f1e] via-[#0d1429] to-[#0a1235] overflow-hidden">
+                      {/* Grid pattern overlay */}
+                      <div className="absolute inset-0 opacity-[0.04]" style={{
+                        backgroundImage: "linear-gradient(rgba(0,85,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0,85,255,0.3) 1px, transparent 1px)",
+                        backgroundSize: "24px 24px",
+                      }} />
 
-                    {/* Glow effect */}
-                    <div className="absolute -inset-1 bg-blue/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                      {/* Top glow */}
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-blue/40 to-transparent" />
 
-                    <div className="relative p-8 md:p-9">
-                      <div className="w-16 h-16 rounded-xl bg-white/15 backdrop-blur-sm flex items-center justify-center text-white mb-6 group-hover:bg-white/25 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)]">
-                        {categoryIcons[cat.id]}
-                      </div>
-                      <h3 className="text-xl font-extrabold text-white tracking-tight">
-                        {cat.name}
-                      </h3>
-                      <p className="mt-2 text-sm text-white/60 font-medium leading-relaxed">
-                        {cat.tagline}
-                      </p>
+                      {/* Hover glow orb */}
+                      <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-60 h-60 bg-blue/0 group-hover:bg-blue/10 rounded-full blur-3xl transition-all duration-700" />
 
-                      <div className="mt-6 pt-5 border-t border-white/10 flex items-center justify-between">
-                        <span className="text-xs font-bold text-white/40 uppercase tracking-widest">
-                          From ${cat.bundles[0].price}
-                        </span>
-                        <div className="flex items-center gap-1.5 text-white text-sm font-bold opacity-60 group-hover:opacity-100 translate-x-0 group-hover:translate-x-1 transition-all duration-300">
-                          View
-                          <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
-                          </svg>
+                      <div className="relative p-8 md:p-9">
+                        <div className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300 w-fit">
+                          {categoryEmoji[cat.id]}
+                        </div>
+
+                        <h3 className="text-xl font-extrabold text-white tracking-tight">
+                          {cat.name}
+                        </h3>
+                        <p className="mt-2 text-sm text-white/35 font-medium leading-relaxed">
+                          {cat.tagline}
+                        </p>
+
+                        <div className="mt-7 pt-5 border-t border-white/5 flex items-center justify-between">
+                          <div>
+                            <span className="text-xs font-bold text-white/20 uppercase tracking-widest">From </span>
+                            <span className="text-lg font-black text-blue">${cat.bundles[0].price}</span>
+                          </div>
+                          <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:border-blue/50 group-hover:bg-blue/10 transition-all duration-300">
+                            <svg className="w-4 h-4 text-white/30 group-hover:text-blue group-hover:translate-x-0.5 transition-all duration-300" viewBox="0 0 20 20" fill="currentColor">
+                              <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
+                            </svg>
+                          </div>
                         </div>
                       </div>
                     </div>
+
+                    {/* Outer glow on hover */}
+                    <div className="absolute -inset-2 bg-blue/0 group-hover:bg-blue/[0.07] rounded-3xl blur-2xl transition-all duration-500 -z-10" />
                   </motion.div>
                 </Link>
               </AnimateIn>
@@ -750,11 +645,10 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Shimmer keyframe */}
       <style jsx global>{`
-        @keyframes shimmer {
-          0% { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
       `}</style>
     </div>
