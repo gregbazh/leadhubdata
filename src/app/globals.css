@@ -1,33 +1,14 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --accent: #0055FF;
-  --accent-light: #3377FF;
-  --accent-dark: #0033CC;
-  --surface: #F5F7FA;
-  --surface-2: #E8ECF2;
-  --border: #D1D9E6;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-accent: var(--accent);
-  --color-accent-light: var(--accent-light);
-  --color-accent-dark: var(--accent-dark);
-  --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
-  --color-border: var(--border);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0a;
+  --color-blue: #0055FF;
+  --color-blue-light: #3377FF;
+  --color-blue-dark: #0033CC;
+  --color-surface: #F5F7FA;
+  --color-surface-2: #E8ECF2;
+  --font-sans: var(--font-inter);
 }
 
 html {
@@ -35,13 +16,12 @@ html {
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
   overflow-x: hidden;
 }
 
 ::selection {
-  background: var(--accent);
+  background: var(--color-blue);
   color: white;
 }
