@@ -255,16 +255,20 @@ export default function Home() {
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-blue rounded-lg flex items-center justify-center shadow-[0_2px_10px_rgba(0,85,255,0.3)]">
-              <span className="text-white font-black text-sm">L</span>
-            </div>
-            <span className="text-lg font-extrabold tracking-tight">
-              LEADHUB<span className="text-blue">DATA</span>
-            </span>
-          </Link>
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center">
+          {/* Left — Logo */}
+          <div className="flex-1">
+            <Link href="/" className="inline-flex items-center gap-2.5">
+              <div className="w-8 h-8 bg-blue rounded-lg flex items-center justify-center shadow-[0_2px_10px_rgba(0,85,255,0.3)]">
+                <span className="text-white font-black text-sm">L</span>
+              </div>
+              <span className="text-lg font-extrabold tracking-tight">
+                LEADHUB<span className="text-blue">DATA</span>
+              </span>
+            </Link>
+          </div>
 
+          {/* Center — Nav links */}
           <div className="hidden md:flex items-center gap-8">
             <div className="relative" onClick={(e) => e.stopPropagation()}>
               <button
@@ -303,6 +307,10 @@ export default function Home() {
 
             <a href="#demo" className="text-sm font-bold text-foreground/60 hover:text-blue transition-colors">DEMO</a>
             <a href="#reviews" className="text-sm font-bold text-foreground/60 hover:text-blue transition-colors">REVIEWS</a>
+          </div>
+
+          {/* Right — CTA button */}
+          <div className="flex-1 hidden md:flex justify-end">
             <Link href="#choose" className="text-sm font-bold text-white bg-blue px-6 py-2.5 rounded-full hover:bg-blue-dark transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,85,255,0.3)]">
               Get Leads
             </Link>
