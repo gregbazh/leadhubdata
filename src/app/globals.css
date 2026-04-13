@@ -6,8 +6,6 @@
   --color-blue: #0055FF;
   --color-blue-light: #3377FF;
   --color-blue-dark: #0033CC;
-  --color-surface: #F5F7FA;
-  --color-surface-2: #E8ECF2;
   --font-sans: var(--font-inter);
 }
 
@@ -16,12 +14,27 @@ html {
 }
 
 body {
-  background: var(--color-background);
-  color: var(--color-foreground);
+  background: #ffffff;
+  color: #0a0a0a;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: var(--color-blue);
+  background: #0055FF;
   color: white;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 85, 255, 0.15); }
+  50% { box-shadow: 0 0 40px rgba(0, 85, 255, 0.3); }
+}
+
+@keyframes bounce-arrow {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(12px); opacity: 1; }
 }
