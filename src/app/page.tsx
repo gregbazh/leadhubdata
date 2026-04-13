@@ -2,6 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
+import Link from "next/link";
 
 function AnimateIn({
   children,
@@ -137,49 +138,16 @@ const features = [
   },
 ];
 
-const pricingTiers = [
-  {
-    name: "Starter",
-    price: "49",
-    period: "/mo",
-    desc: "For solo operators testing a new channel",
-    features: ["100 leads/month", "1 lead category", "CSV delivery", "Email support", "48hr refresh rate"],
-    cta: "Start Free Trial",
-    highlighted: false,
-  },
-  {
-    name: "Growth",
-    price: "149",
-    period: "/mo",
-    desc: "For teams ready to scale pipeline",
-    features: [
-      "500 leads/month",
-      "3 lead categories",
-      "CSV + API access",
-      "Priority support",
-      "24hr refresh rate",
-      "Enriched contacts",
-    ],
-    cta: "Start Free Trial",
-    highlighted: true,
-  },
-  {
-    name: "Enterprise",
-    price: "Custom",
-    period: "",
-    desc: "Unlimited volume, white-glove service",
-    features: [
-      "Unlimited leads",
-      "All categories",
-      "API + CRM integration",
-      "Dedicated account manager",
-      "Real-time delivery",
-      "Exclusive territories",
-    ],
-    cta: "Contact Sales",
-    highlighted: false,
-  },
-];
+import { leadCategories as productCategories } from "@/lib/products";
+
+const categoryIcons: Record<string, string> = {
+  contractors: "wrench",
+  realestate: "building",
+  insurance: "shield",
+  mortgage: "dollar",
+  newbusiness: "store",
+  automotive: "truck",
+};
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -387,16 +355,16 @@ export default function Home() {
                     {leadCategories.find((c) => c.id === selectedCategory)?.label} Leads
                   </h3>
                   <p className="mt-2 text-[#0a0a0a]/50 font-medium max-w-lg">
-                    Fresh data delivered daily. Each lead includes contact info, location, and intent signals. Request a sample to see the data quality.
+                    Fresh data delivered daily. Each lead includes contact info, location, and intent signals. Choose a bundle and start closing.
                   </p>
                 </div>
-                <a
-                  href="#cta"
+                <Link
+                  href={`/leads/${selectedCategory}`}
                   className="inline-flex items-center justify-center h-12 px-6 text-sm font-bold text-white bg-[#0055FF] hover:bg-[#0033CC] transition-colors shrink-0"
                   style={{ clipPath: "polygon(0 0, 100% 0, 100% 65%, 92% 100%, 0 100%)" }}
                 >
-                  Request Sample →
-                </a>
+                  View Bundles & Pricing →
+                </Link>
               </div>
             </motion.div>
           )}
@@ -483,111 +451,72 @@ export default function Home() {
                 Pricing
               </p>
               <h2 className="text-4xl md:text-5xl font-black tracking-[-0.02em] text-[#0a0a0a] leading-[1.1]">
-                Simple pricing.
+                Pay per lead.
                 <br />
-                Serious leads.
+                No subscriptions.
               </h2>
               <p className="mt-4 text-lg text-[#0a0a0a]/50 font-medium">
-                No hidden fees. No long contracts. Cancel anytime.
+                Buy the exact number of leads you need. Bigger bundles = lower cost per lead.
               </p>
             </div>
           </AnimateIn>
 
-          <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {pricingTiers.map((tier, i) => (
-              <AnimateIn key={tier.name} delay={i * 0.1}>
+          <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {productCategories.map((cat, i) => (
+              <AnimateIn key={cat.id} delay={i * 0.08}>
                 <motion.div
-                  className={`relative p-8 md:p-10 flex flex-col h-full ${
-                    tier.highlighted
-                      ? "bg-[#0a0a0a] text-white border-2 border-[#0a0a0a]"
-                      : "bg-white border-2 border-[#0a0a0a]/5"
-                  }`}
-                  style={{ clipPath: "polygon(0 0, 100% 0, 100% 93%, 93% 100%, 0 100%)" }}
-                  whileHover={{ y: -6 }}
-                  transition={{ duration: 0.3 }}
+                  className="relative bg-white border-2 border-[#0a0a0a]/5 p-8 flex flex-col h-full hover:border-[#0055FF]/20 transition-all duration-300"
+                  style={{ clipPath: "polygon(0 0, 100% 0, 100% 90%, 92% 100%, 0 100%)" }}
+                  whileHover={{ y: -4 }}
                 >
-                  {tier.highlighted && (
-                    <div
-                      className="absolute top-0 right-0 px-4 py-1 bg-[#0055FF] text-white text-xs font-bold uppercase tracking-wider"
-                      style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 10% 100%)" }}
-                    >
-                      Popular
-                    </div>
-                  )}
+                  <div className="text-xs font-bold text-[#0a0a0a]/30 uppercase tracking-widest">
+                    {cat.tagline}
+                  </div>
+                  <h3 className="mt-3 text-xl font-extrabold text-[#0a0a0a] tracking-tight">
+                    {cat.name}
+                  </h3>
 
-                  <div>
-                    <h3
-                      className={`text-lg font-extrabold uppercase tracking-wider ${
-                        tier.highlighted ? "text-white/60" : "text-[#0a0a0a]/40"
-                      }`}
-                    >
-                      {tier.name}
-                    </h3>
-                    <div className="mt-4 flex items-baseline gap-1">
-                      {tier.price !== "Custom" && (
-                        <span className={`text-lg font-bold ${tier.highlighted ? "text-white/40" : "text-[#0a0a0a]/30"}`}>
-                          $
-                        </span>
-                      )}
-                      <span
-                        className={`text-5xl font-black tracking-tight ${
-                          tier.highlighted ? "text-white" : "text-[#0a0a0a]"
-                        }`}
-                      >
-                        {tier.price}
-                      </span>
-                      {tier.period && (
-                        <span className={`text-lg font-bold ${tier.highlighted ? "text-white/40" : "text-[#0a0a0a]/30"}`}>
-                          {tier.period}
-                        </span>
-                      )}
-                    </div>
-                    <p
-                      className={`mt-2 text-sm font-medium ${
-                        tier.highlighted ? "text-white/50" : "text-[#0a0a0a]/40"
-                      }`}
-                    >
-                      {tier.desc}
-                    </p>
+                  <div className="mt-4 flex items-baseline gap-1">
+                    <span className="text-sm font-bold text-[#0a0a0a]/30">from</span>
+                    <span className="text-3xl font-black text-[#0055FF]">
+                      ${cat.bundles[0].price}
+                    </span>
+                  </div>
+                  <div className="text-sm font-semibold text-[#0a0a0a]/30 mt-1">
+                    {cat.bundles[0].leads} leads — ${cat.bundles[0].pricePerLead.toFixed(2)}/lead
                   </div>
 
-                  <div className="mt-8 flex-1">
-                    <ul className="space-y-3">
-                      {tier.features.map((feature) => (
-                        <li key={feature} className="flex items-center gap-3">
-                          <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke={tier.highlighted ? "#0055FF" : "#0055FF"}
-                            strokeWidth={2.5}
-                            className="w-4 h-4 shrink-0"
-                          >
-                            <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                          <span
-                            className={`text-sm font-medium ${
-                              tier.highlighted ? "text-white/80" : "text-[#0a0a0a]/60"
-                            }`}
-                          >
-                            {feature}
+                  <div className="mt-5 pt-5 border-t border-[#0a0a0a]/5 flex-1">
+                    <div className="text-xs font-bold text-[#0a0a0a]/20 uppercase tracking-widest mb-3">
+                      Bundle options
+                    </div>
+                    <div className="space-y-2">
+                      {cat.bundles.map((b) => (
+                        <div key={b.id} className="flex items-center justify-between text-sm">
+                          <span className="font-semibold text-[#0a0a0a]/50">
+                            {b.leads.toLocaleString()} leads
                           </span>
-                        </li>
+                          <span className="font-bold text-[#0a0a0a]">
+                            ${b.price}
+                            {b.popular && (
+                              <span className="ml-2 text-[10px] font-bold text-[#0055FF] bg-[#0055FF]/5 px-1.5 py-0.5 uppercase">
+                                Best
+                              </span>
+                            )}
+                          </span>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   </div>
 
-                  <div className="mt-8">
-                    <a
-                      href="#cta"
-                      className={`flex items-center justify-center h-12 w-full text-sm font-bold transition-all duration-200 hover:translate-y-[-2px] ${
-                        tier.highlighted
-                          ? "bg-[#0055FF] text-white hover:bg-[#3377FF] hover:shadow-[0_8px_30px_rgba(0,85,255,0.4)]"
-                          : "bg-[#0a0a0a] text-white hover:bg-[#1a1a1a] hover:shadow-lg"
-                      }`}
+                  <div className="mt-6">
+                    <Link
+                      href={`/leads/${cat.id}`}
+                      className="flex items-center justify-center h-12 w-full text-sm font-bold bg-[#0a0a0a] text-white hover:bg-[#1a1a1a] transition-all duration-200 hover:translate-y-[-2px] hover:shadow-lg"
                       style={{ clipPath: "polygon(0 0, 100% 0, 100% 60%, 93% 100%, 0 100%)" }}
                     >
-                      {tier.cta}
-                    </a>
+                      Select Bundle →
+                    </Link>
                   </div>
                 </motion.div>
               </AnimateIn>
