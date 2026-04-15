@@ -386,7 +386,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
           >
-            Fresh. Verified. Exclusive. Sourced from public records daily.
+            Fresh data. Verified daily. Ready to close.
           </motion.p>
         </motion.div>
 
