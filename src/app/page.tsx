@@ -415,55 +415,50 @@ export default function Home() {
       </section>
 
       {/* ─── CHOOSE YOUR LEADS ─── */}
-      <section id="choose" className="relative py-20 md:py-44 px-5 md:px-6 overflow-hidden">
+      <section id="choose" className="relative py-20 md:py-32 px-5 md:px-6 overflow-hidden">
         <div
           className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full pointer-events-none"
           style={{ background: "radial-gradient(circle, rgba(0,140,255,0.06) 0%, transparent 70%)" }}
         />
 
         <div className="relative max-w-6xl mx-auto">
-          <AnimateIn className="text-center mb-12 md:mb-20">
+          <AnimateIn className="text-center mb-10 md:mb-14">
             <p className="text-xs md:text-sm font-bold text-blue uppercase tracking-[0.25em] mb-4 md:mb-5">Choose Your Leads</p>
-            <h2 className="text-3xl md:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.9]">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-[-0.04em] leading-[0.9]">
               What are you
               <br />
               <span className="text-blue">looking for?</span>
             </h2>
           </AnimateIn>
 
-          <RevealOnScroll className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <RevealOnScroll className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 max-w-2xl mx-auto">
             {productCategories.map((cat, i) => (
-              <Link key={cat.id} href={`/leads/${cat.id}`} className="block h-full">
-                <div
-                  className="holo-card card-reveal group relative rounded-2xl cursor-pointer overflow-hidden h-full"
-                  style={{ animationDelay: `${i * 80}ms` }}
-                >
-                  <div className="relative z-[2] p-6 md:p-9 flex flex-col flex-1">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 bg-blue/8 border border-blue/15 text-blue group-hover:bg-blue/12 group-hover:border-blue/30 group-hover:scale-110 transition-all duration-300">
+              <div key={cat.id} className="relative group card-reveal" style={{ animationDelay: `${i * 60}ms` }}>
+                <Link href={`/leads/${cat.id}`}>
+                  <div className="lead-tile flex items-center gap-3 px-4 py-3.5 md:px-5 md:py-4 rounded-xl cursor-pointer">
+                    <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg flex-shrink-0 flex items-center justify-center bg-blue/6 border border-blue/12 text-blue group-hover:bg-blue/12 group-hover:border-blue/30 transition-all duration-300">
                       {categoryIcons[cat.id]}
                     </div>
+                    <span className="text-sm md:text-[15px] font-bold text-foreground tracking-tight leading-tight">{cat.name}</span>
+                  </div>
+                </Link>
 
-                    <h3 className="text-xl font-extrabold tracking-tight text-foreground">
-                      {cat.name}
-                    </h3>
-                    <p className="mt-2 text-sm font-medium leading-relaxed flex-1 text-foreground/40">
-                      {cat.tagline}
-                    </p>
-
-                    <div className="mt-7 pt-5 border-t border-blue/10 flex items-center justify-between">
+                {/* Hover detail dropdown */}
+                <div className="absolute top-full left-0 right-0 z-20 pt-1.5 opacity-0 translate-y-1 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-250">
+                  <div className="tile-dropdown rounded-xl p-4 md:p-5">
+                    <p className="text-xs md:text-sm text-foreground/50 font-medium leading-relaxed">{cat.description}</p>
+                    <div className="mt-3 pt-3 border-t border-blue/8 flex items-center justify-between">
                       <div>
-                        <span className="text-xs font-bold text-foreground/20 uppercase tracking-widest">From </span>
-                        <span className="text-lg font-black text-blue">${cat.bundles[0].price}</span>
+                        <span className="text-[10px] md:text-xs font-bold text-foreground/20 uppercase tracking-widest">From </span>
+                        <span className="text-sm md:text-base font-black text-blue">${cat.bundles[0].price}</span>
                       </div>
-                      <div className="w-10 h-10 rounded-full border border-blue/15 flex items-center justify-center group-hover:border-blue/40 group-hover:bg-blue/5 transition-all duration-300">
-                        <svg className="w-4 h-4 text-blue/40 group-hover:text-blue group-hover:translate-x-0.5 transition-all duration-300" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
-                        </svg>
-                      </div>
+                      <Link href={`/leads/${cat.id}`} className="text-xs md:text-sm font-bold text-blue hover:text-blue-dark transition-colors">
+                        View leads →
+                      </Link>
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
           </RevealOnScroll>
         </div>
