@@ -365,67 +365,71 @@ export default function Home() {
 
         <div className="relative max-w-6xl mx-auto">
           <AnimateIn className="text-center mb-20">
-            <p className="hologram-label text-sm font-bold uppercase tracking-[0.25em] mb-5">Choose Your Leads</p>
-            <div className="hologram-wrap inline-block">
-              <h2 className="hologram-text text-4xl md:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.9]">
-                What are you
-                <br />
-                looking for?
-              </h2>
-            </div>
+            <p className="text-sm font-bold text-blue uppercase tracking-[0.25em] mb-5">Choose Your Leads</p>
+            <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.9]">
+              What are you
+              <br />
+              <span className="text-blue">looking for?</span>
+            </h2>
           </AnimateIn>
 
           <RevealOnScroll className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {productCategories.map((cat, i) => (
               <Link key={cat.id} href={`/leads/${cat.id}`} className="block h-full">
                 <div
-                  className="card-reveal group relative rounded-2xl cursor-pointer overflow-hidden bg-[#0a0f1e] h-full hover:-translate-y-2.5 hover:scale-[1.02] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  className="holo-card card-reveal group relative rounded-2xl cursor-pointer overflow-hidden h-full hover:-translate-y-2.5 hover:scale-[1.02] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
                   style={{ animationDelay: `${i * 80}ms` }}
                 >
-                  {/* Animated gradient border */}
+                  {/* Hologram border glow */}
                   <div className="absolute inset-0 rounded-2xl p-px overflow-hidden">
                     <div
-                      className="absolute inset-[-200%] opacity-40 group-hover:opacity-80 transition-opacity duration-700"
+                      className="absolute inset-[-200%] opacity-60 group-hover:opacity-100 transition-opacity duration-700"
                       style={{
-                        background: "conic-gradient(from 0deg, transparent 0%, #0055FF 10%, transparent 20%, transparent 80%, #3377FF 90%, transparent 100%)",
+                        background: "conic-gradient(from 0deg, transparent 0%, #00d4ff 8%, #0088ff 15%, transparent 22%, transparent 78%, #0088ff 85%, #00d4ff 92%, transparent 100%)",
                         animation: "spin 4s linear infinite",
                       }}
                     />
                   </div>
 
                   {/* Inner card */}
-                  <div className="relative m-px rounded-2xl bg-gradient-to-br from-[#0a0f1e] via-[#0d1429] to-[#0a1235] overflow-hidden h-full flex flex-col">
+                  <div className="relative m-px rounded-2xl overflow-hidden h-full flex flex-col" style={{ background: "linear-gradient(135deg, rgba(0,20,50,0.95) 0%, rgba(0,12,35,0.98) 50%, rgba(0,20,55,0.95) 100%)" }}>
+                    {/* Hologram scan lines */}
+                    <div className="holo-scanlines absolute inset-0 pointer-events-none rounded-2xl" />
+
                     {/* Grid pattern overlay */}
-                    <div className="absolute inset-0 opacity-[0.04]" style={{
-                      backgroundImage: "linear-gradient(rgba(0,85,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0,85,255,0.3) 1px, transparent 1px)",
-                      backgroundSize: "24px 24px",
+                    <div className="absolute inset-0 opacity-[0.06]" style={{
+                      backgroundImage: "linear-gradient(rgba(0,212,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.4) 1px, transparent 1px)",
+                      backgroundSize: "20px 20px",
                     }} />
 
-                    {/* Top glow */}
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-blue/40 to-transparent" />
+                    {/* Top edge glow */}
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4/5 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(0,212,255,0.7), transparent)" }} />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[2px] blur-sm" style={{ background: "linear-gradient(90deg, transparent, rgba(0,212,255,0.5), transparent)" }} />
 
                     {/* Hover glow orb */}
-                    <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-60 h-60 bg-blue/0 group-hover:bg-blue/10 rounded-full blur-3xl transition-all duration-700" />
+                    <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-60 h-60 rounded-full blur-3xl transition-all duration-700 bg-[rgba(0,180,255,0)] group-hover:bg-[rgba(0,180,255,0.12)]" />
 
                     <div className="relative p-8 md:p-9 flex flex-col flex-1">
-                      <div className="w-12 h-12 rounded-xl bg-blue/10 border border-blue/20 flex items-center justify-center text-blue mb-6 group-hover:bg-blue/20 group-hover:border-blue/40 group-hover:scale-110 transition-all duration-300">
-                        {categoryIcons[cat.id]}
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 border transition-all duration-300 group-hover:scale-110" style={{ background: "rgba(0,180,255,0.1)", borderColor: "rgba(0,212,255,0.25)" }}>
+                        <div className="text-[#00d4ff]">
+                          {categoryIcons[cat.id]}
+                        </div>
                       </div>
 
-                      <h3 className="text-xl font-extrabold text-white tracking-tight">
+                      <h3 className="text-xl font-extrabold tracking-tight" style={{ color: "#e0f4ff" }}>
                         {cat.name}
                       </h3>
-                      <p className="mt-2 text-sm text-white/35 font-medium leading-relaxed flex-1">
+                      <p className="mt-2 text-sm font-medium leading-relaxed flex-1" style={{ color: "rgba(0,212,255,0.4)" }}>
                         {cat.tagline}
                       </p>
 
-                      <div className="mt-7 pt-5 border-t border-white/5 flex items-center justify-between">
+                      <div className="mt-7 pt-5 flex items-center justify-between" style={{ borderTop: "1px solid rgba(0,212,255,0.1)" }}>
                         <div>
-                          <span className="text-xs font-bold text-white/20 uppercase tracking-widest">From </span>
-                          <span className="text-lg font-black text-blue">${cat.bundles[0].price}</span>
+                          <span className="text-xs font-bold uppercase tracking-widest" style={{ color: "rgba(0,212,255,0.25)" }}>From </span>
+                          <span className="text-lg font-black" style={{ color: "#00d4ff", textShadow: "0 0 8px rgba(0,212,255,0.4)" }}>${cat.bundles[0].price}</span>
                         </div>
-                        <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:border-blue/50 group-hover:bg-blue/10 transition-all duration-300">
-                          <svg className="w-4 h-4 text-white/30 group-hover:text-blue group-hover:translate-x-0.5 transition-all duration-300" viewBox="0 0 20 20" fill="currentColor">
+                        <div className="w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300" style={{ borderColor: "rgba(0,212,255,0.15)" }}>
+                          <svg className="w-4 h-4 transition-all duration-300 group-hover:translate-x-0.5" style={{ color: "rgba(0,212,255,0.35)" }} viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
                           </svg>
                         </div>
@@ -433,8 +437,8 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Outer glow on hover */}
-                  <div className="absolute -inset-2 bg-blue/0 group-hover:bg-blue/[0.07] rounded-3xl blur-2xl transition-all duration-500 -z-10" />
+                  {/* Outer hologram glow on hover */}
+                  <div className="absolute -inset-3 rounded-3xl blur-2xl transition-all duration-500 -z-10 bg-[rgba(0,180,255,0)] group-hover:bg-[rgba(0,180,255,0.08)]" />
                 </div>
               </Link>
             ))}

@@ -39,61 +39,42 @@ body {
   50% { transform: translateY(12px); opacity: 1; }
 }
 
-/* ─── HOLOGRAM HEADING ─── */
-.hologram-text {
-  color: #00d4ff;
-  text-shadow:
-    0 0 7px rgba(0, 212, 255, 0.8),
-    0 0 20px rgba(0, 170, 255, 0.5),
-    0 0 42px rgba(0, 130, 255, 0.3),
-    0 0 82px rgba(0, 100, 255, 0.12);
-  animation: hologram-glow 4s ease-in-out infinite;
+/* ─── HOLOGRAM CARDS ─── */
+.holo-card {
+  --holo-color: rgba(0, 212, 255, 1);
+  --holo-glow: rgba(0, 180, 255, 0.5);
 }
 
-.hologram-label {
-  color: #00d4ff;
-  text-shadow:
-    0 0 5px rgba(0, 212, 255, 0.6),
-    0 0 15px rgba(0, 170, 255, 0.3);
-  animation: hologram-glow 4s ease-in-out infinite 0.5s;
-}
-
-.hologram-wrap {
-  position: relative;
-}
-
-.hologram-wrap::after {
-  content: '';
-  position: absolute;
-  inset: -10px -20px;
+.holo-scanlines {
   background: repeating-linear-gradient(
     0deg,
     transparent,
     transparent 3px,
-    rgba(0, 212, 255, 0.03) 3px,
-    rgba(0, 212, 255, 0.03) 4px
+    rgba(0, 212, 255, 0.025) 3px,
+    rgba(0, 212, 255, 0.025) 4px
   );
-  pointer-events: none;
-  animation: hologram-scan 10s linear infinite;
+  animation: holo-scan 8s linear infinite;
 }
 
-@keyframes hologram-glow {
-  0%, 100% {
-    text-shadow:
-      0 0 7px rgba(0, 212, 255, 0.8),
-      0 0 20px rgba(0, 170, 255, 0.5),
-      0 0 42px rgba(0, 130, 255, 0.3);
-  }
-  50% {
-    text-shadow:
-      0 0 10px rgba(0, 212, 255, 1),
-      0 0 30px rgba(0, 170, 255, 0.7),
-      0 0 60px rgba(0, 130, 255, 0.4),
-      0 0 100px rgba(0, 100, 255, 0.18);
-  }
+.holo-card:hover .holo-scanlines {
+  animation: holo-scan 4s linear infinite;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 212, 255, 0.05) 3px,
+    rgba(0, 212, 255, 0.05) 4px
+  );
 }
 
-@keyframes hologram-scan {
+.holo-card:hover {
+  box-shadow:
+    0 0 15px rgba(0, 212, 255, 0.15),
+    0 0 40px rgba(0, 180, 255, 0.08),
+    inset 0 0 30px rgba(0, 212, 255, 0.03);
+}
+
+@keyframes holo-scan {
   0% { background-position: 0 0; }
   100% { background-position: 0 200px; }
 }
