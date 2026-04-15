@@ -163,6 +163,7 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
 /* ─── MAIN PAGE ─── */
 export default function Home() {
   const [leadsOpen, setLeadsOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
   const heroOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
@@ -172,7 +173,7 @@ export default function Home() {
   useSmoothScroll();
 
   useEffect(() => {
-    const close = () => setLeadsOpen(false);
+    const close = () => { setLeadsOpen(false); setMobileMenuOpen(false); };
     window.addEventListener("click", close);
     return () => window.removeEventListener("click", close);
   }, []);
@@ -240,13 +241,70 @@ export default function Home() {
             <a href="#reviews" className="text-sm font-bold text-foreground/60 hover:text-blue transition-colors">REVIEWS</a>
           </div>
 
-          {/* Right — CTA button */}
+          {/* Right — CTA button (desktop) */}
           <div className="flex-1 hidden md:flex justify-end">
             <Link href="#choose" className="text-sm font-bold text-white bg-blue px-6 py-2.5 rounded-full hover:bg-blue-dark transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,85,255,0.3)]">
               Get Leads
             </Link>
           </div>
+
+          {/* Mobile — hamburger */}
+          <div className="flex-1 flex justify-end md:hidden">
+            <button
+              onClick={(e) => { e.stopPropagation(); setMobileMenuOpen(!mobileMenuOpen); }}
+              className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-blue/5 transition-colors"
+              aria-label="Toggle menu"
+            >
+              <svg className="w-5 h-5 text-foreground" viewBox="0 0 20 20" fill="currentColor">
+                {mobileMenuOpen ? (
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                ) : (
+                  <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
+
+        {/* Mobile menu panel */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              className="md:hidden border-t border-blue/5 bg-white/95 backdrop-blur-xl"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <div className="px-6 py-4 flex flex-col gap-1">
+                {productCategories.map((cat) => (
+                  <Link
+                    key={cat.id}
+                    href={`/leads/${cat.id}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-blue/5 transition-colors"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-blue/5 flex items-center justify-center text-blue">
+                      {categoryIcons[cat.id]}
+                    </div>
+                    <span className="text-sm font-bold text-foreground">{cat.name}</span>
+                  </Link>
+                ))}
+                <div className="h-px bg-blue/5 my-2" />
+                <a href="#demo" onClick={() => setMobileMenuOpen(false)} className="px-3 py-3 text-sm font-bold text-foreground/60 rounded-xl hover:bg-blue/5 transition-colors">Demo</a>
+                <a href="#reviews" onClick={() => setMobileMenuOpen(false)} className="px-3 py-3 text-sm font-bold text-foreground/60 rounded-xl hover:bg-blue/5 transition-colors">Reviews</a>
+                <div className="h-px bg-blue/5 my-2" />
+                <Link
+                  href="#choose"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-center text-sm font-bold text-white bg-blue py-3 rounded-full hover:bg-blue-dark transition-colors"
+                >
+                  Get Leads
+                </Link>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.nav>
 
       {/* ─── HERO ─── */}
@@ -303,7 +361,7 @@ export default function Home() {
         <motion.div style={{ opacity: heroOpacity, scale: heroScale, y: heroY }} className="relative z-10 text-center px-6">
           <div className="overflow-hidden">
             <motion.h1
-              className="text-6xl md:text-8xl lg:text-[10rem] font-black tracking-[-0.05em] leading-[0.85]"
+              className="text-5xl md:text-8xl lg:text-[10rem] font-black tracking-[-0.05em] leading-[0.85]"
               initial={{ y: 120, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
@@ -313,7 +371,7 @@ export default function Home() {
           </div>
           <div className="overflow-hidden">
             <motion.h1
-              className="text-6xl md:text-8xl lg:text-[10rem] font-black tracking-[-0.05em] leading-[0.85] text-blue"
+              className="text-5xl md:text-8xl lg:text-[10rem] font-black tracking-[-0.05em] leading-[0.85] text-blue"
               initial={{ y: 120, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 1, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
@@ -357,16 +415,16 @@ export default function Home() {
       </section>
 
       {/* ─── CHOOSE YOUR LEADS ─── */}
-      <section id="choose" className="relative py-32 md:py-44 px-6 overflow-hidden">
+      <section id="choose" className="relative py-20 md:py-44 px-5 md:px-6 overflow-hidden">
         <div
           className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full pointer-events-none"
           style={{ background: "radial-gradient(circle, rgba(0,140,255,0.06) 0%, transparent 70%)" }}
         />
 
         <div className="relative max-w-6xl mx-auto">
-          <AnimateIn className="text-center mb-20">
-            <p className="text-sm font-bold text-blue uppercase tracking-[0.25em] mb-5">Choose Your Leads</p>
-            <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.9]">
+          <AnimateIn className="text-center mb-12 md:mb-20">
+            <p className="text-xs md:text-sm font-bold text-blue uppercase tracking-[0.25em] mb-4 md:mb-5">Choose Your Leads</p>
+            <h2 className="text-3xl md:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.9]">
               What are you
               <br />
               <span className="text-blue">looking for?</span>
@@ -380,7 +438,7 @@ export default function Home() {
                   className="holo-card card-reveal group relative rounded-2xl cursor-pointer overflow-hidden h-full"
                   style={{ animationDelay: `${i * 80}ms` }}
                 >
-                  <div className="relative z-[2] p-8 md:p-9 flex flex-col flex-1">
+                  <div className="relative z-[2] p-6 md:p-9 flex flex-col flex-1">
                     <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 bg-blue/8 border border-blue/15 text-blue group-hover:bg-blue/12 group-hover:border-blue/30 group-hover:scale-110 transition-all duration-300">
                       {categoryIcons[cat.id]}
                     </div>
@@ -412,7 +470,7 @@ export default function Home() {
       </section>
 
       {/* ─── STATS BAR ─── */}
-      <section className="py-20 px-6">
+      <section className="py-14 md:py-20 px-5 md:px-6">
         <div className="max-w-6xl mx-auto">
           <AnimateIn>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
@@ -437,7 +495,7 @@ export default function Home() {
       </section>
 
       {/* ─── DEMO ─── */}
-      <section id="demo" className="relative py-32 md:py-44 px-6 overflow-hidden">
+      <section id="demo" className="relative py-20 md:py-44 px-5 md:px-6 overflow-hidden">
         <motion.div
           className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full pointer-events-none"
           style={{
@@ -447,9 +505,9 @@ export default function Home() {
         />
 
         <div className="relative max-w-6xl mx-auto">
-          <AnimateIn className="text-center mb-20">
-            <p className="text-sm font-bold text-blue uppercase tracking-[0.25em] mb-5">See It In Action</p>
-            <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.9]">
+          <AnimateIn className="text-center mb-12 md:mb-20">
+            <p className="text-xs md:text-sm font-bold text-blue uppercase tracking-[0.25em] mb-4 md:mb-5">See It In Action</p>
+            <h2 className="text-3xl md:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.9]">
               Real data.
               <br />
               <span className="text-blue">Real results.</span>
@@ -471,7 +529,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="p-6 md:p-8">
+                <div className="p-4 md:p-8">
                   <div className="flex items-center justify-between mb-6">
                     <div>
                       <h4 className="text-lg font-extrabold">Contractor Leads</h4>
@@ -490,9 +548,11 @@ export default function Home() {
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-blue/5">
-                          {["Name", "Address", "Permit", "Value", "Date"].map((h) => (
-                            <th key={h} className="text-left py-3 px-4 font-bold text-foreground/25 text-xs uppercase tracking-wider">{h}</th>
-                          ))}
+                          <th className="text-left py-3 px-3 md:px-4 font-bold text-foreground/25 text-xs uppercase tracking-wider">Name</th>
+                          <th className="text-left py-3 px-3 md:px-4 font-bold text-foreground/25 text-xs uppercase tracking-wider hidden md:table-cell">Address</th>
+                          <th className="text-left py-3 px-3 md:px-4 font-bold text-foreground/25 text-xs uppercase tracking-wider">Permit</th>
+                          <th className="text-left py-3 px-3 md:px-4 font-bold text-foreground/25 text-xs uppercase tracking-wider">Value</th>
+                          <th className="text-left py-3 px-3 md:px-4 font-bold text-foreground/25 text-xs uppercase tracking-wider hidden sm:table-cell">Date</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -511,11 +571,11 @@ export default function Home() {
                             viewport={{ once: true }}
                             transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
                           >
-                            <td className="py-3.5 px-4 font-semibold">{row.name}</td>
-                            <td className="py-3.5 px-4 text-foreground/50">{row.addr}</td>
-                            <td className="py-3.5 px-4"><span className="px-2.5 py-1 bg-blue/5 rounded-full text-xs font-bold text-blue">{row.permit}</span></td>
-                            <td className="py-3.5 px-4 font-bold text-blue">{row.value}</td>
-                            <td className="py-3.5 px-4 text-foreground/30">{row.date}</td>
+                            <td className="py-3 px-3 md:px-4 font-semibold text-xs md:text-sm">{row.name}</td>
+                            <td className="py-3 px-3 md:px-4 text-foreground/50 hidden md:table-cell">{row.addr}</td>
+                            <td className="py-3 px-3 md:px-4"><span className="px-2 py-0.5 md:px-2.5 md:py-1 bg-blue/5 rounded-full text-xs font-bold text-blue">{row.permit}</span></td>
+                            <td className="py-3 px-3 md:px-4 font-bold text-blue text-xs md:text-sm">{row.value}</td>
+                            <td className="py-3 px-3 md:px-4 text-foreground/30 hidden sm:table-cell">{row.date}</td>
                           </motion.tr>
                         ))}
                       </tbody>
@@ -536,7 +596,7 @@ export default function Home() {
       </section>
 
       {/* ─── REVIEWS ─── */}
-      <section id="reviews" className="relative py-32 md:py-44 px-6 overflow-hidden">
+      <section id="reviews" className="relative py-20 md:py-44 px-5 md:px-6 overflow-hidden">
         <motion.div
           className="absolute top-20 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
           style={{
@@ -547,8 +607,8 @@ export default function Home() {
 
         <div className="relative max-w-6xl mx-auto">
           <AnimateIn className="text-center mb-6">
-            <p className="text-sm font-bold text-blue uppercase tracking-[0.25em] mb-5">Reviews</p>
-            <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.9]">
+            <p className="text-xs md:text-sm font-bold text-blue uppercase tracking-[0.25em] mb-4 md:mb-5">Reviews</p>
+            <h2 className="text-3xl md:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.9]">
               Don&apos;t take our word
               <br />
               <span className="text-blue">for it.</span>
@@ -600,7 +660,7 @@ export default function Home() {
       </section>
 
       {/* ─── CTA ─── */}
-      <section className="relative py-32 md:py-44 px-6 overflow-hidden">
+      <section className="relative py-20 md:py-44 px-5 md:px-6 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <motion.div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full"
@@ -612,7 +672,7 @@ export default function Home() {
 
         <div className="relative max-w-3xl mx-auto text-center">
           <AnimateIn>
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-[-0.04em] leading-[0.85]">
+            <h2 className="text-4xl md:text-7xl lg:text-8xl font-black tracking-[-0.04em] leading-[0.85]">
               READY TO
               <br />
               <span className="text-blue">START CLOSING?</span>
@@ -639,7 +699,7 @@ export default function Home() {
       </section>
 
       {/* ─── FOOTER ─── */}
-      <footer className="py-12 px-6 border-t border-blue/5">
+      <footer className="py-10 md:py-12 px-5 md:px-6 border-t border-blue/5">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2.5">
