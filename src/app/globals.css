@@ -38,3 +38,79 @@ body {
   0%, 100% { transform: translateY(0); opacity: 0.6; }
   50% { transform: translateY(12px); opacity: 1; }
 }
+
+/* ─── HOLOGRAM HEADING ─── */
+.hologram-text {
+  color: #00d4ff;
+  text-shadow:
+    0 0 7px rgba(0, 212, 255, 0.8),
+    0 0 20px rgba(0, 170, 255, 0.5),
+    0 0 42px rgba(0, 130, 255, 0.3),
+    0 0 82px rgba(0, 100, 255, 0.12);
+  animation: hologram-glow 4s ease-in-out infinite;
+}
+
+.hologram-label {
+  color: #00d4ff;
+  text-shadow:
+    0 0 5px rgba(0, 212, 255, 0.6),
+    0 0 15px rgba(0, 170, 255, 0.3);
+  animation: hologram-glow 4s ease-in-out infinite 0.5s;
+}
+
+.hologram-wrap {
+  position: relative;
+}
+
+.hologram-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -10px -20px;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 212, 255, 0.03) 3px,
+    rgba(0, 212, 255, 0.03) 4px
+  );
+  pointer-events: none;
+  animation: hologram-scan 10s linear infinite;
+}
+
+@keyframes hologram-glow {
+  0%, 100% {
+    text-shadow:
+      0 0 7px rgba(0, 212, 255, 0.8),
+      0 0 20px rgba(0, 170, 255, 0.5),
+      0 0 42px rgba(0, 130, 255, 0.3);
+  }
+  50% {
+    text-shadow:
+      0 0 10px rgba(0, 212, 255, 1),
+      0 0 30px rgba(0, 170, 255, 0.7),
+      0 0 60px rgba(0, 130, 255, 0.4),
+      0 0 100px rgba(0, 100, 255, 0.18);
+  }
+}
+
+@keyframes hologram-scan {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 200px; }
+}
+
+/* ─── CARD REVEAL (replaces per-card framer-motion) ─── */
+.card-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.cards-revealed .card-reveal {
+  animation: card-slide-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes card-slide-up {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
