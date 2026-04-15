@@ -377,7 +377,7 @@ export default function Home() {
             {productCategories.map((cat, i) => (
               <Link key={cat.id} href={`/leads/${cat.id}`} className="block h-full">
                 <div
-                  className="holo-card card-reveal group relative rounded-2xl cursor-pointer overflow-hidden h-full hover:-translate-y-3 hover:scale-[1.02]"
+                  className="holo-card card-reveal group relative rounded-2xl cursor-pointer overflow-hidden h-full"
                   style={{ animationDelay: `${i * 80}ms` }}
                 >
                   <div className="relative z-[2] p-8 md:p-9 flex flex-col flex-1">
