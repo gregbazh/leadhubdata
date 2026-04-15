@@ -63,13 +63,19 @@ body {
   background: linear-gradient(90deg, transparent, rgba(0, 180, 255, 0.14), transparent);
   transform: skewX(-12deg);
   pointer-events: none;
-  animation: tile-shimmer 3s ease-in-out infinite;
+  animation: tile-shimmer 6s ease-in-out infinite;
 }
 
 .lead-tile-active {
   border-color: rgba(0, 85, 255, 0.3) !important;
   background: rgba(225, 240, 255, 0.75) !important;
   transform: scale(1.03);
+}
+
+.lead-tile-selected {
+  border-color: rgba(0, 85, 255, 0.25) !important;
+  background: rgba(230, 242, 255, 0.7) !important;
+  box-shadow: 0 0 0 2px rgba(0, 85, 255, 0.15);
 }
 
 /* ─── DETAIL PANEL ─── */
@@ -91,7 +97,7 @@ body {
   transform: skewX(-12deg);
   pointer-events: none;
   z-index: 1;
-  animation: tile-shimmer 3s ease-in-out infinite;
+  animation: tile-shimmer 6s ease-in-out infinite;
 }
 
 @keyframes tile-shimmer {

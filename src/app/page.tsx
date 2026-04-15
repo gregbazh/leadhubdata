@@ -94,7 +94,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 /* ─── REVIEWS DATA ─── */
 const reviews = [
   { name: "Marcus T.", role: "Insurance Agency Owner", text: "Switched from another lead provider 3 months ago. The data quality is night and day. We went from a 2% close rate to almost 9%. Worth every penny.", stars: 5 },
-  { name: "Jennifer L.", role: "Mortgage Broker", text: "I was skeptical at first but decided to try the starter pack. Got 3 closed loans from 50 leads in the first week. Already ordered the enterprise bundle.", stars: 5 },
+  { name: "Jennifer L.", role: "Mortgage Broker", text: "I was skeptical at first but decided to try the starter pack. Got 3 closed loans from 50 leads in the first week. Already upgraded to the enterprise plan.", stars: 5 },
   { name: "David R.", role: "Real Estate Investor", text: "The motivated seller leads are legit. These are actual distressed properties, not recycled lists from 2019. I've done 4 deals this month from their data.", stars: 5 },
   { name: "Sarah K.", role: "Roofing Contractor", text: "Building permit leads changed our business. Instead of door knocking random neighborhoods, we're calling homeowners who literally just filed for roof work. Game changer.", stars: 5 },
   { name: "Michael P.", role: "Commercial Auto Insurance", text: "We buy the 5,000 pack every month. At $0.20 per lead it's basically free compared to what we were paying. The DOT data is always fresh and accurate.", stars: 5 },
@@ -164,7 +164,9 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
 export default function Home() {
   const [leadsOpen, setLeadsOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeLeadCat, setActiveLeadCat] = useState<string | null>(null);
+  const [selectedLeadCat, setSelectedLeadCat] = useState<string | null>(null);
+  const [hoveredLeadCat, setHoveredLeadCat] = useState<string | null>(null);
+  const activeLeadCat = hoveredLeadCat || selectedLeadCat;
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
   const heroOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
@@ -435,20 +437,25 @@ export default function Home() {
           <RevealOnScroll className="max-w-3xl mx-auto">
             {/* Tiles */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
-              {productCategories.map((cat, i) => (
-                <button
-                  key={cat.id}
-                  className={`card-reveal lead-tile flex items-center gap-3 px-4 py-3.5 md:px-5 md:py-4 rounded-xl cursor-pointer text-left ${activeLeadCat === cat.id ? "lead-tile-active" : ""}`}
-                  style={{ animationDelay: `${i * 60}ms` }}
-                  onMouseEnter={() => setActiveLeadCat(cat.id)}
-                  onClick={() => setActiveLeadCat(cat.id)}
-                >
-                  <div className={`w-9 h-9 md:w-10 md:h-10 rounded-lg flex-shrink-0 flex items-center justify-center border transition-all duration-300 ${activeLeadCat === cat.id ? "bg-blue border-blue text-white" : "bg-blue/6 border-blue/12 text-blue/60"}`}>
-                    {categoryIcons[cat.id]}
-                  </div>
-                  <span className={`text-sm md:text-[15px] font-bold tracking-tight leading-tight transition-colors duration-200 ${activeLeadCat === cat.id ? "text-foreground" : "text-foreground/50"}`}>{cat.name}</span>
-                </button>
-              ))}
+              {productCategories.map((cat, i) => {
+                const isActive = activeLeadCat === cat.id;
+                const isSelected = selectedLeadCat === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    className={`card-reveal lead-tile flex items-center gap-3 px-4 py-3.5 md:px-5 md:py-4 rounded-xl cursor-pointer text-left ${isActive ? "lead-tile-active" : ""} ${isSelected && !isActive ? "lead-tile-selected" : ""}`}
+                    style={{ animationDelay: `${i * 60}ms` }}
+                    onMouseEnter={() => setHoveredLeadCat(cat.id)}
+                    onMouseLeave={() => setHoveredLeadCat(null)}
+                    onClick={() => setSelectedLeadCat(prev => prev === cat.id ? null : cat.id)}
+                  >
+                    <div className={`w-9 h-9 md:w-10 md:h-10 rounded-lg flex-shrink-0 flex items-center justify-center border transition-all duration-300 ${isActive || isSelected ? "bg-blue border-blue text-white" : "bg-blue/6 border-blue/12 text-blue/60"}`}>
+                      {categoryIcons[cat.id]}
+                    </div>
+                    <span className={`text-sm md:text-[15px] font-bold tracking-tight leading-tight transition-colors duration-200 ${isActive || isSelected ? "text-foreground" : "text-foreground/50"}`}>{cat.name}</span>
+                  </button>
+                );
+              })}
             </div>
 
             {/* Prompt / Detail panel area */}
@@ -506,18 +513,18 @@ export default function Home() {
 
                             <div className="md:w-52 flex-shrink-0 rounded-xl p-4 bg-gradient-to-br from-blue/[0.04] to-blue/[0.08] border border-blue/10">
                               <div className="flex items-center gap-2 mb-2">
-                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue/10 text-blue">Promo</span>
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue/10 text-blue">From</span>
                               </div>
                               <div className="flex items-baseline gap-0.5 mb-1">
-                                <span className="text-3xl font-black text-blue">$1</span>
-                                <span className="text-sm font-semibold text-foreground/30">/lead</span>
+                                <span className="text-3xl font-black text-blue">${cat.plans[0].price}</span>
+                                <span className="text-sm font-semibold text-foreground/30">/mo</span>
                               </div>
-                              <p className="text-[11px] text-foreground/30 font-medium mb-4">Limited time on all bundles</p>
+                              <p className="text-[11px] text-foreground/30 font-medium mb-4">{cat.plans[0].leadsPerMonth.toLocaleString()} leads/month to start</p>
                               <Link
                                 href={`/leads/${cat.id}`}
                                 className="block text-center text-sm font-bold text-white bg-blue py-2.5 rounded-lg hover:bg-blue-dark transition-colors duration-200"
                               >
-                                View bundles →
+                                View plans →
                               </Link>
                             </div>
                           </div>
@@ -648,7 +655,7 @@ export default function Home() {
                   <div className="mt-6 flex items-center justify-between">
                     <p className="text-xs text-foreground/25 font-medium">Showing 5 of 2,847 available leads</p>
                     <Link href="/leads/contractors" className="text-sm font-bold text-blue hover:text-blue-dark transition-colors">
-                      View all bundles →
+                      View all plans →
                     </Link>
                   </div>
                 </div>
@@ -741,7 +748,7 @@ export default function Home() {
               <span className="text-blue">START CLOSING?</span>
             </h2>
             <p className="mt-8 text-lg text-foreground/35 font-medium max-w-md mx-auto leading-relaxed">
-              Pick your leads. Choose a bundle. Start closing deals tomorrow.
+              Pick your leads. Choose a plan. Start closing deals tomorrow.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Link

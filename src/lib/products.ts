@@ -5,16 +5,17 @@ export type LeadCategory = {
   description: string;
   icon: string;
   fields: string[];
-  bundles: Bundle[];
+  plans: Plan[];
 };
 
-export type Bundle = {
+export type Plan = {
   id: string;
-  leads: number;
-  price: number;
+  name: string;
+  leadsPerMonth: number;
+  price: number; // monthly price in dollars
   pricePerLead: number;
-  label: string;
   popular?: boolean;
+  features: string[];
 };
 
 export const leadCategories: LeadCategory[] = [
@@ -23,7 +24,7 @@ export const leadCategories: LeadCategory[] = [
     name: "Contractor Leads",
     tagline: "Roofing, HVAC, Solar, Plumbing, Electrical",
     description:
-      "Homeowners who recently filed building permits. These people are actively looking for contractors right now.",
+      "Homeowners who recently filed building permits. These people are actively looking for contractors right now — delivered fresh to you every month.",
     icon: "wrench",
     fields: [
       "Full Name",
@@ -34,11 +35,40 @@ export const leadCategories: LeadCategory[] = [
       "Job Value Estimate",
       "Filing Date",
     ],
-    bundles: [
-      { id: "contractors-50", leads: 50, price: 49, pricePerLead: 0.98, label: "Starter" },
-      { id: "contractors-200", leads: 200, price: 149, pricePerLead: 0.75, label: "Growth", popular: true },
-      { id: "contractors-500", leads: 500, price: 299, pricePerLead: 0.6, label: "Scale" },
-      { id: "contractors-1000", leads: 1000, price: 499, pricePerLead: 0.5, label: "Enterprise" },
+    plans: [
+      {
+        id: "contractors-starter",
+        name: "Starter",
+        leadsPerMonth: 100,
+        price: 79,
+        pricePerLead: 0.79,
+        features: ["100 leads/month", "CSV delivery", "Email support"],
+      },
+      {
+        id: "contractors-growth",
+        name: "Growth",
+        leadsPerMonth: 500,
+        price: 249,
+        pricePerLead: 0.50,
+        popular: true,
+        features: ["500 leads/month", "CSV delivery", "Priority support", "Custom filters"],
+      },
+      {
+        id: "contractors-scale",
+        name: "Scale",
+        leadsPerMonth: 1000,
+        price: 399,
+        pricePerLead: 0.40,
+        features: ["1,000 leads/month", "CSV delivery", "Priority support", "Custom filters", "Dedicated rep"],
+      },
+      {
+        id: "contractors-enterprise",
+        name: "Enterprise",
+        leadsPerMonth: 5000,
+        price: 999,
+        pricePerLead: 0.20,
+        features: ["5,000 leads/month", "CSV + API access", "Dedicated rep", "Custom filters", "SLA guarantee"],
+      },
     ],
   },
   {
@@ -46,7 +76,7 @@ export const leadCategories: LeadCategory[] = [
     name: "Real Estate Leads",
     tagline: "Motivated sellers, tax delinquent, pre-foreclosure",
     description:
-      "Distressed property owners identified through public court and tax records. High-intent seller leads for agents and investors.",
+      "Distressed property owners identified through public court and tax records. High-intent seller leads for agents and investors — refreshed monthly.",
     icon: "building",
     fields: [
       "Owner Name",
@@ -58,11 +88,40 @@ export const leadCategories: LeadCategory[] = [
       "Estimated Equity",
       "Record Date",
     ],
-    bundles: [
-      { id: "realestate-50", leads: 50, price: 79, pricePerLead: 1.58, label: "Starter" },
-      { id: "realestate-200", leads: 200, price: 249, pricePerLead: 1.25, label: "Growth", popular: true },
-      { id: "realestate-500", leads: 500, price: 499, pricePerLead: 1.0, label: "Scale" },
-      { id: "realestate-1000", leads: 1000, price: 799, pricePerLead: 0.8, label: "Enterprise" },
+    plans: [
+      {
+        id: "realestate-starter",
+        name: "Starter",
+        leadsPerMonth: 100,
+        price: 99,
+        pricePerLead: 0.99,
+        features: ["100 leads/month", "CSV delivery", "Email support"],
+      },
+      {
+        id: "realestate-growth",
+        name: "Growth",
+        leadsPerMonth: 500,
+        price: 349,
+        pricePerLead: 0.70,
+        popular: true,
+        features: ["500 leads/month", "CSV delivery", "Priority support", "Custom filters"],
+      },
+      {
+        id: "realestate-scale",
+        name: "Scale",
+        leadsPerMonth: 1000,
+        price: 549,
+        pricePerLead: 0.55,
+        features: ["1,000 leads/month", "CSV delivery", "Priority support", "Custom filters", "Dedicated rep"],
+      },
+      {
+        id: "realestate-enterprise",
+        name: "Enterprise",
+        leadsPerMonth: 5000,
+        price: 1499,
+        pricePerLead: 0.30,
+        features: ["5,000 leads/month", "CSV + API access", "Dedicated rep", "Custom filters", "SLA guarantee"],
+      },
     ],
   },
   {
@@ -70,7 +129,7 @@ export const leadCategories: LeadCategory[] = [
     name: "Insurance Leads",
     tagline: "Auto, commercial auto, health, life",
     description:
-      "Consumers and businesses actively needing insurance coverage. Sourced from registration data, business filings, and public records.",
+      "Consumers and businesses actively needing insurance coverage. Sourced from registration data, business filings, and public records — updated monthly.",
     icon: "shield",
     fields: [
       "Full Name",
@@ -81,11 +140,40 @@ export const leadCategories: LeadCategory[] = [
       "Insurance Type Needed",
       "Source",
     ],
-    bundles: [
-      { id: "insurance-50", leads: 50, price: 69, pricePerLead: 1.38, label: "Starter" },
-      { id: "insurance-200", leads: 200, price: 199, pricePerLead: 1.0, label: "Growth", popular: true },
-      { id: "insurance-500", leads: 500, price: 399, pricePerLead: 0.8, label: "Scale" },
-      { id: "insurance-1000", leads: 1000, price: 649, pricePerLead: 0.65, label: "Enterprise" },
+    plans: [
+      {
+        id: "insurance-starter",
+        name: "Starter",
+        leadsPerMonth: 100,
+        price: 89,
+        pricePerLead: 0.89,
+        features: ["100 leads/month", "CSV delivery", "Email support"],
+      },
+      {
+        id: "insurance-growth",
+        name: "Growth",
+        leadsPerMonth: 500,
+        price: 299,
+        pricePerLead: 0.60,
+        popular: true,
+        features: ["500 leads/month", "CSV delivery", "Priority support", "Custom filters"],
+      },
+      {
+        id: "insurance-scale",
+        name: "Scale",
+        leadsPerMonth: 1000,
+        price: 449,
+        pricePerLead: 0.45,
+        features: ["1,000 leads/month", "CSV delivery", "Priority support", "Custom filters", "Dedicated rep"],
+      },
+      {
+        id: "insurance-enterprise",
+        name: "Enterprise",
+        leadsPerMonth: 5000,
+        price: 1199,
+        pricePerLead: 0.24,
+        features: ["5,000 leads/month", "CSV + API access", "Dedicated rep", "Custom filters", "SLA guarantee"],
+      },
     ],
   },
   {
@@ -93,7 +181,7 @@ export const leadCategories: LeadCategory[] = [
     name: "Mortgage Leads",
     tagline: "New homeowners, refinance candidates",
     description:
-      "Recent property buyers and refinance-eligible homeowners from county deed recordings. Perfect for loan officers and mortgage brokers.",
+      "Recent property buyers and refinance-eligible homeowners from county deed recordings. Perfect for loan officers and mortgage brokers — fresh data monthly.",
     icon: "dollar",
     fields: [
       "Buyer Name",
@@ -105,11 +193,40 @@ export const leadCategories: LeadCategory[] = [
       "Lender",
       "Recording Date",
     ],
-    bundles: [
-      { id: "mortgage-50", leads: 50, price: 89, pricePerLead: 1.78, label: "Starter" },
-      { id: "mortgage-200", leads: 200, price: 279, pricePerLead: 1.4, label: "Growth", popular: true },
-      { id: "mortgage-500", leads: 500, price: 549, pricePerLead: 1.1, label: "Scale" },
-      { id: "mortgage-1000", leads: 1000, price: 899, pricePerLead: 0.9, label: "Enterprise" },
+    plans: [
+      {
+        id: "mortgage-starter",
+        name: "Starter",
+        leadsPerMonth: 100,
+        price: 109,
+        pricePerLead: 1.09,
+        features: ["100 leads/month", "CSV delivery", "Email support"],
+      },
+      {
+        id: "mortgage-growth",
+        name: "Growth",
+        leadsPerMonth: 500,
+        price: 399,
+        pricePerLead: 0.80,
+        popular: true,
+        features: ["500 leads/month", "CSV delivery", "Priority support", "Custom filters"],
+      },
+      {
+        id: "mortgage-scale",
+        name: "Scale",
+        leadsPerMonth: 1000,
+        price: 649,
+        pricePerLead: 0.65,
+        features: ["1,000 leads/month", "CSV delivery", "Priority support", "Custom filters", "Dedicated rep"],
+      },
+      {
+        id: "mortgage-enterprise",
+        name: "Enterprise",
+        leadsPerMonth: 5000,
+        price: 1799,
+        pricePerLead: 0.36,
+        features: ["5,000 leads/month", "CSV + API access", "Dedicated rep", "Custom filters", "SLA guarantee"],
+      },
     ],
   },
   {
@@ -117,7 +234,7 @@ export const leadCategories: LeadCategory[] = [
     name: "New Business Leads",
     tagline: "Fresh LLC & Corp formations daily",
     description:
-      "Brand new businesses filed with the Secretary of State. They need everything — insurance, web design, payroll, banking, accounting.",
+      "Brand new businesses filed with the Secretary of State. They need everything — insurance, web design, payroll, banking, accounting. Updated monthly.",
     icon: "store",
     fields: [
       "Entity Name",
@@ -129,11 +246,40 @@ export const leadCategories: LeadCategory[] = [
       "Filing Date",
       "State",
     ],
-    bundles: [
-      { id: "newbusiness-100", leads: 100, price: 39, pricePerLead: 0.39, label: "Starter" },
-      { id: "newbusiness-500", leads: 500, price: 129, pricePerLead: 0.26, label: "Growth", popular: true },
-      { id: "newbusiness-1000", leads: 1000, price: 199, pricePerLead: 0.2, label: "Scale" },
-      { id: "newbusiness-5000", leads: 5000, price: 699, pricePerLead: 0.14, label: "Enterprise" },
+    plans: [
+      {
+        id: "newbusiness-starter",
+        name: "Starter",
+        leadsPerMonth: 200,
+        price: 49,
+        pricePerLead: 0.25,
+        features: ["200 leads/month", "CSV delivery", "Email support"],
+      },
+      {
+        id: "newbusiness-growth",
+        name: "Growth",
+        leadsPerMonth: 1000,
+        price: 149,
+        pricePerLead: 0.15,
+        popular: true,
+        features: ["1,000 leads/month", "CSV delivery", "Priority support", "Custom filters"],
+      },
+      {
+        id: "newbusiness-scale",
+        name: "Scale",
+        leadsPerMonth: 2500,
+        price: 299,
+        pricePerLead: 0.12,
+        features: ["2,500 leads/month", "CSV delivery", "Priority support", "Custom filters", "Dedicated rep"],
+      },
+      {
+        id: "newbusiness-enterprise",
+        name: "Enterprise",
+        leadsPerMonth: 10000,
+        price: 799,
+        pricePerLead: 0.08,
+        features: ["10,000 leads/month", "CSV + API access", "Dedicated rep", "Custom filters", "SLA guarantee"],
+      },
     ],
   },
   {
@@ -141,7 +287,7 @@ export const leadCategories: LeadCategory[] = [
     name: "Auto & Fleet Leads",
     tagline: "Commercial auto, trucking, fleet operators",
     description:
-      "Motor carriers, fleet operators, and commercial vehicle owners from federal and state registrations. Ideal for commercial auto insurance agents.",
+      "Motor carriers, fleet operators, and commercial vehicle owners from federal and state registrations. Ideal for commercial auto insurance agents — refreshed monthly.",
     icon: "truck",
     fields: [
       "Company Name",
@@ -153,11 +299,40 @@ export const leadCategories: LeadCategory[] = [
       "Fleet Size",
       "Cargo Type",
     ],
-    bundles: [
-      { id: "automotive-100", leads: 100, price: 59, pricePerLead: 0.59, label: "Starter" },
-      { id: "automotive-500", leads: 500, price: 199, pricePerLead: 0.4, label: "Growth", popular: true },
-      { id: "automotive-1000", leads: 1000, price: 349, pricePerLead: 0.35, label: "Scale" },
-      { id: "automotive-5000", leads: 5000, price: 999, pricePerLead: 0.2, label: "Enterprise" },
+    plans: [
+      {
+        id: "automotive-starter",
+        name: "Starter",
+        leadsPerMonth: 200,
+        price: 69,
+        pricePerLead: 0.35,
+        features: ["200 leads/month", "CSV delivery", "Email support"],
+      },
+      {
+        id: "automotive-growth",
+        name: "Growth",
+        leadsPerMonth: 1000,
+        price: 199,
+        pricePerLead: 0.20,
+        popular: true,
+        features: ["1,000 leads/month", "CSV delivery", "Priority support", "Custom filters"],
+      },
+      {
+        id: "automotive-scale",
+        name: "Scale",
+        leadsPerMonth: 2500,
+        price: 399,
+        pricePerLead: 0.16,
+        features: ["2,500 leads/month", "CSV delivery", "Priority support", "Custom filters", "Dedicated rep"],
+      },
+      {
+        id: "automotive-enterprise",
+        name: "Enterprise",
+        leadsPerMonth: 10000,
+        price: 999,
+        pricePerLead: 0.10,
+        features: ["10,000 leads/month", "CSV + API access", "Dedicated rep", "Custom filters", "SLA guarantee"],
+      },
     ],
   },
 ];
@@ -166,10 +341,10 @@ export function getCategoryById(id: string) {
   return leadCategories.find((c) => c.id === id);
 }
 
-export function getBundleById(bundleId: string) {
+export function getPlanById(planId: string) {
   for (const cat of leadCategories) {
-    const bundle = cat.bundles.find((b) => b.id === bundleId);
-    if (bundle) return { category: cat, bundle };
+    const plan = cat.plans.find((p) => p.id === planId);
+    if (plan) return { category: cat, plan };
   }
   return null;
 }
