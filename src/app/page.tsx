@@ -377,63 +377,33 @@ export default function Home() {
             {productCategories.map((cat, i) => (
               <Link key={cat.id} href={`/leads/${cat.id}`} className="block h-full">
                 <div
-                  className="holo-card card-reveal group relative rounded-2xl cursor-pointer overflow-hidden h-full hover:-translate-y-3 hover:scale-[1.03] transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
-                  style={{ animationDelay: `${i * 80}ms`, background: "#020a18" }}
+                  className="holo-card card-reveal group relative rounded-2xl cursor-pointer overflow-hidden h-full hover:-translate-y-3 hover:scale-[1.02]"
+                  style={{ animationDelay: `${i * 80}ms` }}
                 >
-                  {/* Hologram scan lines */}
-                  <div className="holo-scanlines absolute inset-0 pointer-events-none rounded-2xl z-[1]" />
-
-                  {/* Grid pattern overlay */}
-                  <div className="absolute inset-0 opacity-[0.08] z-[1]" style={{
-                    backgroundImage: "linear-gradient(rgba(0,210,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(0,210,255,0.5) 1px, transparent 1px)",
-                    backgroundSize: "24px 24px",
-                  }} />
-
-                  {/* Top neon edge */}
-                  <div className="absolute top-0 left-[10%] right-[10%] h-px z-[2]" style={{ background: "linear-gradient(90deg, transparent, #00d2ff, transparent)" }} />
-                  <div className="absolute top-[-1px] left-[15%] right-[15%] h-[3px] blur-[3px] z-[2]" style={{ background: "linear-gradient(90deg, transparent, rgba(0,210,255,0.6), transparent)" }} />
-
-                  {/* Bottom neon edge */}
-                  <div className="absolute bottom-0 left-[20%] right-[20%] h-px z-[2]" style={{ background: "linear-gradient(90deg, transparent, rgba(0,210,255,0.4), transparent)" }} />
-
-                  {/* Hover glow orb */}
-                  <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full blur-3xl transition-all duration-500 z-0 opacity-0 group-hover:opacity-100" style={{ background: "radial-gradient(circle, rgba(0,200,255,0.18), transparent 70%)" }} />
-
-                  {/* Corner accents */}
-                  <div className="absolute top-3 left-3 w-4 h-4 z-[2]" style={{ borderTop: "1px solid rgba(0,210,255,0.5)", borderLeft: "1px solid rgba(0,210,255,0.5)" }} />
-                  <div className="absolute top-3 right-3 w-4 h-4 z-[2]" style={{ borderTop: "1px solid rgba(0,210,255,0.5)", borderRight: "1px solid rgba(0,210,255,0.5)" }} />
-                  <div className="absolute bottom-3 left-3 w-4 h-4 z-[2]" style={{ borderBottom: "1px solid rgba(0,210,255,0.5)", borderLeft: "1px solid rgba(0,210,255,0.5)" }} />
-                  <div className="absolute bottom-3 right-3 w-4 h-4 z-[2]" style={{ borderBottom: "1px solid rgba(0,210,255,0.5)", borderRight: "1px solid rgba(0,210,255,0.5)" }} />
-
-                  <div className="relative z-[3] p-8 md:p-9 flex flex-col flex-1">
-                    <div className="neon-icon w-13 h-13 rounded-xl flex items-center justify-center mb-6 border transition-all duration-300 group-hover:scale-110" style={{ background: "rgba(0,210,255,0.08)", borderColor: "rgba(0,210,255,0.4)" }}>
-                      <div style={{ color: "#00e0ff", filter: "drop-shadow(0 0 4px rgba(0,210,255,0.6))" }}>
-                        {categoryIcons[cat.id]}
-                      </div>
+                  <div className="relative z-[2] p-8 md:p-9 flex flex-col flex-1">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 bg-blue/8 border border-blue/15 text-blue group-hover:bg-blue/12 group-hover:border-blue/30 group-hover:scale-110 transition-all duration-300">
+                      {categoryIcons[cat.id]}
                     </div>
 
-                    <h3 className="text-xl font-extrabold tracking-tight" style={{ color: "#ffffff", textShadow: "0 0 20px rgba(0,210,255,0.15)" }}>
+                    <h3 className="text-xl font-extrabold tracking-tight text-foreground">
                       {cat.name}
                     </h3>
-                    <p className="mt-2 text-sm font-medium leading-relaxed flex-1" style={{ color: "rgba(0,220,255,0.45)" }}>
+                    <p className="mt-2 text-sm font-medium leading-relaxed flex-1 text-foreground/40">
                       {cat.tagline}
                     </p>
 
-                    <div className="mt-7 pt-5 flex items-center justify-between" style={{ borderTop: "1px solid rgba(0,210,255,0.15)" }}>
+                    <div className="mt-7 pt-5 border-t border-blue/10 flex items-center justify-between">
                       <div>
-                        <span className="text-xs font-bold uppercase tracking-widest" style={{ color: "rgba(0,210,255,0.3)" }}>From </span>
-                        <span className="neon-price text-lg font-black" style={{ color: "#00e0ff" }}>${cat.bundles[0].price}</span>
+                        <span className="text-xs font-bold text-foreground/20 uppercase tracking-widest">From </span>
+                        <span className="text-lg font-black text-blue">${cat.bundles[0].price}</span>
                       </div>
-                      <div className="neon-arrow w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300" style={{ borderColor: "rgba(0,210,255,0.25)" }}>
-                        <svg className="w-4 h-4 transition-all duration-300 group-hover:translate-x-0.5" style={{ color: "#00d2ff", filter: "drop-shadow(0 0 3px rgba(0,210,255,0.5))" }} viewBox="0 0 20 20" fill="currentColor">
+                      <div className="w-10 h-10 rounded-full border border-blue/15 flex items-center justify-center group-hover:border-blue/40 group-hover:bg-blue/5 transition-all duration-300">
+                        <svg className="w-4 h-4 text-blue/40 group-hover:text-blue group-hover:translate-x-0.5 transition-all duration-300" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
                         </svg>
                       </div>
                     </div>
                   </div>
-
-                  {/* Outer neon bloom on hover */}
-                  <div className="absolute -inset-4 rounded-3xl blur-2xl transition-all duration-500 -z-10 opacity-0 group-hover:opacity-100" style={{ background: "radial-gradient(circle, rgba(0,200,255,0.12), transparent 70%)" }} />
                 </div>
               </Link>
             ))}
