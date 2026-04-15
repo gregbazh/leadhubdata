@@ -39,39 +39,92 @@ body {
   50% { transform: translateY(12px); opacity: 1; }
 }
 
-/* ─── HOLOGRAM CARDS ─── */
+/* ─── NEON HOLOGRAM CARDS ─── */
 .holo-card {
-  --holo-color: rgba(0, 212, 255, 1);
-  --holo-glow: rgba(0, 180, 255, 0.5);
+  border: 1px solid rgba(0, 210, 255, 0.35);
+  box-shadow:
+    0 0 12px rgba(0, 210, 255, 0.15),
+    0 0 4px rgba(0, 210, 255, 0.1),
+    inset 0 0 20px rgba(0, 210, 255, 0.03);
+  animation: neon-breathe 3s ease-in-out infinite;
+}
+
+.holo-card:hover {
+  border-color: rgba(0, 210, 255, 0.7);
+  box-shadow:
+    0 0 20px rgba(0, 210, 255, 0.35),
+    0 0 50px rgba(0, 180, 255, 0.2),
+    0 0 80px rgba(0, 140, 255, 0.1),
+    inset 0 0 40px rgba(0, 210, 255, 0.05);
 }
 
 .holo-scanlines {
   background: repeating-linear-gradient(
     0deg,
     transparent,
-    transparent 3px,
-    rgba(0, 212, 255, 0.025) 3px,
-    rgba(0, 212, 255, 0.025) 4px
+    transparent 2px,
+    rgba(0, 220, 255, 0.04) 2px,
+    rgba(0, 220, 255, 0.04) 3px
   );
-  animation: holo-scan 8s linear infinite;
+  animation: holo-scan 6s linear infinite;
 }
 
 .holo-card:hover .holo-scanlines {
-  animation: holo-scan 4s linear infinite;
+  animation: holo-scan 3s linear infinite;
   background: repeating-linear-gradient(
     0deg,
     transparent,
-    transparent 3px,
-    rgba(0, 212, 255, 0.05) 3px,
-    rgba(0, 212, 255, 0.05) 4px
+    transparent 2px,
+    rgba(0, 220, 255, 0.07) 2px,
+    rgba(0, 220, 255, 0.07) 3px
   );
 }
 
-.holo-card:hover {
+.neon-icon {
   box-shadow:
-    0 0 15px rgba(0, 212, 255, 0.15),
-    0 0 40px rgba(0, 180, 255, 0.08),
-    inset 0 0 30px rgba(0, 212, 255, 0.03);
+    0 0 10px rgba(0, 210, 255, 0.3),
+    0 0 25px rgba(0, 210, 255, 0.1),
+    inset 0 0 8px rgba(0, 210, 255, 0.1);
+}
+
+.holo-card:hover .neon-icon {
+  box-shadow:
+    0 0 15px rgba(0, 210, 255, 0.5),
+    0 0 35px rgba(0, 210, 255, 0.2),
+    inset 0 0 12px rgba(0, 210, 255, 0.15);
+}
+
+.neon-price {
+  text-shadow:
+    0 0 6px rgba(0, 210, 255, 0.7),
+    0 0 18px rgba(0, 180, 255, 0.4),
+    0 0 40px rgba(0, 140, 255, 0.2);
+}
+
+.neon-arrow {
+  box-shadow: 0 0 8px rgba(0, 210, 255, 0.15);
+}
+
+.holo-card:hover .neon-arrow {
+  border-color: rgba(0, 210, 255, 0.5) !important;
+  box-shadow:
+    0 0 12px rgba(0, 210, 255, 0.3),
+    0 0 25px rgba(0, 210, 255, 0.1);
+}
+
+@keyframes neon-breathe {
+  0%, 100% {
+    box-shadow:
+      0 0 12px rgba(0, 210, 255, 0.15),
+      0 0 4px rgba(0, 210, 255, 0.1),
+      inset 0 0 20px rgba(0, 210, 255, 0.03);
+  }
+  50% {
+    box-shadow:
+      0 0 18px rgba(0, 210, 255, 0.25),
+      0 0 8px rgba(0, 210, 255, 0.15),
+      inset 0 0 25px rgba(0, 210, 255, 0.05);
+  }
 }
 
 @keyframes holo-scan {
