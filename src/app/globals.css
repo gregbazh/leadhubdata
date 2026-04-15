@@ -63,8 +63,8 @@ body {
   position: absolute;
   top: -20%;
   bottom: -20%;
-  width: 45px;
-  left: -60px;
+  width: 120px;
+  left: -140px;
   background: linear-gradient(90deg, transparent, rgba(0, 210, 255, 0.18), transparent);
   transform: skewX(-12deg);
   pointer-events: none;
@@ -86,9 +86,9 @@ body {
 }
 
 @keyframes holo-shimmer {
-  0%   { left: -60px; }
-  50%  { left: calc(100% + 60px); }
-  100% { left: calc(100% + 60px); }
+  0%   { left: -140px; }
+  50%  { left: calc(100% + 140px); }
+  100% { left: calc(100% + 140px); }
 }
 
 /* ─── CARD REVEAL (replaces per-card framer-motion) ─── */
