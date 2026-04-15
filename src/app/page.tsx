@@ -164,7 +164,7 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
 export default function Home() {
   const [leadsOpen, setLeadsOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeLeadCat, setActiveLeadCat] = useState(productCategories[0].id);
+  const [activeLeadCat, setActiveLeadCat] = useState<string | null>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
   const heroOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
@@ -432,7 +432,7 @@ export default function Home() {
             </h2>
           </AnimateIn>
 
-          <RevealOnScroll className="max-w-2xl mx-auto">
+          <RevealOnScroll className="max-w-3xl mx-auto">
             {/* Tiles */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
               {productCategories.map((cat, i) => (
@@ -443,76 +443,90 @@ export default function Home() {
                   onMouseEnter={() => setActiveLeadCat(cat.id)}
                   onClick={() => setActiveLeadCat(cat.id)}
                 >
-                  <div className={`w-9 h-9 md:w-10 md:h-10 rounded-lg flex-shrink-0 flex items-center justify-center border transition-all duration-300 ${activeLeadCat === cat.id ? "bg-blue/15 border-blue/35 text-blue" : "bg-blue/6 border-blue/12 text-blue/60"}`}>
+                  <div className={`w-9 h-9 md:w-10 md:h-10 rounded-lg flex-shrink-0 flex items-center justify-center border transition-all duration-300 ${activeLeadCat === cat.id ? "bg-blue border-blue text-white" : "bg-blue/6 border-blue/12 text-blue/60"}`}>
                     {categoryIcons[cat.id]}
                   </div>
-                  <span className={`text-sm md:text-[15px] font-bold tracking-tight leading-tight transition-colors duration-200 ${activeLeadCat === cat.id ? "text-foreground" : "text-foreground/60"}`}>{cat.name}</span>
+                  <span className={`text-sm md:text-[15px] font-bold tracking-tight leading-tight transition-colors duration-200 ${activeLeadCat === cat.id ? "text-foreground" : "text-foreground/50"}`}>{cat.name}</span>
                 </button>
               ))}
             </div>
 
-            {/* Hologram projection panel */}
+            {/* Prompt / Detail panel area */}
             <div className="mt-6 md:mt-8">
-              <div className="holo-projection rounded-2xl relative overflow-hidden">
-                {/* Scan lines */}
-                <div className="holo-projection-scanlines absolute inset-0 pointer-events-none z-[1] rounded-2xl" />
-                {/* Top beam glow */}
-                <div className="absolute top-0 left-[10%] right-[10%] h-px z-[2]" style={{ background: "linear-gradient(90deg, transparent, rgba(0,200,255,0.6), transparent)" }} />
-                <div className="absolute top-0 left-[15%] right-[15%] h-[3px] blur-[4px] z-[2]" style={{ background: "linear-gradient(90deg, transparent, rgba(0,200,255,0.35), transparent)" }} />
-
-                {productCategories.map((cat) => (
-                  <div
-                    key={cat.id}
-                    className={`relative z-[3] transition-all duration-300 ${activeLeadCat === cat.id ? "block" : "hidden"}`}
+              <AnimatePresence mode="wait">
+                {!activeLeadCat ? (
+                  <motion.div
+                    key="prompt"
+                    className="flex items-center justify-center gap-2 py-8"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
                   >
-                    <div className="p-6 md:p-8">
-                      <div className="flex flex-col md:flex-row md:items-start gap-5 md:gap-8">
-                        {/* Left: info */}
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(0,200,255,0.1)", border: "1px solid rgba(0,200,255,0.2)" }}>
-                              <div style={{ color: "#00d4ff" }}>{categoryIcons[cat.id]}</div>
-                            </div>
-                            <h3 className="text-lg md:text-xl font-extrabold" style={{ color: "#e0f6ff" }}>{cat.name}</h3>
-                          </div>
-                          <p className="text-sm leading-relaxed" style={{ color: "rgba(160,210,240,0.7)" }}>{cat.description}</p>
-                          <div className="mt-4 flex flex-wrap gap-2">
-                            {cat.fields.slice(0, 5).map((field) => (
-                              <span key={field} className="px-2.5 py-1 rounded-full text-[11px] font-semibold" style={{ background: "rgba(0,180,255,0.08)", color: "rgba(0,200,255,0.7)", border: "1px solid rgba(0,180,255,0.12)" }}>
-                                {field}
-                              </span>
-                            ))}
-                            {cat.fields.length > 5 && (
-                              <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold" style={{ color: "rgba(0,200,255,0.5)" }}>
-                                +{cat.fields.length - 5} more
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                    <motion.div
+                      className="w-1.5 h-1.5 rounded-full bg-blue/40"
+                      animate={{ scale: [1, 1.5, 1], opacity: [0.4, 1, 0.4] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    <span className="text-sm text-foreground/25 font-medium">Hover to explore</span>
+                  </motion.div>
+                ) : (
+                  (() => {
+                    const cat = productCategories.find((c) => c.id === activeLeadCat)!;
+                    return (
+                      <motion.div
+                        key={activeLeadCat}
+                        className="detail-panel relative rounded-2xl overflow-hidden"
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                      >
+                        {/* Shimmer line */}
+                        <div className="detail-shimmer" />
 
-                        {/* Right: pricing */}
-                        <div className="md:w-56 flex-shrink-0 rounded-xl p-4 md:p-5" style={{ background: "rgba(0,180,255,0.05)", border: "1px solid rgba(0,180,255,0.1)" }}>
-                          <div className="flex items-baseline gap-1 mb-1">
-                            <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "rgba(0,200,255,0.45)" }}>Promo</span>
-                            <span className="ml-auto text-2xl font-black" style={{ color: "#00e0ff", textShadow: "0 0 12px rgba(0,210,255,0.3)" }}>$1</span>
-                            <span className="text-xs font-semibold" style={{ color: "rgba(0,200,255,0.5)" }}>/lead</span>
+                        <div className="p-5 md:p-7">
+                          <div className="flex flex-col md:flex-row md:items-start gap-5 md:gap-8">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-3 mb-3">
+                                <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-blue/8 border border-blue/15 text-blue">
+                                  {categoryIcons[cat.id]}
+                                </div>
+                                <h3 className="text-lg md:text-xl font-extrabold text-foreground tracking-tight">{cat.name}</h3>
+                              </div>
+                              <p className="text-sm text-foreground/45 font-medium leading-relaxed">{cat.description}</p>
+                              <div className="mt-4 flex flex-wrap gap-1.5">
+                                {cat.fields.map((field) => (
+                                  <span key={field} className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue/5 text-blue/60 border border-blue/8">
+                                    {field}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="md:w-52 flex-shrink-0 rounded-xl p-4 bg-gradient-to-br from-blue/[0.04] to-blue/[0.08] border border-blue/10">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue/10 text-blue">Promo</span>
+                              </div>
+                              <div className="flex items-baseline gap-0.5 mb-1">
+                                <span className="text-3xl font-black text-blue">$1</span>
+                                <span className="text-sm font-semibold text-foreground/30">/lead</span>
+                              </div>
+                              <p className="text-[11px] text-foreground/30 font-medium mb-4">Limited time on all bundles</p>
+                              <Link
+                                href={`/leads/${cat.id}`}
+                                className="block text-center text-sm font-bold text-white bg-blue py-2.5 rounded-lg hover:bg-blue-dark transition-colors duration-200"
+                              >
+                                View bundles →
+                              </Link>
+                            </div>
                           </div>
-                          <p className="text-[11px] mb-4" style={{ color: "rgba(160,210,240,0.5)" }}>
-                            Limited time offer on all bundles
-                          </p>
-                          <Link
-                            href={`/leads/${cat.id}`}
-                            className="block text-center text-sm font-bold py-2.5 rounded-lg transition-all duration-300 hover:brightness-110"
-                            style={{ background: "rgba(0,180,255,0.2)", color: "#00e0ff", border: "1px solid rgba(0,180,255,0.25)" }}
-                          >
-                            View bundles →
-                          </Link>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                      </motion.div>
+                    );
+                  })()
+                )}
+              </AnimatePresence>
             </div>
           </RevealOnScroll>
         </div>
