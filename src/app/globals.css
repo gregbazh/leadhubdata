@@ -66,18 +66,40 @@ body {
   animation: tile-shimmer 3s ease-in-out infinite;
 }
 
-.group:hover .lead-tile {
-  border-color: rgba(0, 120, 255, 0.3);
-  background: rgba(225, 240, 255, 0.65);
+.lead-tile-active {
+  border-color: rgba(0, 120, 255, 0.3) !important;
+  background: rgba(225, 240, 255, 0.7) !important;
   transform: scale(1.03);
 }
 
-.tile-dropdown {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 120, 255, 0.12);
-  box-shadow: 0 12px 40px rgba(0, 60, 180, 0.08);
+/* ─── HOLOGRAM PROJECTION ─── */
+.holo-projection {
+  background: linear-gradient(
+    160deg,
+    rgba(2, 12, 30, 0.97) 0%,
+    rgba(3, 15, 40, 0.98) 40%,
+    rgba(2, 18, 45, 0.97) 100%
+  );
+  border: 1px solid rgba(0, 180, 255, 0.18);
+  box-shadow:
+    0 20px 60px rgba(0, 40, 120, 0.15),
+    inset 0 1px 0 rgba(0, 200, 255, 0.1);
+}
+
+.holo-projection-scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 200, 255, 0.02) 3px,
+    rgba(0, 200, 255, 0.02) 4px
+  );
+  animation: projection-scan 8s linear infinite;
+}
+
+@keyframes projection-scan {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 200px; }
 }
 
 @keyframes tile-shimmer {

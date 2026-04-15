@@ -164,6 +164,7 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
 export default function Home() {
   const [leadsOpen, setLeadsOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeLeadCat, setActiveLeadCat] = useState(productCategories[0].id);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
   const heroOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
@@ -431,35 +432,88 @@ export default function Home() {
             </h2>
           </AnimateIn>
 
-          <RevealOnScroll className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 max-w-2xl mx-auto">
-            {productCategories.map((cat, i) => (
-              <div key={cat.id} className="relative group card-reveal" style={{ animationDelay: `${i * 60}ms` }}>
-                <Link href={`/leads/${cat.id}`}>
-                  <div className="lead-tile flex items-center gap-3 px-4 py-3.5 md:px-5 md:py-4 rounded-xl cursor-pointer">
-                    <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg flex-shrink-0 flex items-center justify-center bg-blue/6 border border-blue/12 text-blue group-hover:bg-blue/12 group-hover:border-blue/30 transition-all duration-300">
-                      {categoryIcons[cat.id]}
-                    </div>
-                    <span className="text-sm md:text-[15px] font-bold text-foreground tracking-tight leading-tight">{cat.name}</span>
+          <RevealOnScroll className="max-w-2xl mx-auto">
+            {/* Tiles */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
+              {productCategories.map((cat, i) => (
+                <button
+                  key={cat.id}
+                  className={`card-reveal lead-tile flex items-center gap-3 px-4 py-3.5 md:px-5 md:py-4 rounded-xl cursor-pointer text-left ${activeLeadCat === cat.id ? "lead-tile-active" : ""}`}
+                  style={{ animationDelay: `${i * 60}ms` }}
+                  onMouseEnter={() => setActiveLeadCat(cat.id)}
+                  onClick={() => setActiveLeadCat(cat.id)}
+                >
+                  <div className={`w-9 h-9 md:w-10 md:h-10 rounded-lg flex-shrink-0 flex items-center justify-center border transition-all duration-300 ${activeLeadCat === cat.id ? "bg-blue/15 border-blue/35 text-blue" : "bg-blue/6 border-blue/12 text-blue/60"}`}>
+                    {categoryIcons[cat.id]}
                   </div>
-                </Link>
+                  <span className={`text-sm md:text-[15px] font-bold tracking-tight leading-tight transition-colors duration-200 ${activeLeadCat === cat.id ? "text-foreground" : "text-foreground/60"}`}>{cat.name}</span>
+                </button>
+              ))}
+            </div>
 
-                {/* Hover detail dropdown */}
-                <div className="absolute top-full left-0 right-0 z-20 pt-1.5 opacity-0 translate-y-1 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-250">
-                  <div className="tile-dropdown rounded-xl p-4 md:p-5">
-                    <p className="text-xs md:text-sm text-foreground/50 font-medium leading-relaxed">{cat.description}</p>
-                    <div className="mt-3 pt-3 border-t border-blue/8 flex items-center justify-between">
-                      <div>
-                        <span className="text-[10px] md:text-xs font-bold text-foreground/20 uppercase tracking-widest">From </span>
-                        <span className="text-sm md:text-base font-black text-blue">${cat.bundles[0].price}</span>
+            {/* Hologram projection panel */}
+            <div className="mt-6 md:mt-8">
+              <div className="holo-projection rounded-2xl relative overflow-hidden">
+                {/* Scan lines */}
+                <div className="holo-projection-scanlines absolute inset-0 pointer-events-none z-[1] rounded-2xl" />
+                {/* Top beam glow */}
+                <div className="absolute top-0 left-[10%] right-[10%] h-px z-[2]" style={{ background: "linear-gradient(90deg, transparent, rgba(0,200,255,0.6), transparent)" }} />
+                <div className="absolute top-0 left-[15%] right-[15%] h-[3px] blur-[4px] z-[2]" style={{ background: "linear-gradient(90deg, transparent, rgba(0,200,255,0.35), transparent)" }} />
+
+                {productCategories.map((cat) => (
+                  <div
+                    key={cat.id}
+                    className={`relative z-[3] transition-all duration-300 ${activeLeadCat === cat.id ? "block" : "hidden"}`}
+                  >
+                    <div className="p-6 md:p-8">
+                      <div className="flex flex-col md:flex-row md:items-start gap-5 md:gap-8">
+                        {/* Left: info */}
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(0,200,255,0.1)", border: "1px solid rgba(0,200,255,0.2)" }}>
+                              <div style={{ color: "#00d4ff" }}>{categoryIcons[cat.id]}</div>
+                            </div>
+                            <h3 className="text-lg md:text-xl font-extrabold" style={{ color: "#e0f6ff" }}>{cat.name}</h3>
+                          </div>
+                          <p className="text-sm leading-relaxed" style={{ color: "rgba(160,210,240,0.7)" }}>{cat.description}</p>
+                          <div className="mt-4 flex flex-wrap gap-2">
+                            {cat.fields.slice(0, 5).map((field) => (
+                              <span key={field} className="px-2.5 py-1 rounded-full text-[11px] font-semibold" style={{ background: "rgba(0,180,255,0.08)", color: "rgba(0,200,255,0.7)", border: "1px solid rgba(0,180,255,0.12)" }}>
+                                {field}
+                              </span>
+                            ))}
+                            {cat.fields.length > 5 && (
+                              <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold" style={{ color: "rgba(0,200,255,0.5)" }}>
+                                +{cat.fields.length - 5} more
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Right: pricing */}
+                        <div className="md:w-56 flex-shrink-0 rounded-xl p-4 md:p-5" style={{ background: "rgba(0,180,255,0.05)", border: "1px solid rgba(0,180,255,0.1)" }}>
+                          <div className="flex items-baseline gap-1 mb-1">
+                            <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "rgba(0,200,255,0.45)" }}>Promo</span>
+                            <span className="ml-auto text-2xl font-black" style={{ color: "#00e0ff", textShadow: "0 0 12px rgba(0,210,255,0.3)" }}>$1</span>
+                            <span className="text-xs font-semibold" style={{ color: "rgba(0,200,255,0.5)" }}>/lead</span>
+                          </div>
+                          <p className="text-[11px] mb-4" style={{ color: "rgba(160,210,240,0.5)" }}>
+                            Limited time offer on all bundles
+                          </p>
+                          <Link
+                            href={`/leads/${cat.id}`}
+                            className="block text-center text-sm font-bold py-2.5 rounded-lg transition-all duration-300 hover:brightness-110"
+                            style={{ background: "rgba(0,180,255,0.2)", color: "#00e0ff", border: "1px solid rgba(0,180,255,0.25)" }}
+                          >
+                            View bundles →
+                          </Link>
+                        </div>
                       </div>
-                      <Link href={`/leads/${cat.id}`} className="text-xs md:text-sm font-bold text-blue hover:text-blue-dark transition-colors">
-                        View leads →
-                      </Link>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
+            </div>
           </RevealOnScroll>
         </div>
       </section>
