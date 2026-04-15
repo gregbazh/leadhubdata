@@ -53,7 +53,7 @@ function PlanCard({
   return (
     <motion.button
       onClick={onSelect}
-      className={`relative w-full text-left p-6 md:p-7 rounded-2xl border-2 transition-all duration-300 ${
+      className={`relative w-full h-full flex flex-col text-left p-6 md:p-7 rounded-2xl border-2 transition-all duration-300 ${
         selected
           ? "border-blue bg-blue/[0.03] shadow-[0_8px_40px_rgba(0,85,255,0.12)]"
           : "border-blue/8 bg-white hover:border-blue/20 hover:shadow-[0_10px_40px_rgba(0,85,255,0.06)]"
@@ -79,7 +79,7 @@ function PlanCard({
         </motion.div>
       )}
 
-      <div className="text-xs font-bold text-foreground/30 uppercase tracking-[0.2em]">
+      <div className="text-xs font-bold text-foreground/50 uppercase tracking-[0.2em]">
         {plan.name}
       </div>
 
@@ -87,35 +87,37 @@ function PlanCard({
         <span className="text-4xl font-black tracking-tight text-foreground">
           ${plan.price}
         </span>
-        <span className="text-sm font-semibold text-foreground/30">/mo</span>
+        <span className="text-sm font-semibold text-foreground/50">/mo</span>
       </div>
 
       <div className="mt-1 text-sm font-semibold text-blue">
         {plan.leadsPerMonth.toLocaleString()} leads/month
       </div>
 
-      <div className="mt-1 text-xs font-medium text-foreground/30">
+      <div className="mt-1 text-xs font-medium text-foreground/50">
         ${plan.pricePerLead.toFixed(2)} per lead
       </div>
 
-      <div className="mt-5 pt-5 border-t border-blue/8 space-y-2.5">
+      <div className="mt-5 pt-5 border-t border-blue/8 space-y-2.5 flex-1">
         {plan.features.map((feat) => (
           <div key={feat} className="flex items-center gap-2">
             <svg className="w-4 h-4 text-blue flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
               <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            <span className="text-sm font-medium text-foreground/50">{feat}</span>
+            <span className="text-sm font-medium text-foreground/65">{feat}</span>
           </div>
         ))}
       </div>
 
-      {plan.leadsPerMonth >= 1000 && (
+      {plan.leadsPerMonth >= 1000 ? (
         <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-full">
           <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
             <path d="M2.25 6L9 12.75l4.286-4.286a11.948 11.948 0 014.306 6.43l.776 2.898m0 0l3.182-5.511m-3.182 5.51l-5.511-3.181" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           Save {Math.round((1 - plan.pricePerLead / category.plans[0].pricePerLead) * 100)}%
         </div>
+      ) : (
+        <div className="mt-4 h-[26px]" />
       )}
     </motion.button>
   );
@@ -181,7 +183,7 @@ export default function LeadCategoryPage() {
               LEADHUB<span className="text-blue">DATA</span>
             </span>
           </Link>
-          <Link href="/" className="text-sm font-bold text-foreground/40 hover:text-blue transition-colors">
+          <Link href="/" className="text-sm font-bold text-foreground/60 hover:text-blue transition-colors">
             ← All Categories
           </Link>
         </div>
@@ -208,7 +210,7 @@ export default function LeadCategoryPage() {
           >
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-foreground/30 hover:text-blue transition-colors mb-8"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-foreground/50 hover:text-blue transition-colors mb-8"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <path d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" strokeLinecap="round" strokeLinejoin="round" />
@@ -224,13 +226,13 @@ export default function LeadCategoryPage() {
                 <h1 className="text-4xl md:text-6xl font-black tracking-[-0.04em] text-foreground leading-[0.9]">
                   {category.name}
                 </h1>
-                <p className="mt-3 text-lg font-medium text-foreground/35">
+                <p className="mt-3 text-lg font-medium text-foreground/55">
                   {category.tagline}
                 </p>
               </div>
             </div>
 
-            <p className="mt-8 text-lg text-foreground/40 font-medium max-w-2xl leading-relaxed">
+            <p className="mt-8 text-lg text-foreground/60 font-medium max-w-2xl leading-relaxed">
               {category.description}
             </p>
           </motion.div>
@@ -252,7 +254,7 @@ export default function LeadCategoryPage() {
               {category.fields.map((field) => (
                 <span
                   key={field}
-                  className="px-3 py-1.5 rounded-full text-sm font-semibold bg-blue/5 text-blue/60 border border-blue/8"
+                  className="px-3 py-1.5 rounded-full text-sm font-semibold bg-blue/5 text-blue/80 border border-blue/8"
                 >
                   {field}
                 </span>
@@ -274,7 +276,7 @@ export default function LeadCategoryPage() {
             <h2 className="text-3xl md:text-5xl font-black tracking-[-0.04em] text-foreground leading-[0.9]">
               Choose your <span className="text-blue">plan</span>
             </h2>
-            <p className="mt-4 text-foreground/35 font-medium">
+            <p className="mt-4 text-foreground/55 font-medium">
               Monthly subscription. Fresh leads delivered every month. Cancel anytime.
             </p>
           </motion.div>
@@ -318,16 +320,16 @@ export default function LeadCategoryPage() {
                     <div className="mt-2 text-2xl font-black text-foreground">
                       {selected.leadsPerMonth.toLocaleString()} {category.name} / month
                     </div>
-                    <div className="mt-1 text-sm font-medium text-foreground/35">
+                    <div className="mt-1 text-sm font-medium text-foreground/55">
                       ${selected.pricePerLead.toFixed(2)}/lead — Fresh CSV delivered monthly
                     </div>
                   </div>
                   <div className="flex items-center gap-5 shrink-0">
                     <div className="text-right">
                       <div className="text-3xl font-black text-blue">
-                        ${selected.price}<span className="text-base font-semibold text-foreground/30">/mo</span>
+                        ${selected.price}<span className="text-base font-semibold text-foreground/50">/mo</span>
                       </div>
-                      <div className="text-xs font-medium text-foreground/25">cancel anytime</div>
+                      <div className="text-xs font-medium text-foreground/45">cancel anytime</div>
                     </div>
                     <button
                       onClick={handleSubscribe}
@@ -340,7 +342,7 @@ export default function LeadCategoryPage() {
                 </div>
               ) : (
                 <div className="text-center py-4">
-                  <p className="text-lg font-semibold text-foreground/25">
+                  <p className="text-lg font-semibold text-foreground/40">
                     Select a plan above to continue
                   </p>
                 </div>
@@ -391,7 +393,7 @@ export default function LeadCategoryPage() {
                   {item.icon}
                 </div>
                 <h3 className="mt-5 text-lg font-extrabold text-foreground tracking-tight">{item.title}</h3>
-                <p className="mt-2 text-sm text-foreground/40 font-medium leading-relaxed">{item.desc}</p>
+                <p className="mt-2 text-sm text-foreground/55 font-medium leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -415,7 +417,7 @@ export default function LeadCategoryPage() {
             ].map((faq) => (
               <div key={faq.q} className="p-6 rounded-2xl border border-blue/8 hover:border-blue/15 transition-colors">
                 <h4 className="text-base font-bold text-foreground">{faq.q}</h4>
-                <p className="mt-2 text-sm text-foreground/40 font-medium leading-relaxed">{faq.a}</p>
+                <p className="mt-2 text-sm text-foreground/55 font-medium leading-relaxed">{faq.a}</p>
               </div>
             ))}
           </div>
@@ -434,11 +436,11 @@ export default function LeadCategoryPage() {
             </span>
           </div>
           <div className="flex items-center gap-8">
-            <Link href="/" className="text-sm text-foreground/25 hover:text-blue transition-colors font-medium">Home</Link>
-            <Link href="/#demo" className="text-sm text-foreground/25 hover:text-blue transition-colors font-medium">Demo</Link>
-            <Link href="/#reviews" className="text-sm text-foreground/25 hover:text-blue transition-colors font-medium">Reviews</Link>
+            <Link href="/" className="text-sm text-foreground/45 hover:text-blue transition-colors font-medium">Home</Link>
+            <Link href="/#demo" className="text-sm text-foreground/45 hover:text-blue transition-colors font-medium">Demo</Link>
+            <Link href="/#reviews" className="text-sm text-foreground/45 hover:text-blue transition-colors font-medium">Reviews</Link>
           </div>
-          <p className="text-xs text-foreground/15 font-medium">© 2026 LeadHubData</p>
+          <p className="text-xs text-foreground/35 font-medium">© 2026 LeadHubData</p>
         </div>
       </footer>
     </div>

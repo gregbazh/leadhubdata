@@ -231,7 +231,7 @@ export default function Home() {
                         </div>
                         <div>
                           <div className="text-sm font-bold text-foreground">{cat.name}</div>
-                          <div className="text-xs text-foreground/40">{cat.tagline.split(",")[0]}</div>
+                          <div className="text-xs text-foreground/55">{cat.tagline.split(",")[0]}</div>
                         </div>
                       </Link>
                     ))}
@@ -384,7 +384,7 @@ export default function Home() {
           </div>
 
           <motion.p
-            className="mt-10 text-lg md:text-xl text-foreground/35 max-w-lg mx-auto font-medium leading-relaxed"
+            className="mt-10 text-lg md:text-xl text-foreground/55 max-w-lg mx-auto font-medium leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
@@ -475,7 +475,7 @@ export default function Home() {
                       animate={{ scale: [1, 1.5, 1], opacity: [0.4, 1, 0.4] }}
                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                     />
-                    <span className="text-sm text-foreground/25 font-medium">Hover to explore</span>
+                    <span className="text-sm text-foreground/45 font-medium">Hover to explore</span>
                   </motion.div>
                 ) : (
                   (() => {
@@ -501,10 +501,10 @@ export default function Home() {
                                 </div>
                                 <h3 className="text-lg md:text-xl font-extrabold text-foreground tracking-tight">{cat.name}</h3>
                               </div>
-                              <p className="text-sm text-foreground/45 font-medium leading-relaxed">{cat.description}</p>
+                              <p className="text-sm text-foreground/60 font-medium leading-relaxed">{cat.description}</p>
                               <div className="mt-4 flex flex-wrap gap-1.5">
                                 {cat.fields.map((field) => (
-                                  <span key={field} className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue/5 text-blue/60 border border-blue/8">
+                                  <span key={field} className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue/5 text-blue/80 border border-blue/8">
                                     {field}
                                   </span>
                                 ))}
@@ -517,9 +517,9 @@ export default function Home() {
                               </div>
                               <div className="flex items-baseline gap-0.5 mb-1">
                                 <span className="text-3xl font-black text-blue">${cat.plans[0].price}</span>
-                                <span className="text-sm font-semibold text-foreground/30">/mo</span>
+                                <span className="text-sm font-semibold text-foreground/50">/mo</span>
                               </div>
-                              <p className="text-[11px] text-foreground/30 font-medium mb-4">{cat.plans[0].leadsPerMonth.toLocaleString()} leads/month to start</p>
+                              <p className="text-[11px] text-foreground/50 font-medium mb-4">{cat.plans[0].leadsPerMonth.toLocaleString()} leads/month to start</p>
                               <Link
                                 href={`/leads/${cat.id}`}
                                 className="block text-center text-sm font-bold text-white bg-blue py-2.5 rounded-lg hover:bg-blue-dark transition-colors duration-200"
@@ -554,7 +554,7 @@ export default function Home() {
                   <div className="text-4xl md:text-5xl font-black text-blue tracking-tight">
                     <AnimatedCounter target={stat.value} suffix={stat.suffix} />
                   </div>
-                  <div className="mt-2 text-sm font-semibold text-foreground/25 uppercase tracking-widest">
+                  <div className="mt-2 text-sm font-semibold text-foreground/45 uppercase tracking-widest">
                     {stat.label}
                   </div>
                 </div>
@@ -595,7 +595,7 @@ export default function Home() {
                     <div className="w-3 h-3 rounded-full bg-blue/10" />
                   </div>
                   <div className="flex-1 mx-4 h-7 rounded-lg bg-blue/[0.03] flex items-center px-3">
-                    <span className="text-xs text-foreground/30 font-medium">leadhubdata.com/leads/contractors</span>
+                    <span className="text-xs text-foreground/45 font-medium">leadhubdata.com/leads/contractors</span>
                   </div>
                 </div>
 
@@ -603,7 +603,7 @@ export default function Home() {
                   <div className="flex items-center justify-between mb-6">
                     <div>
                       <h4 className="text-lg font-extrabold">Contractor Leads</h4>
-                      <p className="text-sm text-foreground/40 font-medium">Sample data — updated today</p>
+                      <p className="text-sm text-foreground/55 font-medium">Sample data — updated today</p>
                     </div>
                     <div className="px-3 py-1.5 bg-blue/5 rounded-full flex items-center gap-2">
                       <span className="relative flex h-2 w-2">
@@ -618,11 +618,11 @@ export default function Home() {
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-blue/5">
-                          <th className="text-left py-3 px-3 md:px-4 font-bold text-foreground/25 text-xs uppercase tracking-wider">Name</th>
-                          <th className="text-left py-3 px-3 md:px-4 font-bold text-foreground/25 text-xs uppercase tracking-wider hidden md:table-cell">Address</th>
-                          <th className="text-left py-3 px-3 md:px-4 font-bold text-foreground/25 text-xs uppercase tracking-wider">Permit</th>
-                          <th className="text-left py-3 px-3 md:px-4 font-bold text-foreground/25 text-xs uppercase tracking-wider">Value</th>
-                          <th className="text-left py-3 px-3 md:px-4 font-bold text-foreground/25 text-xs uppercase tracking-wider hidden sm:table-cell">Date</th>
+                          <th className="text-left py-3 px-3 md:px-4 font-bold text-foreground/45 text-xs uppercase tracking-wider">Name</th>
+                          <th className="text-left py-3 px-3 md:px-4 font-bold text-foreground/45 text-xs uppercase tracking-wider hidden md:table-cell">Address</th>
+                          <th className="text-left py-3 px-3 md:px-4 font-bold text-foreground/45 text-xs uppercase tracking-wider">Permit</th>
+                          <th className="text-left py-3 px-3 md:px-4 font-bold text-foreground/45 text-xs uppercase tracking-wider">Value</th>
+                          <th className="text-left py-3 px-3 md:px-4 font-bold text-foreground/45 text-xs uppercase tracking-wider hidden sm:table-cell">Date</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -642,10 +642,10 @@ export default function Home() {
                             transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
                           >
                             <td className="py-3 px-3 md:px-4 font-semibold text-xs md:text-sm">{row.name}</td>
-                            <td className="py-3 px-3 md:px-4 text-foreground/50 hidden md:table-cell">{row.addr}</td>
+                            <td className="py-3 px-3 md:px-4 text-foreground/60 hidden md:table-cell">{row.addr}</td>
                             <td className="py-3 px-3 md:px-4"><span className="px-2 py-0.5 md:px-2.5 md:py-1 bg-blue/5 rounded-full text-xs font-bold text-blue">{row.permit}</span></td>
                             <td className="py-3 px-3 md:px-4 font-bold text-blue text-xs md:text-sm">{row.value}</td>
-                            <td className="py-3 px-3 md:px-4 text-foreground/30 hidden sm:table-cell">{row.date}</td>
+                            <td className="py-3 px-3 md:px-4 text-foreground/50 hidden sm:table-cell">{row.date}</td>
                           </motion.tr>
                         ))}
                       </tbody>
@@ -653,7 +653,7 @@ export default function Home() {
                   </div>
 
                   <div className="mt-6 flex items-center justify-between">
-                    <p className="text-xs text-foreground/25 font-medium">Showing 5 of 2,847 available leads</p>
+                    <p className="text-xs text-foreground/45 font-medium">Showing 5 of 2,847 available leads</p>
                     <Link href="/leads/contractors" className="text-sm font-bold text-blue hover:text-blue-dark transition-colors">
                       View all plans →
                     </Link>
@@ -694,7 +694,7 @@ export default function Home() {
                   </svg>
                 ))}
               </div>
-              <span className="text-foreground/30 font-semibold text-sm">4.9 / 5 from 500+ customers</span>
+              <span className="text-foreground/50 font-semibold text-sm">4.9 / 5 from 500+ customers</span>
             </div>
           </AnimateIn>
 
@@ -712,14 +712,14 @@ export default function Home() {
                       </svg>
                     ))}
                   </div>
-                  <p className="text-foreground/60 text-sm leading-relaxed font-medium">&ldquo;{review.text}&rdquo;</p>
+                  <p className="text-foreground/70 text-sm leading-relaxed font-medium">&ldquo;{review.text}&rdquo;</p>
                   <div className="mt-5 flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue to-blue-dark flex items-center justify-center shadow-[0_2px_8px_rgba(0,85,255,0.3)]">
                       <span className="text-xs font-bold text-white">{review.name.split(" ").map((n) => n[0]).join("")}</span>
                     </div>
                     <div>
                       <div className="text-sm font-bold">{review.name}</div>
-                      <div className="text-xs text-foreground/30 font-medium">{review.role}</div>
+                      <div className="text-xs text-foreground/50 font-medium">{review.role}</div>
                     </div>
                   </div>
                 </motion.div>
@@ -747,7 +747,7 @@ export default function Home() {
               <br />
               <span className="text-blue">START CLOSING?</span>
             </h2>
-            <p className="mt-8 text-lg text-foreground/35 font-medium max-w-md mx-auto leading-relaxed">
+            <p className="mt-8 text-lg text-foreground/55 font-medium max-w-md mx-auto leading-relaxed">
               Pick your leads. Choose a plan. Start closing deals tomorrow.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
@@ -781,11 +781,11 @@ export default function Home() {
               </span>
             </div>
             <div className="flex items-center gap-8">
-              <a href="#choose" className="text-sm text-foreground/25 hover:text-blue transition-colors font-medium">Leads</a>
-              <a href="#demo" className="text-sm text-foreground/25 hover:text-blue transition-colors font-medium">Demo</a>
-              <a href="#reviews" className="text-sm text-foreground/25 hover:text-blue transition-colors font-medium">Reviews</a>
+              <a href="#choose" className="text-sm text-foreground/45 hover:text-blue transition-colors font-medium">Leads</a>
+              <a href="#demo" className="text-sm text-foreground/45 hover:text-blue transition-colors font-medium">Demo</a>
+              <a href="#reviews" className="text-sm text-foreground/45 hover:text-blue transition-colors font-medium">Reviews</a>
             </div>
-            <p className="text-xs text-foreground/15 font-medium">© 2026 LeadHubData</p>
+            <p className="text-xs text-foreground/35 font-medium">© 2026 LeadHubData</p>
           </div>
         </div>
       </footer>

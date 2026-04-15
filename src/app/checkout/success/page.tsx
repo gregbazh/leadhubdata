@@ -40,10 +40,11 @@ export default function CheckoutSuccess() {
           <span className="text-blue">SUBSCRIBED</span>
         </h1>
 
-        <p className="mt-6 text-lg text-foreground/35 font-medium leading-relaxed">
+        <p className="mt-6 text-lg text-foreground/55 font-medium leading-relaxed">
           Your subscription is active. Your first batch of leads will be delivered
           to your email within <span className="text-foreground font-bold">24 hours</span>.
         </p>
+
 
         <div className="mt-10 p-6 rounded-2xl border border-blue/10 bg-blue/[0.02] text-left">
           <h3 className="text-xs font-bold text-blue uppercase tracking-[0.25em]">
@@ -61,7 +62,7 @@ export default function CheckoutSuccess() {
                 <span className="w-6 h-6 rounded-lg bg-blue text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 shadow-[0_2px_8px_rgba(0,85,255,0.3)]">
                   {i + 1}
                 </span>
-                <span className="text-sm font-medium text-foreground/50">{step}</span>
+                <span className="text-sm font-medium text-foreground/60">{step}</span>
               </li>
             ))}
           </ul>
