@@ -12,9 +12,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://www.leadhubdata.com"),
   title: "LeadHubData — Premium Leads That Convert",
   description:
-    "Get exclusive, verified leads delivered fresh. Real-time data from public records, building permits, business filings, and more.",
+    "Fresh, verified lead lists built from public records. One-time purchase, instant CSV download — no subscription required.",
 };
 
 export default function RootLayout({

@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { getOneTimeProductById } from "@/lib/products";
+import { recordPurchase } from "@/lib/db";
 import Stripe from "stripe";
+
+export const runtime = "nodejs";
 
 // Purchase receipt with a durable download link, so the buyer isn't stranded
 // if they close the success page before downloading.
@@ -71,6 +74,17 @@ export async function POST(req: NextRequest) {
           amount: session.amount_total,
         });
         if (email) {
+          // Persist first so the buyer's /account works even if email fails.
+          try {
+            await recordPurchase({
+              sessionId: session.id,
+              email,
+              productId: session.metadata.productId,
+              amountTotal: session.amount_total,
+            });
+          } catch (err) {
+            console.error("webhook: failed to record purchase:", err);
+          }
           await sendDownloadEmail(email, session.id, session.metadata.productId);
         }
         break;

@@ -25,13 +25,15 @@ export default function FlContractorsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productId: product.id }),
       });
-      const data = await res.json();
-      if (data.url) {
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.url) {
         window.location.href = data.url;
+        return; // keep the button in its loading state during navigation
       }
+      alert("Checkout couldn't start. Please try again in a moment.");
+      setLoading(false);
     } catch {
       alert("Something went wrong. Please try again.");
-    } finally {
       setLoading(false);
     }
   }

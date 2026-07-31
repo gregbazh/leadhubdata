@@ -1,28 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getStripe } from "@/lib/stripe";
+import { NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
-  try {
-    const { customerId } = await req.json();
-
-    if (!customerId) {
-      return NextResponse.json({ error: "Customer ID required" }, { status: 400 });
-    }
-
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const stripe = getStripe();
-
-    const portalSession = await stripe.billingPortal.sessions.create({
-      customer: customerId,
-      return_url: `${baseUrl}/`,
-    });
-
-    return NextResponse.json({ url: portalSession.url });
-  } catch (err) {
-    console.error("Portal error:", err);
-    return NextResponse.json(
-      { error: "Failed to create portal session" },
-      { status: 500 }
-    );
-  }
+// The Stripe billing portal only applies to subscriptions, which are not
+// currently sold (the only live product is the one-time FL Contractors list).
+// Restore the billingPortal.sessions.create handler from git history when
+// subscriptions launch.
+export async function POST() {
+  return NextResponse.json({ error: "Not available" }, { status: 404 });
 }
