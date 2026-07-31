@@ -16,7 +16,7 @@ const BATCH = 500;
 
 for (const line of fs.existsSync(".env.local") ? fs.readFileSync(".env.local", "utf8").split("\n") : []) {
   const m = /^([A-Z_]+)=(.*)$/.exec(line.trim());
-  if (m && !process.env[m[1]]) process.env[m[1]] = m[2];
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^"(.*)"$/, "$1");
 }
 
 if (!process.env.DATABASE_URL) {
