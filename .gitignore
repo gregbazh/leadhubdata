@@ -33,6 +33,15 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# lead data (contains personal contact info - never commit)
+/data-work/
+/deliverables/
+/private-data/
+/pipeline/.enrich-state.json
+/pipeline/.sent-log.json
+/pipeline/.blocklist.json
+/pipeline/.smtp-cache.json
+
 # vercel
 .vercel
 

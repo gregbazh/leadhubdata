@@ -1,0 +1,20 @@
+SUBJECT: 48,795 FL contractors — licenses expire Aug 31
+
+Hi {{name}},
+
+Quick one: Florida's contractor license renewal wave hits August 31 — 32 days out.
+
+I have a list of 48,795 current, active FL contractors whose licenses expire within 90 days. Every one of them needs their bond, GL, and workers' comp squared away to renew. Sorted by expiration date, so you can call the most urgent first.
+
+Each record: license number, trade, business name, DBA, full address, county, original license date, and exact expiration date. A growing share also have email, phone, and website — we verify those by hand.
+
+Grab the full list now — one-time purchase, instant CSV download, no subscription:
+{{checkout_url}}
+
+Want to see it first? Reply "SAMPLE" with the county you work and I'll send 100 free.
+
+{{signature}}
+
+--
+{{physical_address}}
+Don't want emails from me? Reply "unsubscribe" and you won't hear from me again.

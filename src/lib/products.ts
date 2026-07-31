@@ -337,6 +337,48 @@ export const leadCategories: LeadCategory[] = [
   },
 ];
 
+export type OneTimeProduct = {
+  id: string;
+  name: string;
+  headline: string;
+  description: string;
+  price: number; // one-time price in dollars
+  leadCount: number;
+  fields: string[];
+  table: string; // Neon table the download route exports
+  downloadName: string; // filename offered to the buyer
+};
+
+export const oneTimeProducts: OneTimeProduct[] = [
+  {
+    id: "fl-contractors",
+    name: "FL Contractors — Expiring Licenses",
+    headline: "48,795 Florida contractors renewing by August 31",
+    description:
+      "Every active Florida contractor whose license expires within 90 days. Each one needs their bond, GL, and workers' comp squared away to renew. Sorted by expiration date so you call the most urgent first.",
+    price: 299,
+    leadCount: 48795,
+    fields: [
+      "License Number",
+      "Trade",
+      "Business Name",
+      "DBA",
+      "City",
+      "ZIP",
+      "County",
+      "License Expiration Date",
+      "Days Until Expiry",
+      "Email / Phone / Website (enriched subset)",
+    ],
+    table: "fl_contractors",
+    downloadName: "fl_contractors_expiring_90d.csv",
+  },
+];
+
+export function getOneTimeProductById(id: string) {
+  return oneTimeProducts.find((p) => p.id === id);
+}
+
 export function getCategoryById(id: string) {
   return leadCategories.find((c) => c.id === id);
 }

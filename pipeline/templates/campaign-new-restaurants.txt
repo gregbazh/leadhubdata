@@ -1,0 +1,20 @@
+SUBJECT: 9,696 brand-new FL restaurants (owner emails included)
+
+Hi {{name}},
+
+Every restaurant that opens in Florida files a license application with the state before day one. I pull those filings while they're still in review — before the doors open, before any other agent has called them.
+
+Right now that's 9,696 new Florida restaurants, caterers, and food trucks, every single one with the owner's direct email, plus phone, facility type, county, and application date.
+
+New food businesses need GL, property, workers' comp, and liquor liability from day one — and they haven't picked an agent yet. That's the window.
+
+Grab the full list now — one-time CSV purchase, instant delivery, refreshable monthly:
+{{checkout_url}}
+
+Want to see it first? Reply "SAMPLE" with your county and I'll send you 50 free.
+
+{{signature}}
+
+--
+{{physical_address}}
+Don't want emails from me? Reply "unsubscribe" and you won't hear from me again.
