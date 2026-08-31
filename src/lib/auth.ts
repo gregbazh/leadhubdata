@@ -149,7 +149,7 @@ export async function verifyLoginCode(email: string, code: string): Promise<Veri
 // ── Email delivery (Resend REST, same pattern as the Stripe webhook) ────
 
 export async function sendLoginCodeEmail(to: string, code: string): Promise<boolean> {
-  if (!process.env.RESEND_API_KEY || !process.env.RESEND_FROM) {
+  if (!process.env.RESEND_API_KEY || !(process.env.RESEND_TRANSACTIONAL_FROM || process.env.RESEND_FROM)) {
     console.error("sendLoginCodeEmail: RESEND_API_KEY / RESEND_FROM not set");
     return false;
   }
@@ -160,7 +160,7 @@ export async function sendLoginCodeEmail(to: string, code: string): Promise<bool
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: process.env.RESEND_FROM,
+      from: process.env.RESEND_TRANSACTIONAL_FROM || process.env.RESEND_FROM,
       to: [to],
       reply_to: process.env.RESEND_REPLY_TO || undefined,
       subject: `${code} is your LeadHubData sign-in code`,

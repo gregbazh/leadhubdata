@@ -344,36 +344,138 @@ export type OneTimeProduct = {
   description: string;
   price: number; // one-time price in dollars
   leadCount: number;
+  // Records carrying a researched website/email/phone. Every other record is
+  // license data only. Keep this at or below the true count in Neon -- the
+  // loader prints the current number each time the table is reloaded.
+  verifiedContactCount: number;
+  // Records you can actually contact: a phone number or an email, not just a
+  // website. This is what the page leads with, because it is the number a buyer
+  // is really asking about. Measured from the delivered table, never estimated.
+  reachableCount?: number;
+  phoneCount?: number;
+  emailCount?: number;
   fields: string[];
   table: string; // Neon table the download route exports
+  columns: string[]; // exact CSV columns, in order, that the buyer receives
+  orderBy: string; // SQL ordering for the exported file
   downloadName: string; // filename offered to the buyer
+  sample: {
+    rows: number; // how many records the free sample contains
+    column: string; // column the visitor narrows the sample by
+    label: string; // what to call it on the form
+    options: string[]; // allowed values -- also the whitelist the API checks
+  };
 };
 
 export const oneTimeProducts: OneTimeProduct[] = [
   {
     id: "fl-contractors",
     name: "FL Contractors — Expiring Licenses",
-    headline: "48,795 Florida contractors renewing by August 31",
+    headline: "3,695 Florida contractors with researched contact details",
     description:
-      "Every active Florida contractor whose license expires within 90 days. Each one needs their bond, GL, and workers' comp squared away to renew. Sorted by expiration date so you call the most urgent first.",
+      "3,695 contractors with a phone number or email researched and matched to the licensed business — all from the August 31, 2026 renewal cohort. The complete 48,795-record state license file is included.",
     price: 299,
     leadCount: 48795,
+    verifiedContactCount: 3737,
+    reachableCount: 3695,
+    phoneCount: 3588,
+    emailCount: 1909,
     fields: [
       "License Number",
       "Trade",
       "Business Name",
       "DBA",
+      "Street Address",
       "City",
       "ZIP",
-      "County",
+      "County Code",
+      "Originally Licensed Date",
       "License Expiration Date",
       "Days Until Expiry",
-      "Email / Phone / Website (enriched subset)",
     ],
     table: "fl_contractors",
+    columns: [
+      "license_number", "trade_code", "trade", "licensee_name", "dba_name",
+      "address", "city", "state", "zip", "county_code", "originally_licensed",
+      "license_expires", "days_until_expiry", "website", "email", "phone",
+    ],
+    orderBy: "to_date(license_expires, 'MM/DD/YYYY'), license_number",
     downloadName: "fl_contractors_expiring_90d.csv",
+    sample: {
+      rows: 100,
+      column: "trade",
+      label: "Which trade do you write?",
+      options: [
+        "Cert General", "Cert Building", "Cert Air", "Cert Roofing",
+        "Cert Residental", "Cert Plumbing", "Cert Pool", "Cert Specialty",
+        "Cert Under", "Cert Mechanical", "Cert Solar",
+      ],
+    },
+  },
+  {
+    id: "fl-restaurants",
+    name: "FL Food Businesses — Newly Licensed",
+    headline: "9,806 Florida food businesses, every one with an email",
+    description:
+      "Every restaurant, food truck, caterer, and food stand that filed a Florida plan review since January 2025 — 9,806 businesses, each with the contact email from its state filing. Newest filings first.",
+    price: 199,
+    leadCount: 9806,
+    verifiedContactCount: 9806,
+    fields: [
+      "Business Name",
+      "Legal Name",
+      "Facility Type",
+      "County",
+      "Street Address",
+      "City",
+      "ZIP",
+      "Phone",
+      "Email",
+      "Plan Review Status",
+      "Application Date",
+      "Application Type",
+    ],
+    table: "fl_restaurants",
+    columns: [
+      "business_name", "legal_name", "facility_type", "county", "address",
+      "city", "zip", "phone", "email", "plan_review_status",
+      "application_date", "application_type",
+    ],
+    orderBy: "to_date(application_date, 'MM/DD/YYYY') DESC NULLS LAST, business_name",
+    downloadName: "fl_new_food_businesses.csv",
+    sample: {
+      rows: 50,
+      column: "county",
+      label: "Which county do you work?",
+      options: [
+        "Dade", "Orange", "Hillsborough", "Broward", "Palm Beach", "Pinellas",
+        "Duval", "Lee", "Polk", "Volusia", "Lake", "Pasco", "Brevard",
+        "Manatee", "Marion", "Osceola", "St. Lucie", "Sarasota", "Escambia",
+        "St. Johns", "Bay", "Collier", "Seminole", "Okaloosa", "Alachua",
+        "Leon", "Walton", "Hernando", "Monroe", "Santa Rosa", "Charlotte",
+        "Martin", "Citrus", "Indian River", "Sumter", "Clay", "Highlands",
+      ],
+    },
   },
 ];
+
+// The recurring product. Priced by the owner; don't change it without asking.
+// What justifies the price is the standing feed plus everything in the
+// catalogue, not the weekly delta on its own.
+export const SUBSCRIPTION = {
+  id: "fl-all-access",
+  name: "Florida All-Access",
+  price: 299, // per month, in dollars
+  interval: "month" as const,
+  newPerMonth: 825, // measured from real source movement, not estimated
+  includes: [
+    "Every list in the catalogue, yours while subscribed",
+    "New Florida food businesses emailed to you every week",
+    "The full back archive on day one",
+    "Records we keep after the state deletes them",
+    "Every new list we build, at no extra cost",
+  ],
+};
 
 export function getOneTimeProductById(id: string) {
   return oneTimeProducts.find((p) => p.id === id);

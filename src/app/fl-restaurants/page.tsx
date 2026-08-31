@@ -7,23 +7,28 @@ import { oneTimeProducts } from "@/lib/products";
 import SampleForm from "@/app/sample-form";
 import SiteFooter from "@/components/site-footer";
 import { captureAttribution, readAttribution } from "@/lib/attribution";
-import { contractorFaqs } from "@/lib/seo";
+import { restaurantFaqs } from "@/lib/seo";
 
-const product = oneTimeProducts.find((p) => p.id === "fl-contractors")!;
-const faqs = contractorFaqs(product);
+const product = oneTimeProducts.find((p) => p.id === "fl-restaurants")!;
+const faqs = restaurantFaqs(product);
 
-const RENEWAL_DEADLINE = new Date("2026-08-31T23:59:59-04:00");
+// Every figure below is measured from the deliverable, not estimated. If the
+// file is rebuilt, re-check these before shipping copy that cites them.
+const UNIQUE_EMAILS = 7833;
+const WITH_PHONE = 9724;
+const COUNTIES = 67;
+const MIX = [
+  { label: "Mobile food vehicles", count: 4197 },
+  { label: "Seating restaurants", count: 3184 },
+  { label: "Not specified on filing", count: 1645 },
+  { label: "Hot dog carts", count: 301 },
+  { label: "Non-seating", count: 301 },
+  { label: "Catering", count: 175 },
+  { label: "Theme park", count: 3 },
+];
 
-function daysUntilDeadline() {
-  return Math.max(0, Math.ceil((RENEWAL_DEADLINE.getTime() - Date.now()) / 86_400_000));
-}
-
-export default function FlContractorsPage() {
+export default function FlRestaurantsPage() {
   const [loading, setLoading] = useState(false);
-  const days = daysUntilDeadline();
-  const deadlineLabel = days > 0
-    ? `License renewal deadline: August 31 — ${days} ${days === 1 ? "day" : "days"} out`
-    : "2026 license renewal date: August 31";
 
   useEffect(captureAttribution, []);
 
@@ -95,26 +100,20 @@ export default function FlContractorsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-50 border border-red-200 text-red-700 text-sm font-bold">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600" />
-              </span>
-              {deadlineLabel}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue/5 border border-blue/15 text-blue text-sm font-bold">
+              An email address on every single row
             </div>
 
             <h1 className="mt-8 text-5xl md:text-7xl font-black tracking-[-0.04em] text-foreground leading-[0.9]">
-              {(product.reachableCount ?? product.verifiedContactCount).toLocaleString()}
+              {product.leadCount.toLocaleString()}
               <br />
-              <span className="text-blue">FL Contractors</span>
+              <span className="text-blue">FL food businesses</span>
               <br />
-              you can contact
+              newly licensed
             </h1>
 
             <p className="mt-8 text-lg md:text-xl text-foreground/60 font-medium max-w-2xl mx-auto leading-relaxed">
-              Public Florida contractor-license records, filtered to the August 31, 2026
-              renewal cohort and paired with researched business contact details where available.
-              The complete state record set is included.
+              {product.description}
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -137,9 +136,9 @@ export default function FlContractorsPage() {
       <section className="pb-14 px-6">
         <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-5">
           {[
-            { big: (product.phoneCount ?? 0).toLocaleString(), small: "with a direct phone number" },
-            { big: (product.emailCount ?? 0).toLocaleString(), small: "with an email address" },
-            { big: product.leadCount.toLocaleString(), small: "complete state file included, free updates as we add contacts" },
+            { big: product.leadCount.toLocaleString(), small: "food businesses, all with an email" },
+            { big: WITH_PHONE.toLocaleString(), small: "also carry a phone number" },
+            { big: `${COUNTIES}`, small: "Florida counties covered" },
           ].map((stat, i) => (
             <motion.div
               key={stat.small}
@@ -155,33 +154,33 @@ export default function FlContractorsPage() {
         </div>
       </section>
 
-      {/* Why now */}
+      {/* Why */}
       <section className="py-14 md:py-20 px-6 bg-blue/[0.015] border-y border-blue/5">
         <div className="max-w-5xl mx-auto">
-          <p className="text-xs font-bold text-blue uppercase tracking-[0.25em] mb-4">Why now</p>
+          <p className="text-xs font-bold text-blue uppercase tracking-[0.25em] mb-4">Why this list</p>
           <h2 className="text-3xl md:text-5xl font-black tracking-[-0.04em] text-foreground leading-[0.95] max-w-3xl">
-            Renewal dates create a <span className="text-blue">timely review window</span>
+            New filings create <span className="text-blue">timely business conversations</span>
           </h2>
           <p className="mt-6 text-lg text-foreground/60 font-medium max-w-2xl leading-relaxed">
-            Florida certified contractor licenses renew on an even-year August 31 cycle.
-            The state lists continuing education and fees as renewal requirements. Insurance,
-            bonding, and workers&apos; compensation needs vary by business, so use the date as a
-            relevant conversation signal and verify each contractor&apos;s situation before outreach.
+            New and remodeled food businesses often evaluate insurance, payments, payroll,
+            equipment, marketing, and other operating services. Needs vary by business.
+            The application date and status columns help teams identify a relevant segment
+            without treating a public filing as proof of purchase intent.
           </p>
 
           <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
               {
-                title: "Date-based timing",
-                desc: "A documented state renewal date gives sales teams a concrete reason to prioritize and personalize outreach.",
+                title: "Reachable by email",
+                desc: `Every row has the contact address from the state filing — ${UNIQUE_EMAILS.toLocaleString()} unique inboxes. No enrichment guesswork.`,
               },
               {
-                title: "Public-record accuracy",
-                desc: "Sourced directly from Florida DBPR license files. Current, active licenses only — no recycled lists.",
+                title: "Newest first",
+                desc: "Sorted by filing date, most recent at the top. Roughly 500 new businesses file every month.",
               },
               {
-                title: "Clear limitations",
-                desc: "License status and dates are state-sourced. Contact coverage is reported separately so buyers know what is and is not present.",
+                title: "Statewide",
+                desc: `All ${COUNTIES} Florida counties, from Miami-Dade food trucks to Panhandle diners. Filter to your territory in seconds.`,
               },
             ].map((item) => (
               <div
@@ -196,35 +195,59 @@ export default function FlContractorsPage() {
         </div>
       </section>
 
-      {/* Data fields */}
+      {/* What's actually in it */}
       <section className="py-14 md:py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <p className="text-xs font-bold text-blue uppercase tracking-[0.25em] mb-4">
-            What&apos;s in every record
+            Exactly what you get
           </p>
           <h2 className="text-3xl md:text-4xl font-black tracking-[-0.04em] text-foreground leading-[0.95]">
-            Every column in the <span className="text-blue">file</span>
+            The full <span className="text-blue">breakdown</span>
           </h2>
-          <div className="mt-8 flex flex-wrap gap-2">
-            {product.fields.map((field) => (
-              <span
-                key={field}
-                className="px-3 py-1.5 rounded-full text-sm font-semibold bg-blue/5 text-blue/80 border border-blue/8"
-              >
-                {field}
-              </span>
-            ))}
+
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div>
+              <h3 className="text-sm font-bold text-foreground/70 uppercase tracking-wider">
+                Every column in the file
+              </h3>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {product.fields.map((field) => (
+                  <span
+                    key={field}
+                    className="px-3 py-1.5 rounded-full text-sm font-semibold bg-blue/5 text-blue/80 border border-blue/8"
+                  >
+                    {field}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-bold text-foreground/70 uppercase tracking-wider">
+                What kind of businesses
+              </h3>
+              <div className="mt-4 space-y-2">
+                {MIX.map((m) => (
+                  <div key={m.label} className="flex items-center justify-between gap-4 text-sm">
+                    <span className="font-medium text-foreground/65">{m.label}</span>
+                    <span className="font-bold text-foreground tabular-nums">
+                      {m.count.toLocaleString()}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-          <p className="mt-6 text-sm text-foreground/50 font-medium max-w-2xl">
-            Florida does not publish contact details, so we research them ourselves and
-            match each one back to the licensed business.{" "}
-            {(product.phoneCount ?? 0).toLocaleString()} records carry a phone number
-            and {(product.emailCount ?? 0).toLocaleString()} carry an email. The rest of
-            the state file — all {product.leadCount.toLocaleString()} licenses, with
-            business name, address, trade and expiry — comes with it for direct mail.
-            We add contact details continuously, and every update is free to anyone who
-            has already bought.
-          </p>
+
+          <div className="mt-10 p-6 rounded-2xl border border-blue/10 bg-blue/[0.02]">
+            <h3 className="text-sm font-bold text-foreground">Two things to know before you buy</h3>
+            <p className="mt-3 text-sm text-foreground/60 font-medium leading-relaxed">
+              The email on each row is the contact listed on the license application. That is
+              usually the owner, but it is sometimes their consultant, attorney, or landlord.
+              And {UNIQUE_EMAILS.toLocaleString()} of the {product.leadCount.toLocaleString()} addresses
+              are unique — the rest repeat because one operator filed for more than one location.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -255,17 +278,16 @@ export default function FlContractorsPage() {
               <span className="text-base font-semibold text-foreground/50">once</span>
             </div>
             <div className="mt-2 text-sm font-semibold text-blue">
-              {(product.price / (product.reachableCount ?? product.leadCount) * 100).toFixed(0)}¢
-              per contactable lead
+              {((product.price / product.leadCount) * 100).toFixed(1)}¢ per business
             </div>
 
             <div className="mt-8 space-y-3 text-left max-w-sm mx-auto">
               {[
-                `${(product.phoneCount ?? 0).toLocaleString()} contractors with a phone number`,
-                `${(product.emailCount ?? 0).toLocaleString()} with an email address`,
-                `All ${product.leadCount.toLocaleString()} state records included for direct mail`,
-                "Free updates as we add more contact details",
-                "Instant CSV download, no subscription",
+                `${product.leadCount.toLocaleString()} Florida food businesses`,
+                "An email address on every row",
+                `${WITH_PHONE.toLocaleString()} with a phone number too`,
+                "Instant CSV download after checkout",
+                "No subscription, no recurring charges",
               ].map((feat) => (
                 <div key={feat} className="flex items-center gap-3">
                   <svg className="w-5 h-5 text-blue flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>

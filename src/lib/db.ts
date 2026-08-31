@@ -48,6 +48,141 @@ export function ensureAccountSchema(): Promise<void> {
   return schemaReady;
 }
 
+// Sample requests are the only capture point for the ~99% of visitors who
+// don't buy on the first visit, so they're stored even though the sample is
+// emailed immediately -- the address is the asset, not the delivery receipt.
+let sampleSchemaReady: Promise<void> | null = null;
+
+export function ensureSampleSchema(): Promise<void> {
+  if (!sampleSchemaReady) {
+    sampleSchemaReady = (async () => {
+      const sql = getSql();
+      await sql.query(`
+        CREATE TABLE IF NOT EXISTS sample_requests (
+          id         bigserial PRIMARY KEY,
+          email      text NOT NULL,
+          product_id text NOT NULL,
+          filter     text,
+          created_at timestamptz NOT NULL DEFAULT now()
+        )`);
+      await sql.query(
+        `CREATE INDEX IF NOT EXISTS sample_requests_email_idx ON sample_requests (email, created_at)`
+      );
+    })().catch((err) => {
+      sampleSchemaReady = null;
+      throw err;
+    });
+  }
+  return sampleSchemaReady;
+}
+
+// One sample per address per product per day, so the form can't be used to
+// drain the list a hundred rows at a time.
+export async function recentSampleCount(email: string, productId: string): Promise<number> {
+  await ensureSampleSchema();
+  const sql = getSql();
+  const rows = (await sql.query(
+    `SELECT count(*)::int AS n FROM sample_requests
+     WHERE email = $1 AND product_id = $2 AND created_at > now() - interval '24 hours'`,
+    [email.toLowerCase(), productId]
+  )) as { n: number }[];
+  return rows[0]?.n ?? 0;
+}
+
+export async function recordSampleRequest(p: {
+  email: string;
+  productId: string;
+  filter: string | null;
+}): Promise<void> {
+  await ensureSampleSchema();
+  const sql = getSql();
+  await sql.query(
+    `INSERT INTO sample_requests (email, product_id, filter) VALUES ($1, $2, $3)`,
+    [p.email.toLowerCase(), p.productId, p.filter]
+  );
+}
+
+// Active subscribers and how far through the feed each one has been served.
+// last_delivered_at is the watermark: a delivery sends every business whose
+// first_seen is newer than it, so a missed week self-heals on the next run
+// instead of silently skipping records the subscriber paid for.
+let subscriptionSchemaReady: Promise<void> | null = null;
+
+export function ensureSubscriptionSchema(): Promise<void> {
+  if (!subscriptionSchemaReady) {
+    subscriptionSchemaReady = (async () => {
+      const sql = getSql();
+      await sql.query(`
+        CREATE TABLE IF NOT EXISTS subscriptions (
+          stripe_subscription_id text PRIMARY KEY,
+          email                  text NOT NULL,
+          status                 text NOT NULL,
+          created_at             timestamptz NOT NULL DEFAULT now(),
+          last_delivered_at      timestamptz
+        )`);
+      await sql.query(
+        `CREATE INDEX IF NOT EXISTS subscriptions_email_idx ON subscriptions (email)`
+      );
+    })().catch((err) => {
+      subscriptionSchemaReady = null;
+      throw err;
+    });
+  }
+  return subscriptionSchemaReady;
+}
+
+export type SubscriptionRow = {
+  stripe_subscription_id: string;
+  email: string;
+  status: string;
+  created_at: string;
+  last_delivered_at: string | null;
+};
+
+export async function upsertSubscription(p: {
+  stripeSubscriptionId: string;
+  email: string;
+  status: string;
+}): Promise<void> {
+  await ensureSubscriptionSchema();
+  const sql = getSql();
+  await sql.query(
+    `INSERT INTO subscriptions (stripe_subscription_id, email, status)
+     VALUES ($1, $2, $3)
+     ON CONFLICT (stripe_subscription_id)
+     DO UPDATE SET status = EXCLUDED.status, email = EXCLUDED.email`,
+    [p.stripeSubscriptionId, p.email.toLowerCase(), p.status]
+  );
+}
+
+export async function getActiveSubscriptions(): Promise<SubscriptionRow[]> {
+  await ensureSubscriptionSchema();
+  const sql = getSql();
+  return (await sql.query(
+    `SELECT stripe_subscription_id, email, status, created_at, last_delivered_at
+     FROM subscriptions WHERE status IN ('active', 'trialing') ORDER BY created_at`
+  )) as SubscriptionRow[];
+}
+
+export async function hasActiveSubscription(email: string): Promise<boolean> {
+  await ensureSubscriptionSchema();
+  const sql = getSql();
+  const rows = (await sql.query(
+    `SELECT 1 FROM subscriptions WHERE email = $1 AND status IN ('active', 'trialing') LIMIT 1`,
+    [email.toLowerCase()]
+  )) as unknown[];
+  return rows.length > 0;
+}
+
+export async function markDelivered(stripeSubscriptionId: string): Promise<void> {
+  await ensureSubscriptionSchema();
+  const sql = getSql();
+  await sql.query(
+    `UPDATE subscriptions SET last_delivered_at = now() WHERE stripe_subscription_id = $1`,
+    [stripeSubscriptionId]
+  );
+}
+
 export type PurchaseRow = {
   session_id: string;
   email: string;

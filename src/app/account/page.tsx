@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { verifySessionValue, SESSION_COOKIE } from "@/lib/auth";
-import { getPurchasesByEmail, type PurchaseRow } from "@/lib/db";
-import { getOneTimeProductById } from "@/lib/products";
+import { getPurchasesByEmail, hasActiveSubscription, type PurchaseRow } from "@/lib/db";
+import { getOneTimeProductById, oneTimeProducts, SUBSCRIPTION } from "@/lib/products";
 import SignInForm from "./sign-in-form";
 
 export const metadata: Metadata = {
@@ -25,10 +25,10 @@ function Nav() {
           </span>
         </Link>
         <Link
-          href="/fl-contractors"
+          href="/"
           className="text-sm font-bold text-foreground/60 hover:text-blue transition-colors"
         >
-          Get the FL Contractors list →
+          Browse the lists →
         </Link>
       </div>
     </nav>
@@ -98,11 +98,15 @@ export default async function AccountPage({
   }
 
   let purchases: PurchaseRow[] = [];
+  let subscribed = false;
   let loadError = false;
   try {
-    purchases = await getPurchasesByEmail(email);
+    [purchases, subscribed] = await Promise.all([
+      getPurchasesByEmail(email),
+      hasActiveSubscription(email),
+    ]);
   } catch (err) {
-    console.error("account: failed to load purchases:", err);
+    console.error("account: failed to load account data:", err);
     loadError = true;
   }
 
@@ -138,6 +142,40 @@ export default async function AccountPage({
                   again in a minute.
                 </p>
               </div>
+            ) : subscribed ? (
+              <>
+                <div className="p-6 rounded-2xl border-2 border-blue bg-blue/[0.02]">
+                  <div className="text-xs font-bold text-blue uppercase tracking-[0.25em]">
+                    {SUBSCRIPTION.name} — active
+                  </div>
+                  <p className="mt-3 text-sm font-medium text-foreground/60 leading-relaxed">
+                    Every list below is yours to download while your subscription is active, and
+                    new Florida food businesses arrive by email each week.
+                  </p>
+                </div>
+                {oneTimeProducts.map((p) => (
+                  <div
+                    key={p.id}
+                    className="p-6 md:p-7 rounded-2xl border border-blue/10 bg-white flex flex-col sm:flex-row sm:items-center gap-5 justify-between"
+                  >
+                    <div>
+                      <div className="text-base font-extrabold text-foreground tracking-tight">{p.name}</div>
+                      <div className="mt-1 text-sm font-medium text-foreground/50">
+                        {p.leadCount.toLocaleString()} records
+                      </div>
+                    </div>
+                    <a
+                      href={`/api/download?product=${encodeURIComponent(p.id)}`}
+                      className="inline-flex items-center justify-center gap-2 h-11 px-6 shrink-0 text-sm font-bold text-white bg-blue rounded-full hover:bg-blue-dark transition-all duration-300"
+                    >
+                      Download CSV
+                    </a>
+                  </div>
+                ))}
+                {purchases.map((p) => (
+                  <PurchaseCard key={p.session_id} purchase={p} />
+                ))}
+              </>
             ) : purchases.length === 0 ? (
               <div className="p-8 rounded-2xl border border-blue/10 bg-blue/[0.02] text-center">
                 <p className="text-base font-semibold text-foreground/60">
@@ -148,10 +186,10 @@ export default async function AccountPage({
                   the email you used at checkout.
                 </p>
                 <Link
-                  href="/fl-contractors"
+                  href="/"
                   className="mt-6 inline-flex items-center justify-center h-11 px-7 text-sm font-bold text-white bg-blue rounded-full hover:bg-blue-dark transition-all duration-300"
                 >
-                  Browse the FL Contractors list →
+                  Browse the lists →
                 </Link>
               </div>
             ) : (

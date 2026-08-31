@@ -1,22 +1,57 @@
 import type { MetadataRoute } from "next";
+import { resources } from "@/lib/resources";
+import { SEO_UPDATED_AT, SITE_URL } from "@/lib/seo";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://www.leadhubdata.com";
+const updatedAt = new Date(`${SEO_UPDATED_AT}T12:00:00Z`);
 
-// Only the pages that are actually sold/public. The subscription storefront
-// is hidden until those products launch.
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
+  const corePages: MetadataRoute.Sitemap = [
     {
-      url: `${BASE_URL}/fl-contractors`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
+      url: SITE_URL,
+      lastModified: updatedAt,
+      changeFrequency: "weekly",
       priority: 1,
     },
     {
-      url: BASE_URL,
-      lastModified: new Date(),
+      url: `${SITE_URL}/fl-contractors`,
+      lastModified: updatedAt,
+      changeFrequency: "weekly",
+      priority: 1,
+    },
+    {
+      url: `${SITE_URL}/fl-restaurants`,
+      lastModified: updatedAt,
+      changeFrequency: "weekly",
+      priority: 1,
+    },
+    {
+      url: `${SITE_URL}/subscribe`,
+      lastModified: updatedAt,
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    ...[
+      ["/resources", 0.8],
+      ["/methodology", 0.8],
+      ["/about", 0.6],
+      ["/contact", 0.5],
+      ["/privacy", 0.3],
+      ["/terms", 0.3],
+      ["/refund-policy", 0.3],
+    ].map(([path, priority]) => ({
+      url: `${SITE_URL}${path}`,
+      lastModified: updatedAt,
+      changeFrequency: "monthly" as const,
+      priority: priority as number,
+    })),
   ];
+
+  const resourcePages: MetadataRoute.Sitemap = resources.map((resource) => ({
+    url: `${SITE_URL}/resources/${resource.slug}`,
+    lastModified: new Date(`${resource.updatedAt}T12:00:00Z`),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...corePages, ...resourcePages];
 }

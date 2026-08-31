@@ -1,0 +1,34 @@
+# LeadHubData
+
+> LeadHubData publishes documented Florida public-record business datasets as downloadable CSV files. It is an independent business and is not affiliated with or endorsed by the State of Florida or DBPR.
+
+## Primary pages
+
+- [Home](https://www.leadhubdata.com/): Current public datasets and purchasing options.
+- [Florida contractor list](https://www.leadhubdata.com/fl-contractors): The August 31, 2026 contractor-license renewal cohort, including a separately researched contactable subset.
+- [Florida food-business list](https://www.leadhubdata.com/fl-restaurants): Food-service plan-review filings since January 2025, with filing contact and application fields.
+- [Subscription](https://www.leadhubdata.com/subscribe): Current catalogue access and weekly food-business updates.
+- [Methodology](https://www.leadhubdata.com/methodology): Sources, filters, enrichment, quality checks, freshness, and limitations.
+- [Resource library](https://www.leadhubdata.com/resources): Source-led guides to contractor licenses, food-business filings, lead-list quality, and responsible outreach.
+- [About](https://www.leadhubdata.com/about): Business purpose and standards.
+- [Contact](https://www.leadhubdata.com/contact): Purchase support, corrections, and privacy requests.
+
+## First-party data sources
+
+- [Florida DBPR Construction public records](https://www2.myfloridalicense.com/construction-industry/public-records/)
+- [Florida DBPR Restaurant and Food Service public records](https://www2.myfloridalicense.com/hotels-restaurants/public-records/)
+- [Florida DBPR Food Service plan review guidance](https://www2.myfloridalicense.com/hotels-restaurants/licensing/plan-review/)
+
+## Important interpretation notes
+
+- A public license, application, or plan-review record is a documented event, not proof of purchase intent or consent to contact.
+- Government fields and separately researched contact fields are identified separately.
+- Filing emails can belong to an owner, operator, consultant, attorney, landlord, or another representative.
+- Source records and contact details can change after extraction; verify time-sensitive or high-value records against the current first-party source.
+- Buyers are responsible for applicable outreach, privacy, suppression, and do-not-contact requirements.
+
+## Policies
+
+- [Privacy](https://www.leadhubdata.com/privacy)
+- [Terms and data license](https://www.leadhubdata.com/terms)
+- [Refund and cancellation policy](https://www.leadhubdata.com/refund-policy)

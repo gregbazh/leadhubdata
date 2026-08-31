@@ -7,6 +7,7 @@ import {
   stripQuotedReply,
   type SvixHeaders,
 } from "@/lib/inbound";
+import { recordEmailEvent } from "@/lib/ops-db";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -132,6 +133,22 @@ export async function POST(req: NextRequest) {
   console.log(`resend-inbound: from=${sender} intent=${intent} subject=${JSON.stringify(subject)}`);
 
   const automated = isAutomatedSender(from, ownDomain);
+
+  // Reply rate is the fastest signal a campaign produces -- it lands days
+  // before any purchase does, so it's what the marketing experiments read.
+  // Automated senders (out-of-office, mailer daemons) would inflate it.
+  if (!automated && sender) {
+    try {
+      await recordEmailEvent({
+        email: sender,
+        eventType: intent === "unsubscribe" ? "unsubscribe" : "reply",
+        intent,
+        detail: subject || null,
+      });
+    } catch (err) {
+      console.error("resend-inbound: failed to record reply event:", err);
+    }
+  }
 
   // Always forward the human's reply to the owner's real inbox.
   if (owner) {

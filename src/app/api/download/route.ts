@@ -1,48 +1,78 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { neon } from "@neondatabase/serverless";
 import { getStripe } from "@/lib/stripe";
 import { getOneTimeProductById } from "@/lib/products";
+import { verifySessionValue, SESSION_COOKIE } from "@/lib/auth";
+import { hasActiveSubscription } from "@/lib/db";
 
 export const runtime = "nodejs";
 
-const CSV_COLUMNS = [
-  "license_number", "trade_code", "trade", "licensee_name", "dba_name",
-  "address", "city", "state", "zip", "county_code", "originally_licensed",
-  "license_expires", "days_until_expiry",
-];
+// The stored value was computed on the day the file was built, so it goes
+// stale every night. Recompute it against the buyer's download date.
+function daysUntil(expires: unknown): string {
+  const [m, d, y] = String(expires ?? "").split("/").map(Number);
+  if (!m || !d || !y) return "";
+  const today = new Date();
+  const days = Math.ceil(
+    (Date.UTC(y, m - 1, d) - Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()))
+      / 86_400_000
+  );
+  return String(days);
+}
 
-function toCsv(rows: Record<string, unknown>[]): string {
+function toCsv(rows: Record<string, unknown>[], columns: string[]): string {
   const esc = (v: unknown) => {
     const s = v == null ? "" : String(v);
     return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
-  const lines = [CSV_COLUMNS.join(",")];
+  const lines = [columns.join(",")];
   for (const row of rows) {
-    lines.push(CSV_COLUMNS.map((c) => esc(row[c])).join(","));
+    lines.push(
+      columns.map((c) =>
+        esc(c === "days_until_expiry" ? daysUntil(row.license_expires) : row[c])
+      ).join(",")
+    );
   }
   return lines.join("\n") + "\n";
 }
 
 export async function GET(req: NextRequest) {
   const sessionId = req.nextUrl.searchParams.get("session_id");
-  if (!sessionId) {
-    return NextResponse.json({ error: "Missing session_id" }, { status: 400 });
-  }
+  const requestedProduct = req.nextUrl.searchParams.get("product");
 
-  let session;
-  try {
-    session = await getStripe().checkout.sessions.retrieve(sessionId);
-  } catch {
-    return NextResponse.json({ error: "Invalid session" }, { status: 404 });
-  }
+  let product;
 
-  if (session.payment_status !== "paid") {
-    return NextResponse.json({ error: "Payment not completed" }, { status: 402 });
-  }
-
-  const product = getOneTimeProductById(session.metadata?.productId ?? "");
-  if (!product) {
-    return NextResponse.json({ error: "No downloadable product on this purchase" }, { status: 404 });
+  if (sessionId) {
+    // Someone who bought a single list: the Stripe session is the receipt.
+    let session;
+    try {
+      session = await getStripe().checkout.sessions.retrieve(sessionId);
+    } catch {
+      return NextResponse.json({ error: "Invalid session" }, { status: 404 });
+    }
+    if (session.payment_status !== "paid") {
+      return NextResponse.json({ error: "Payment not completed" }, { status: 402 });
+    }
+    product = getOneTimeProductById(session.metadata?.productId ?? "");
+    if (!product) {
+      return NextResponse.json({ error: "No downloadable product on this purchase" }, { status: 404 });
+    }
+  } else {
+    // A subscriber has no per-list Stripe session, so entitlement comes from
+    // the signed-in session plus a live subscription.
+    const cookieStore = await cookies();
+    const email = verifySessionValue(cookieStore.get(SESSION_COOKIE)?.value);
+    if (!email) {
+      return NextResponse.json({ error: "Sign in to download" }, { status: 401 });
+    }
+    if (!(await hasActiveSubscription(email))) {
+      return NextResponse.json({ error: "No active subscription" }, { status: 403 });
+    }
+    product = getOneTimeProductById(requestedProduct ?? "");
+    if (!product) {
+      return NextResponse.json({ error: "Unknown list" }, { status: 404 });
+    }
   }
 
   if (!process.env.DATABASE_URL) {
@@ -51,12 +81,12 @@ export async function GET(req: NextRequest) {
   }
 
   const sql = neon(process.env.DATABASE_URL);
-  // product.table comes from our own product catalog, never from user input.
+  // table and orderBy come from our own product catalog, never from user input.
   const rows = (await sql.query(
-    `SELECT * FROM ${product.table} ORDER BY to_date(license_expires, 'MM/DD/YYYY'), license_number`
+    `SELECT * FROM ${product.table} ORDER BY ${product.orderBy}`
   )) as Record<string, unknown>[];
 
-  return new NextResponse(toCsv(rows), {
+  return new NextResponse(toCsv(rows, product.columns), {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": `attachment; filename="${product.downloadName}"`,
