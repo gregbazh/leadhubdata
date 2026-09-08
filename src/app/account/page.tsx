@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { verifySessionValue, SESSION_COOKIE } from "@/lib/auth";
 import { getPurchasesByEmail, hasActiveSubscription, type PurchaseRow } from "@/lib/db";
 import { getOneTimeProductById, oneTimeProducts, SUBSCRIPTION } from "@/lib/products";
+import ManageBilling from "@/components/manage-billing";
 import SignInForm from "./sign-in-form";
 
 export const metadata: Metadata = {
@@ -53,7 +54,7 @@ function PurchaseCard({ purchase }: { purchase: PurchaseRow }) {
           {purchase.amount_total != null && (
             <> · ${(purchase.amount_total / 100).toFixed(0)}</>
           )}
-          {product && <> · {product.leadCount.toLocaleString()} leads</>}
+
         </div>
       </div>
       <a
@@ -150,8 +151,9 @@ export default async function AccountPage({
                   </div>
                   <p className="mt-3 text-sm font-medium text-foreground/60 leading-relaxed">
                     Every list below is yours to download while your subscription is active, and
-                    new Florida food businesses arrive by email each week.
+                    new food-business records arrive by email each week when available.
                   </p>
+                  <ManageBilling />
                 </div>
                 {oneTimeProducts.map((p) => (
                   <div
@@ -161,7 +163,7 @@ export default async function AccountPage({
                     <div>
                       <div className="text-base font-extrabold text-foreground tracking-tight">{p.name}</div>
                       <div className="mt-1 text-sm font-medium text-foreground/50">
-                        {p.leadCount.toLocaleString()} records
+                        Current CSV download
                       </div>
                     </div>
                     <a

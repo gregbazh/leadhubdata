@@ -2,14 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/json-ld";
 import SiteFooter from "@/components/site-footer";
-import { oneTimeProducts, SUBSCRIPTION } from "@/lib/products";
+import { getCatalog } from "@/lib/catalog";
+import { oneTimeProducts } from "@/lib/products";
 import { absoluteUrl, createMetadata, SITE_URL } from "@/lib/seo";
 
-// Focused single-product homepage. The original six-category subscription
-// storefront is archived at src/legacy/home-storefront.tsx — restore it once
-// those products are actually sold and fulfilled.
-
-const totalRecords = oneTimeProducts.reduce((n, p) => n + p.leadCount, 0);
+export const revalidate = 300;
 
 export const metadata: Metadata = createMetadata({
   title: "Florida Public-Record Business Lead Lists",
@@ -39,7 +36,9 @@ const homeJsonLd = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  const products = await getCatalog();
+  const totalRecords = products.filter(p => !p.includedIn).reduce((n, p) => n + p.leadCount, 0);
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <JsonLd data={homeJsonLd} />
@@ -90,45 +89,45 @@ export default function Home() {
 
         <div className="relative max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-8xl font-black tracking-[-0.05em] leading-[0.85]">
-            WE SELL THE
+            FIND YOUR NEXT
             <br />
-            <span className="text-blue">BEST LEADS.</span>
+            <span className="text-blue">BUSINESS CUSTOMER.</span>
           </h1>
           <p className="mt-8 text-lg md:text-xl text-foreground/55 max-w-lg mx-auto font-medium leading-relaxed">
-            Florida businesses pulled straight from state records. Subscribe for a fresh
-            batch every week, or buy any single list outright.
+            Florida contractor and food-business prospects, with clear contact coverage.
+            Choose your market, review a free sample, and buy the CSV you need.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/subscribe"
+              href="#lists"
               className="inline-flex items-center justify-center h-14 px-10 text-base font-bold text-white bg-blue rounded-full hover:bg-blue-dark transition-all duration-300 hover:shadow-[0_8px_40px_rgba(0,85,255,0.35)] hover:scale-105"
             >
-              Get the weekly feed — ${SUBSCRIPTION.price}/mo
+              Explore lists from $99
             </Link>
             <Link
-              href="/fl-contractors"
+              href="/fl-food-trucks"
               className="inline-flex items-center justify-center h-14 px-10 text-base font-bold text-blue border-2 border-blue/20 rounded-full hover:border-blue hover:bg-blue/5 transition-all duration-300"
             >
-              Or buy one list →
+              For commercial auto agents →
             </Link>
           </div>
         </div>
       </section>
 
       {/* ─── AVAILABLE LISTS ─── */}
-      <section className="relative py-16 md:py-24 px-6 bg-blue/[0.015] border-y border-blue/5">
+      <section id="lists" className="scroll-mt-20 relative py-16 md:py-24 px-6 bg-blue/[0.015] border-y border-blue/5">
         <div className="max-w-5xl mx-auto">
           <p className="text-xs md:text-sm font-bold text-blue uppercase tracking-[0.25em] mb-4 text-center">
             Available Now
           </p>
           <h2 className="text-3xl md:text-5xl font-black tracking-[-0.04em] leading-[0.9] text-center">
-            Two Florida lists,
+            Choose your market,
             <br />
-            <span className="text-blue">built this month</span>
+            <span className="text-blue">see the actual data</span>
           </h2>
 
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-            {oneTimeProducts.map((p) => (
+          <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {products.map((p) => (
               <div
                 key={p.id}
                 className="flex flex-col p-8 rounded-3xl border-2 border-blue bg-white shadow-[0_8px_40px_rgba(0,85,255,0.12)]"
@@ -139,6 +138,8 @@ export default function Home() {
                 <p className="mt-3 flex-1 text-sm text-foreground/60 font-medium leading-relaxed">
                   {p.description}
                 </p>
+                <p className="mt-4 text-sm font-bold text-blue">{p.leadCount.toLocaleString()} records · {p.reachableCount?.toLocaleString()} with phone or email</p>
+                {p.includedIn && <p className="mt-2 text-xs text-foreground/55">Included in the full food-business list.</p>}
                 <div className="mt-5 flex flex-wrap gap-1.5">
                   {p.fields.slice(0, 6).map((field) => (
                     <span
@@ -217,11 +218,11 @@ export default function Home() {
             <span className="text-blue">START CLOSING?</span>
           </h2>
           <p className="mt-8 text-lg text-foreground/55 font-medium max-w-md mx-auto leading-relaxed">
-            {totalRecords.toLocaleString()} Florida businesses across both lists, pulled
-            from state records this month. Reach them before your competition does.
+            {totalRecords.toLocaleString()} license and filing records across our main datasets.
+            The food-truck list is a focused subset, so it is counted once.
           </p>
           <Link
-            href={`/${oneTimeProducts[0].id}`}
+            href="#lists"
             className="mt-10 inline-flex items-center justify-center h-14 px-10 text-base font-bold text-white bg-blue rounded-full hover:bg-blue-dark transition-all duration-300 hover:shadow-[0_8px_40px_rgba(0,85,255,0.35)] hover:scale-105"
           >
             Browse the lists

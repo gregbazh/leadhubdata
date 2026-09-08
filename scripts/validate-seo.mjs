@@ -4,6 +4,7 @@ const requiredPaths = [
   "/",
   "/fl-contractors",
   "/fl-restaurants",
+  "/fl-food-trucks",
   "/subscribe",
   "/resources",
   "/methodology",

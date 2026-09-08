@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getStripe } from "@/lib/stripe";
-import { getOneTimeProductById, type OneTimeProduct } from "@/lib/products";
+import { getOneTimeProductById, SUBSCRIPTION, type OneTimeProduct } from "@/lib/products";
 import { recordPurchase } from "@/lib/db";
 
 export const metadata: Metadata = {
@@ -13,6 +13,7 @@ type SessionState =
   | { kind: "missing" }
   | { kind: "invalid" }
   | { kind: "unpaid" }
+  | { kind: "subscribed"; email: string | null }
   | { kind: "paid"; sessionId: string; product: OneTimeProduct; email: string | null };
 
 async function resolveSession(sessionId: string | undefined): Promise<SessionState> {
@@ -22,6 +23,7 @@ async function resolveSession(sessionId: string | undefined): Promise<SessionSta
     const session = await getStripe().checkout.sessions.retrieve(sessionId);
     if (session.payment_status !== "paid") return { kind: "unpaid" };
 
+    if (session.mode === "subscription" && session.metadata?.productId === SUBSCRIPTION.id) return { kind: "subscribed", email: session.customer_details?.email ?? null };
     const product = getOneTimeProductById(session.metadata?.productId ?? "");
     if (!product) return { kind: "invalid" };
 
@@ -115,17 +117,17 @@ export default async function CheckoutSuccess({
               <span className="text-blue">RECEIVED</span>
             </h1>
             <p className="mt-6 text-lg text-foreground/55 font-medium leading-relaxed">
-              Your list of{" "}
+              Your purchased list, {" "}
               <span className="text-foreground font-bold">
-                {state.product.leadCount.toLocaleString()} leads
+                {state.product.name}
               </span>{" "}
-              is ready. Download it now — we&apos;ve also emailed
+              is ready. Download it now. Your receipt link is also sent to
               {state.email ? (
                 <> <span className="text-foreground font-bold">{state.email}</span></>
               ) : (
                 " you"
               )}{" "}
-              this link so you can re-download anytime.
+              for later access.
             </p>
 
             <a
@@ -161,6 +163,13 @@ export default async function CheckoutSuccess({
             <p className="mt-8 text-sm text-foreground/45 font-medium">
               Trouble downloading? Reply to the receipt email and we&apos;ll sort it out.
             </p>
+          </>
+        ) : state.kind === "subscribed" ? (
+          <>
+            <CheckIcon />
+            <h1 className="mt-8 text-4xl font-black tracking-tight">You&apos;re subscribed.</h1>
+            <p className="mt-5 text-base leading-relaxed text-foreground/60">Sign in with your checkout email to download every list and manage billing. Your food-business archive is sent after payment is processed.</p>
+            <Link href={state.email ? `/account?email=${encodeURIComponent(state.email)}` : "/account"} className="mt-8 inline-flex rounded-full bg-blue px-7 py-4 font-bold text-white">Open my account</Link>
           </>
         ) : state.kind === "unpaid" ? (
           <ProblemContent

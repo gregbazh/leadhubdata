@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
               currency: "usd",
               product_data: {
                 name: product.name,
-                description: `${product.leadCount.toLocaleString()} leads — instant CSV download`,
+                description: product.description,
                 metadata: { productId: product.id },
               },
               unit_amount: product.price * 100,

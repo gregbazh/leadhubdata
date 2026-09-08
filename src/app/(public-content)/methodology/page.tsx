@@ -16,11 +16,11 @@ export default function MethodologyPage() {
       eyebrow="Data methodology"
       title="Where each field comes from—and where it does not."
       intro="This page documents the current source, transformation, contact-research, and quality-control approach behind LeadHubData's public products."
-      updatedAt="August 30, 2026"
+      updatedAt="September 8, 2026"
     >
-      <h2>Florida contractor renewal dataset</h2>
+      <h2>Florida active-contractor dataset</h2>
       <p>
-        The license backbone comes from the Florida Department of Business and Professional Regulation&apos;s <a href="https://www2.myfloridalicense.com/construction-industry/public-records/" target="_blank" rel="noreferrer">Construction Industry public-record files</a>. LeadHubData filters the source to the documented product cohort, preserves the license number and state-supplied business and location fields, and calculates convenience fields such as days until expiration from the source date.
+        The license backbone comes from the Florida Department of Business and Professional Regulation&apos;s <a href="https://www2.myfloridalicense.com/construction-industry/public-records/" target="_blank" rel="noreferrer">Construction Industry public-record files</a>. LeadHubData includes certified licenses marked Current and Active, with a Florida address and an unexpired license date at refresh. It preserves the license number and state-supplied business and location fields, and calculates convenience fields such as days until expiration from the source date.
       </p>
       <p>
         The contractor extract used here does not provide phone and email coverage for the full population. Website, phone, and email values are researched separately from public business sources and matched back to the licensed business. Those values are enrichment—not DBPR-supplied fields—and blanks remain when a sufficiently confident match is not available.
@@ -34,6 +34,8 @@ export default function MethodologyPage() {
         A plan-review record is treated as evidence of a filing, not proof that the business is open. Email values are filing contacts and can belong to an owner, operator, consultant, attorney, landlord, or another representative. Repeated inboxes can occur when one contact appears on multiple applications.
       </p>
 
+      <h2>Food-truck prospects</h2>
+      <p>The food-truck list contains filings classified as Mobile MFDV. It is a subset of the full food-business archive, not additional inventory. Vehicle configuration and insurance needs are not established by the filing.</p>
       <h2>Normalization and quality controls</h2>
       <ul>
         <li>Preserve stable identifiers and source values needed for verification.</li>
@@ -46,7 +48,7 @@ export default function MethodologyPage() {
 
       <h2>Freshness and historical records</h2>
       <p>
-        Product pages state the relevant cohort or date range. Source files can change after extraction, and a government agency may correct or remove records. LeadHubData may retain an archived record for a purchased dataset, but the source date should remain visible so historical information is not mistaken for a current agency determination.
+        Sources are checked weekly and product-page counts come from the fulfilled database. Food records are matched by normalized business name, address, ZIP and application date; changing a contact email does not create a new record. Current source values update matching filings, while missing filings remain in the archive. Denied filings are excluded from the prospect products. The CSV shows when each food record was last matched to the current state source; blank values indicate older archived records not matched since this tracking began. Product pages state the latest successful source check. Source files can change after extraction, and a government agency may correct or remove records. LeadHubData may retain an archived record for a purchased dataset, but the source date should remain visible so historical information is not mistaken for a current agency determination.
       </p>
 
       <h2>Known limitations</h2>

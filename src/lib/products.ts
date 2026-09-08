@@ -342,153 +342,81 @@ export type OneTimeProduct = {
   name: string;
   headline: string;
   description: string;
-  price: number; // one-time price in dollars
+  price: number;
   leadCount: number;
-  // Records carrying a researched website/email/phone. Every other record is
-  // license data only. Keep this at or below the true count in Neon -- the
-  // loader prints the current number each time the table is reloaded.
   verifiedContactCount: number;
-  // Records you can actually contact: a phone number or an email, not just a
-  // website. This is what the page leads with, because it is the number a buyer
-  // is really asking about. Measured from the delivered table, never estimated.
   reachableCount?: number;
   phoneCount?: number;
   emailCount?: number;
+  uniqueEmailCount?: number;
+  updatedAt?: string;
+  latestApplication?: string;
+  countyCount?: number;
+  includedIn?: string;
+  mix?: { label: string; count: number }[];
   fields: string[];
-  table: string; // Neon table the download route exports
-  columns: string[]; // exact CSV columns, in order, that the buyer receives
-  orderBy: string; // SQL ordering for the exported file
-  downloadName: string; // filename offered to the buyer
-  sample: {
-    rows: number; // how many records the free sample contains
-    column: string; // column the visitor narrows the sample by
-    label: string; // what to call it on the form
-    options: string[]; // allowed values -- also the whitelist the API checks
-  };
+  table: string;
+  columns: string[];
+  orderBy: string;
+  downloadName: string;
+  sample: { rows: number; column: string; label: string; options: string[] };
 };
 
+const foodFields = ["Business Name", "Legal Name", "Facility Type", "County", "Street Address", "City", "ZIP", "Phone", "Email", "Plan Review Status", "Application Date", "Application Type", "Last Seen in State Source"];
+const foodColumns = ["business_name", "legal_name", "facility_type", "county", "address", "city", "zip", "phone", "email", "plan_review_status", "application_date", "application_type", "source_checked_at"];
+export const FL_COUNTIES = ["Alachua", "Baker", "Bay", "Bradford", "Brevard", "Broward", "Calhoun", "Charlotte", "Citrus", "Clay", "Collier", "Columbia", "Dade", "DeSoto", "Dixie", "Duval", "Escambia", "Flagler", "Franklin", "Gadsden", "Gilchrist", "Glades", "Gulf", "Hamilton", "Hardee", "Hendry", "Hernando", "Highlands", "Hillsborough", "Holmes", "Indian River", "Jackson", "Jefferson", "Lafayette", "Lake", "Lee", "Leon", "Levy", "Liberty", "Madison", "Manatee", "Marion", "Martin", "Monroe", "Nassau", "Okaloosa", "Okeechobee", "Orange", "Osceola", "Palm Beach", "Pasco", "Pinellas", "Polk", "Putnam", "Santa Rosa", "Sarasota", "Seminole", "St. Johns", "St. Lucie", "Sumter", "Suwannee", "Taylor", "Union", "Volusia", "Wakulla", "Walton", "Washington"];
+
+// Inventory counts are populated by catalog.ts from the same tables as fulfillment.
 export const oneTimeProducts: OneTimeProduct[] = [
   {
-    id: "fl-contractors",
-    name: "FL Contractors — Expiring Licenses",
-    headline: "3,695 Florida contractors with researched contact details",
-    description:
-      "3,695 contractors with a phone number or email researched and matched to the licensed business — all from the August 31, 2026 renewal cohort. The complete 48,795-record state license file is included.",
-    price: 299,
-    leadCount: 48795,
-    verifiedContactCount: 3737,
-    reachableCount: 3695,
-    phoneCount: 3588,
-    emailCount: 1909,
-    fields: [
-      "License Number",
-      "Trade",
-      "Business Name",
-      "DBA",
-      "Street Address",
-      "City",
-      "ZIP",
-      "County Code",
-      "Originally Licensed Date",
-      "License Expiration Date",
-      "Days Until Expiry",
-    ],
-    table: "fl_contractors",
-    columns: [
-      "license_number", "trade_code", "trade", "licensee_name", "dba_name",
-      "address", "city", "state", "zip", "county_code", "originally_licensed",
-      "license_expires", "days_until_expiry", "website", "email", "phone",
-    ],
-    orderBy: "to_date(license_expires, 'MM/DD/YYYY'), license_number",
-    downloadName: "fl_contractors_expiring_90d.csv",
-    sample: {
-      rows: 100,
-      column: "trade",
-      label: "Which trade do you write?",
-      options: [
-        "Cert General", "Cert Building", "Cert Air", "Cert Roofing",
-        "Cert Residental", "Cert Plumbing", "Cert Pool", "Cert Specialty",
-        "Cert Under", "Cert Mechanical", "Cert Solar",
-      ],
-    },
+    id: "fl-contractors", name: "Florida Contractors — Active Licenses",
+    headline: "Florida contractor contacts, organized by trade",
+    description: "Current, active Florida certified contractor licenses with researched business contacts where available. Filter by trade, county, license date and expiration.",
+    price: 299, leadCount: 0, verifiedContactCount: 0,
+    fields: ["License Number", "Trade", "Business Name", "DBA", "Street Address", "City", "State", "ZIP", "County Code", "Originally Licensed", "License Expiration", "Days Until Expiry", "Website", "Email", "Phone", "Source Checked"],
+    table: "fl_contractors_current",
+    columns: ["license_number", "trade_code", "trade", "licensee_name", "dba_name", "address", "city", "state", "zip", "county_code", "originally_licensed", "license_expires", "days_until_expiry", "website", "email", "phone", "source_checked_at"],
+    orderBy: "(coalesce(email,'') <> '' OR coalesce(phone,'') <> '') DESC, to_date(originally_licensed, 'MM/DD/YYYY') DESC NULLS LAST, license_number",
+    downloadName: "fl_active_contractors.csv",
+    sample: { rows: 100, column: "trade", label: "Which trade do you write?", options: ["Cert General", "Cert Building", "Cert Air", "Cert Roofing", "Cert Residential", "Cert Plumbing", "Cert Pool", "Cert Specialty", "Cert Underground", "Cert Mechanical", "Cert Solar", "Cert Pollutant", "Cert Metal"] },
   },
   {
-    id: "fl-restaurants",
-    name: "FL Food Businesses — Newly Licensed",
-    headline: "9,806 Florida food businesses, every one with an email",
-    description:
-      "Every restaurant, food truck, caterer, and food stand that filed a Florida plan review since January 2025 — 9,806 businesses, each with the contact email from its state filing. Newest filings first.",
-    price: 199,
-    leadCount: 9806,
-    verifiedContactCount: 9806,
-    fields: [
-      "Business Name",
-      "Legal Name",
-      "Facility Type",
-      "County",
-      "Street Address",
-      "City",
-      "ZIP",
-      "Phone",
-      "Email",
-      "Plan Review Status",
-      "Application Date",
-      "Application Type",
-    ],
-    table: "fl_restaurants",
-    columns: [
-      "business_name", "legal_name", "facility_type", "county", "address",
-      "city", "zip", "phone", "email", "plan_review_status",
-      "application_date", "application_type",
-    ],
-    orderBy: "to_date(application_date, 'MM/DD/YYYY') DESC NULLS LAST, business_name",
-    downloadName: "fl_new_food_businesses.csv",
-    sample: {
-      rows: 50,
-      column: "county",
-      label: "Which county do you work?",
-      options: [
-        "Dade", "Orange", "Hillsborough", "Broward", "Palm Beach", "Pinellas",
-        "Duval", "Lee", "Polk", "Volusia", "Lake", "Pasco", "Brevard",
-        "Manatee", "Marion", "Osceola", "St. Lucie", "Sarasota", "Escambia",
-        "St. Johns", "Bay", "Collier", "Seminole", "Okaloosa", "Alachua",
-        "Leon", "Walton", "Hernando", "Monroe", "Santa Rosa", "Charlotte",
-        "Martin", "Citrus", "Indian River", "Sumter", "Clay", "Highlands",
-      ],
-    },
+    id: "fl-restaurants", name: "Florida Food Businesses — Filing Archive",
+    headline: "Florida food-business filings, with email contacts",
+    description: "Restaurant, food-truck and catering plan-review filings with contact emails, phone numbers where supplied, county, application date and status. Newest filings first.",
+    price: 199, leadCount: 0, verifiedContactCount: 0,
+    fields: foodFields, table: "fl_food_available", columns: foodColumns,
+    orderBy: "to_date(application_date, 'MM/DD/YYYY') DESC NULLS LAST, record_key",
+    downloadName: "fl_food_business_filings.csv",
+    sample: { rows: 50, column: "county", label: "Which county do you serve?", options: FL_COUNTIES },
+  },
+  {
+    id: "fl-food-trucks", name: "Florida Food Trucks — Business Prospects",
+    headline: "Food-truck prospects for commercial auto agents",
+    description: "Florida mobile-food-business filings with contact emails, phones where supplied, county and filing date. A focused starting point for agents who write food trucks and commercial auto.",
+    price: 99, leadCount: 0, verifiedContactCount: 0, includedIn: "fl-restaurants",
+    fields: foodFields, table: "fl_food_trucks", columns: foodColumns,
+    orderBy: "to_date(application_date, 'MM/DD/YYYY') DESC NULLS LAST, record_key",
+    downloadName: "fl_food_truck_prospects.csv",
+    sample: { rows: 25, column: "county", label: "Which county do you serve?", options: FL_COUNTIES },
   },
 ];
 
-// The recurring product. Priced by the owner; don't change it without asking.
-// What justifies the price is the standing feed plus everything in the
-// catalogue, not the weekly delta on its own.
 export const SUBSCRIPTION = {
-  id: "fl-all-access",
-  name: "Florida All-Access",
-  price: 299, // per month, in dollars
-  interval: "month" as const,
-  newPerMonth: 825, // measured from real source movement, not estimated
-  includes: [
-    "Every list in the catalogue, yours while subscribed",
-    "New Florida food businesses emailed to you every week",
-    "The full back archive on day one",
-    "Records we keep after the state deletes them",
-    "Every new list we build, at no extra cost",
-  ],
+  id: "fl-all-access", name: "Florida All-Access", price: 299, interval: "month" as const,
+  includes: ["Every list in the catalogue while subscribed", "New food-business records emailed weekly when available", "The food-business archive in your first delivery", "Current contractor downloads in your account", "Every new list we build at no extra cost"],
 };
 
 export function getOneTimeProductById(id: string) {
-  return oneTimeProducts.find((p) => p.id === id);
+  return oneTimeProducts.find(p => p.id === id);
 }
-
 export function getCategoryById(id: string) {
-  return leadCategories.find((c) => c.id === id);
+  return leadCategories.find(c => c.id === id);
 }
-
 export function getPlanById(planId: string) {
-  for (const cat of leadCategories) {
-    const plan = cat.plans.find((p) => p.id === planId);
-    if (plan) return { category: cat, plan };
+  for (const category of leadCategories) {
+    const plan = category.plans.find(p => p.id === planId);
+    if (plan) return { category, plan };
   }
   return null;
 }

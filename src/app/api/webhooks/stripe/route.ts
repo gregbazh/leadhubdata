@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { deliverSubscriptions } from "@/lib/subscription-delivery";
 import { getStripe } from "@/lib/stripe";
-import { getOneTimeProductById } from "@/lib/products";
+import { getOneTimeProductById, SUBSCRIPTION } from "@/lib/products";
 import { recordPurchase, upsertSubscription, getSql } from "@/lib/db";
 import { recordConversion } from "@/lib/ops-db";
 import Stripe from "stripe";
@@ -39,6 +40,7 @@ async function sendDownloadEmail(to: string, sessionId: string, productId: strin
     headers: {
       Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
       "Content-Type": "application/json",
+      "Idempotency-Key": `purchase-receipt/${sessionId}`,
     },
     body: JSON.stringify({
       from: process.env.RESEND_TRANSACTIONAL_FROM || process.env.RESEND_FROM,
@@ -48,7 +50,7 @@ async function sendDownloadEmail(to: string, sessionId: string, productId: strin
       text: [
         `Thanks for your purchase.`,
         ``,
-        `Download your CSV (${product.leadCount.toLocaleString()} leads):`,
+        `Download your CSV:`,
         `${baseUrl}/api/download?session_id=${sessionId}`,
         ``,
         `This link is tied to your purchase and keeps working if you need to re-download.`,
@@ -58,26 +60,6 @@ async function sendDownloadEmail(to: string, sessionId: string, productId: strin
   });
   if (!res.ok) {
     console.error("Download email failed:", res.status, await res.text().catch(() => ""));
-  }
-}
-
-// New subscribers get their first delivery immediately by calling the same
-// cron endpoint that runs weekly, so there is one code path for delivery and
-// no chance of the welcome batch drifting from the recurring one.
-async function sendSubscriptionWelcome(email: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-  if (!process.env.CRON_SECRET) {
-    console.error("CRON_SECRET not set — first delivery will wait for the weekly run");
-    return;
-  }
-  try {
-    const res = await fetch(`${baseUrl}/api/cron/deliver`, {
-      headers: { Authorization: `Bearer ${process.env.CRON_SECRET}` },
-    });
-    if (!res.ok) console.error("welcome delivery failed:", res.status, await res.text().catch(() => ""));
-    else console.log(`welcome delivery triggered for ${email}`);
-  } catch (err) {
-    console.error("welcome delivery error:", err);
   }
 }
 
@@ -108,7 +90,8 @@ export async function POST(req: NextRequest) {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
-      if (session.mode === "payment" && session.metadata?.productId) {
+      if (session.payment_status !== "paid" && session.payment_status !== "no_payment_required") break;
+      if (session.mode === "payment" && session.metadata?.productId && getOneTimeProductById(session.metadata.productId)) {
         const email = session.customer_details?.email;
         console.log("One-time purchase completed:", {
           productId: session.metadata.productId,
@@ -126,25 +109,30 @@ export async function POST(req: NextRequest) {
             });
           } catch (err) {
             console.error("webhook: failed to record purchase:", err);
+            return NextResponse.json({ error: "Purchase could not be saved" }, { status: 500 });
           }
           await attribute(session, email, session.metadata.productId);
           await sendDownloadEmail(email, session.id, session.metadata.productId);
         }
         break;
       }
+      if (session.mode !== "subscription" || session.metadata?.productId !== SUBSCRIPTION.id) break;
       const subEmail = session.customer_details?.email;
       const subId = typeof session.subscription === "string" ? session.subscription : session.subscription?.id;
       console.log("New subscription created:", { subscriptionId: subId, email: subEmail });
       if (subEmail && subId) {
         try {
-          await upsertSubscription({ stripeSubscriptionId: subId, email: subEmail, status: "active" });
+          const subscription = await getStripe().subscriptions.retrieve(subId);
+          await upsertSubscription({ stripeSubscriptionId: subId, email: subEmail, status: subscription.status });
         } catch (err) {
           console.error("webhook: failed to record subscription:", err);
+          return NextResponse.json({ error: "Subscription could not be saved" }, { status: 500 });
         }
         await attribute(session, subEmail, session.metadata?.productId ?? "subscription");
         // The first delivery is the full archive, sent now rather than waiting
         // for the weekly cron -- nobody should pay $299 and get nothing today.
-        await sendSubscriptionWelcome(subEmail);
+        const delivery = await deliverSubscriptions(subId);
+        if (delivery.results.some(r => r.status === "failed")) return NextResponse.json({ error: "Welcome delivery failed" }, { status: 500 });
       }
       break;
     }
@@ -157,7 +145,6 @@ export async function POST(req: NextRequest) {
         subscriptionId: paidSub,
         amountPaid: invoice.amount_paid,
       });
-      // TODO: Deliver monthly leads to customer
       break;
     }
 
@@ -187,6 +174,7 @@ export async function POST(req: NextRequest) {
         ]);
       } catch (err) {
         console.error("webhook: failed to update subscription status:", err);
+        return NextResponse.json({ error: "Subscription status could not be saved" }, { status: 500 });
       }
       break;
     }

@@ -25,6 +25,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: `${SITE_URL}/fl-food-trucks`,
+      lastModified: updatedAt,
+      changeFrequency: "weekly",
+      priority: 1,
+    },
+    {
       url: `${SITE_URL}/subscribe`,
       lastModified: updatedAt,
       changeFrequency: "weekly",

@@ -6,6 +6,7 @@ const groups = [
     links: [
       ["Florida contractors", "/fl-contractors"],
       ["Florida food businesses", "/fl-restaurants"],
+      ["Florida food trucks", "/fl-food-trucks"],
       ["Weekly subscription", "/subscribe"],
       ["My purchases", "/account"],
     ],

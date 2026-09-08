@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { neon } from "@neondatabase/serverless";
+import { csvStream } from "@/lib/csv.mjs";
 import { getStripe } from "@/lib/stripe";
 import { getOneTimeProductById } from "@/lib/products";
 import { verifySessionValue, SESSION_COOKIE } from "@/lib/auth";
 import { hasActiveSubscription } from "@/lib/db";
 
 export const runtime = "nodejs";
+export const maxDuration = 300;
 
 // The stored value was computed on the day the file was built, so it goes
 // stale every night. Recompute it against the buyer's download date.
@@ -19,22 +21,6 @@ function daysUntil(expires: unknown): string {
       / 86_400_000
   );
   return String(days);
-}
-
-function toCsv(rows: Record<string, unknown>[], columns: string[]): string {
-  const esc = (v: unknown) => {
-    const s = v == null ? "" : String(v);
-    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-  };
-  const lines = [columns.join(",")];
-  for (const row of rows) {
-    lines.push(
-      columns.map((c) =>
-        esc(c === "days_until_expiry" ? daysUntil(row.license_expires) : row[c])
-      ).join(",")
-    );
-  }
-  return lines.join("\n") + "\n";
 }
 
 export async function GET(req: NextRequest) {
@@ -86,7 +72,8 @@ export async function GET(req: NextRequest) {
     `SELECT * FROM ${product.table} ORDER BY ${product.orderBy}`
   )) as Record<string, unknown>[];
 
-  return new NextResponse(toCsv(rows, product.columns), {
+  const exportRows = product.columns.includes("days_until_expiry") ? rows.map(row => ({ ...row, days_until_expiry: daysUntil(row.license_expires) })) : rows;
+  return new NextResponse(csvStream(exportRows, product.columns), {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": `attachment; filename="${product.downloadName}"`,

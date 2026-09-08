@@ -5,8 +5,9 @@
 ## Primary pages
 
 - [Home](https://www.leadhubdata.com/): Current public datasets and purchasing options.
-- [Florida contractor list](https://www.leadhubdata.com/fl-contractors): The August 31, 2026 contractor-license renewal cohort, including a separately researched contactable subset.
+- [Florida contractor list](https://www.leadhubdata.com/fl-contractors): Current, active Florida certified contractor licenses, including a separately researched contactable subset.
 - [Florida food-business list](https://www.leadhubdata.com/fl-restaurants): Food-service plan-review filings since January 2025, with filing contact and application fields.
+- [Florida food-truck prospects](https://www.leadhubdata.com/fl-food-trucks): The mobile-food subset for commercial-auto and food-truck insurance prospecting, also included in the full food-business archive.
 - [Subscription](https://www.leadhubdata.com/subscribe): Current catalogue access and weekly food-business updates.
 - [Methodology](https://www.leadhubdata.com/methodology): Sources, filters, enrichment, quality checks, freshness, and limitations.
 - [Resource library](https://www.leadhubdata.com/resources): Source-led guides to contractor licenses, food-business filings, lead-list quality, and responsible outreach.

@@ -4,7 +4,7 @@ import type { OneTimeProduct } from "@/lib/products";
 export const SITE_NAME = "LeadHubData";
 export const SITE_URL = "https://www.leadhubdata.com";
 export const SUPPORT_EMAIL = "support@mail.leadhubdata.com";
-export const SEO_UPDATED_AT = "2026-08-30";
+export const SEO_UPDATED_AT = "2026-09-08";
 
 export type FaqItem = {
   q: string;
@@ -76,7 +76,7 @@ export function contractorFaqs(product: OneTimeProduct): FaqItem[] {
   return [
     {
       q: "Where does the contractor data come from?",
-      a: "The license records come directly from Florida DBPR public files. The list identifies current contractor licenses carrying an August 31, 2026 expiration date.",
+      a: "The license records come directly from Florida DBPR public files. The list includes current, active certified contractor licenses in Florida with an unexpired license date when the source was checked.",
     },
     {
       q: "How do I get the file?",
@@ -88,7 +88,7 @@ export function contractorFaqs(product: OneTimeProduct): FaqItem[] {
     },
     {
       q: "What exactly is included?",
-      a: `${reachable.toLocaleString()} Florida contractor records have a researched phone number or email: ${phone.toLocaleString()} with a phone number and ${email.toLocaleString()} with an email. The complete ${product.leadCount.toLocaleString()}-record state license file is included for business-name, address, trade, license, and expiration analysis.`,
+      a: `${reachable.toLocaleString()} Florida contractor records have a researched phone number or email: ${phone.toLocaleString()} with a phone number and ${email.toLocaleString()} with an email. The ${product.leadCount.toLocaleString()}-record active-license dataset is included for business-name, address, trade, license, and expiration analysis.`,
     },
     {
       q: "Why does not every record have a phone number?",
@@ -113,7 +113,7 @@ export function restaurantFaqs(product: OneTimeProduct): FaqItem[] {
     },
     {
       q: "What kinds of food businesses are included?",
-      a: "The file includes seating and non-seating restaurants, mobile food vehicles, caterers, hot-dog carts, and other public food-service facility types reported in the state file.",
+      a: product.id === "fl-food-trucks" ? "This product contains only filings classified as Mobile MFDV in the state source. It is a subset of the full food-business archive, which already includes these records." : "The file includes seating and non-seating restaurants, mobile food vehicles, caterers, hot-dog carts, and other food-service facility types reported in the state file.",
     },
     {
       q: "Does every row contain an email?",
@@ -232,7 +232,7 @@ export function productJsonLd({
         license: absoluteUrl("/terms"),
         creator: { "@id": `${SITE_URL}/#organization` },
         publisher: { "@id": `${SITE_URL}/#organization` },
-        dateModified: SEO_UPDATED_AT,
+        dateModified: product.updatedAt?.slice(0, 10) ?? SEO_UPDATED_AT,
         temporalCoverage: "2025/2026",
         spatialCoverage: {
           "@type": "Place",
