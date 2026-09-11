@@ -1,7 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { matchesLicenseLocation } from "../src/lib/contact-identity.mjs";
+import { matchesLicenseLocation, publishedPhone } from "../src/lib/contact-identity.mjs";
 const row={license_number:"CAC020219",city:"PLANT CITY",zip:"33567"};
+test("published phones ignore template values and script identifiers",()=>{
+  assert.equal(publishedPhone('<script>239-444-9999</script><a href="tel:0000000000">Call</a><p>239-597-4675</p>'),'(239) 597-4675');
+  assert.equal(publishedPhone('<div id="239-444-9999">No public phone</div>'),'');
+  assert.equal(publishedPhone('<a href="tel:+13522434777">Call us</a>'),'(352) 243-4777');
+});
 test("a Florida namesake with a different license does not establish identity",()=>{
   assert.equal(matchesLicenseLocation("David's Mechanical Services LLC, Tampa, Florida. State cert. CAC1822238",row),false);
 });

@@ -3,7 +3,7 @@ import path from "node:path";
 import { resolve4 } from "node:dns/promises";
 import { neon } from "@neondatabase/serverless";
 import { hostOf, domainMatchesName, pageMentionsBusiness, looksFlorida, validateContact, cleanPhone } from "../pipeline/contact-validate.mjs";
-import { matchesLicenseLocation } from "../src/lib/contact-identity.mjs";
+import { matchesLicenseLocation, publishedPhone } from "../src/lib/contact-identity.mjs";
 
 const sql = neon(process.env.DATABASE_URL);
 const out = "private-data/current-contractor-enrichment";
@@ -92,7 +92,7 @@ function contacts(html,site,row) {
   const name=business(row),city=row.city;
   const host=hostOf(site);
   const email=(html.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g)||[]).find(value=>value.toLowerCase().split("@")[1]===host)||"";
-  const phone=cleanPhone(/href=["']tel:([^"']+)/i.exec(html)?.[1]||/\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}/.exec(html)?.[0]||"");
+  const phone=publishedPhone(html);
   if(!pageMentionsBusiness(html,name) || !looksFlorida({html,city,phone}) || !matchesLicenseLocation(html,row))return null;
   const result=validateContact({name,website:site,email,phone});
   const form=/<form\b[\s\S]*?<textarea\b[\s\S]*?<\/(?:form)>/i.test(html) && /\b(contact|message|quote|estimate)\b/i.test(html);
