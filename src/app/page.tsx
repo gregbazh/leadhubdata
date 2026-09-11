@@ -138,7 +138,7 @@ export default async function Home() {
                 <p className="mt-3 flex-1 text-sm text-foreground/60 font-medium leading-relaxed">
                   {p.description}
                 </p>
-                <p className="mt-4 text-sm font-bold text-blue">{p.leadCount.toLocaleString()} records · {p.reachableCount?.toLocaleString()} with phone or email</p>
+                <p className="mt-4 text-sm font-bold text-blue">{p.leadCount.toLocaleString()} records · {p.id === "fl-contractors" ? "A contact method on every record" : "Email on every record"}</p>
                 {p.includedIn && <p className="mt-2 text-xs text-foreground/55">Included in the full food-business list.</p>}
                 <div className="mt-5 flex flex-wrap gap-1.5">
                   {p.fields.slice(0, 6).map((field) => (

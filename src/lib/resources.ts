@@ -59,8 +59,8 @@ export const resources: ResourceArticle[] = [
       {
         heading: "Why phone and email coverage is incomplete",
         paragraphs: [
-          "The contractor extract used for LeadHubData's renewal list does not provide a phone or email on every row. Business contact fields therefore require a separate research process. A match might come from a company website or another public business presence, but it should be labeled as researched data rather than represented as a state-supplied field.",
-          "This distinction matters because a website, phone, or mailbox can change ownership. It is better to report a smaller contactable subset honestly than to fill every row with low-confidence data. Buyers should expect blanks and should ask how the vendor handled duplicates, ambiguous names, and businesses that share an address.",
+          "The contractor source does not supply a phone or email on every row. Business contacts require separate research. LeadHubData's customer list includes only records with a researched phone number, email or business contact form; records without a contact method remain outside the offered list.",
+          "A website, phone or mailbox can change ownership. Published contacts are labeled as researched data, with source links and check dates where recorded. Buyers should distinguish those checks from mailbox verification and review duplicate businesses or licenses before outreach.",
         ],
       },
       {
@@ -73,7 +73,7 @@ export const resources: ResourceArticle[] = [
       {
         heading: "A practical quality check before use",
         paragraphs: [
-          "Open a sample and verify that dates parse correctly, ZIP codes retain leading zeroes, rows have a license identifier, and the documented count matches the delivered file. Check a small random sample against DBPR. Then inspect the contactable subset separately from the full state-record population.",
+          "Open a sample and verify that dates parse correctly, ZIP codes retain leading zeroes, rows have a license identifier, and the documented count matches the delivered file. Check a small random sample against DBPR and confirm that each record has a phone number, email or business contact form.",
           "Those checks will not make a file perfect. They do reveal whether the vendor has preserved provenance and whether the list is suitable for the decision you are making.",
         ],
       },

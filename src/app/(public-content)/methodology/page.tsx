@@ -16,15 +16,16 @@ export default function MethodologyPage() {
       eyebrow="Data methodology"
       title="Where each field comes from—and where it does not."
       intro="This page documents the current source, transformation, contact-research, and quality-control approach behind LeadHubData's public products."
-      updatedAt="September 8, 2026"
+      updatedAt="September 10, 2026"
     >
       <h2>Florida active-contractor dataset</h2>
       <p>
         The license backbone comes from the Florida Department of Business and Professional Regulation&apos;s <a href="https://www2.myfloridalicense.com/construction-industry/public-records/" target="_blank" rel="noreferrer">Construction Industry public-record files</a>. LeadHubData includes certified licenses marked Current and Active, with a Florida address and an unexpired license date at refresh. It preserves the license number and state-supplied business and location fields, and calculates convenience fields such as days until expiration from the source date.
       </p>
       <p>
-        The contractor extract used here does not provide phone and email coverage for the full population. Website, phone, and email values are researched separately from public business sources and matched back to the licensed business. Those values are enrichment—not DBPR-supplied fields—and blanks remain when a sufficiently confident match is not available.
+        The contractor extract does not supply phone and email coverage for the full population. We research business websites and match published phone numbers, emails and contact forms to the licensed business. Customer lists include only records with at least one of those contact methods. The complete license source is retained internally for further research, but records without a contact method are excluded from advertised counts, samples and downloads.
       </p>
+      <p>Research checks the business name and Florida location before retaining a website contact. Contacts can be shared across licenses only when the business name, street address and ZIP match. Source links and contact-check dates are included where recorded; these are separate from the license-source date and are not mailbox-delivery verification.</p>
 
       <h2>Florida food-business dataset</h2>
       <p>

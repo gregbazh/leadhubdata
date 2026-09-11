@@ -28,8 +28,8 @@ export async function syncContractors(sql) {
   await sql.transaction([
     sql.query("SELECT pg_advisory_xact_lock(70102)"),
     sql.query("DELETE FROM fl_contractors_current"),
-    sql.query(`INSERT INTO fl_contractors_current (${CONTRACTOR_COLUMNS.join(",")}, website, email, phone, source_checked_at)
-      SELECT ${CONTRACTOR_COLUMNS.map(c => `x.${c}`).join(",")}, coalesce(c.website,''), coalesce(c.email,''), coalesce(c.phone,''), now()
+    sql.query(`INSERT INTO fl_contractors_current (${CONTRACTOR_COLUMNS.join(",")}, website, email, phone, contact_form_url, contact_source_url, contact_checked_at, source_checked_at)
+      SELECT ${CONTRACTOR_COLUMNS.map(c => `x.${c}`).join(",")}, coalesce(c.website,''), coalesce(c.email,''), coalesce(c.phone,''), coalesce(c.contact_form_url,''), coalesce(c.contact_source_url,''), c.contact_checked_at, now()
       FROM jsonb_to_recordset($1::jsonb) AS x(${CONTRACTOR_COLUMNS.map(c => `${c} text`).join(",")})
       LEFT JOIN contractor_contacts c ON c.license_number=x.license_number
         AND regexp_replace(upper(c.business_name),'[^A-Z0-9]','','g') = regexp_replace(upper(coalesce(nullif(trim(x.dba_name),''),x.licensee_name)),'[^A-Z0-9]','','g')`, [JSON.stringify(rows)]),

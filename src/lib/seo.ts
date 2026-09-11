@@ -88,11 +88,11 @@ export function contractorFaqs(product: OneTimeProduct): FaqItem[] {
     },
     {
       q: "What exactly is included?",
-      a: `${reachable.toLocaleString()} Florida contractor records have a researched phone number or email: ${phone.toLocaleString()} with a phone number and ${email.toLocaleString()} with an email. The ${product.leadCount.toLocaleString()}-record active-license dataset is included for business-name, address, trade, license, and expiration analysis.`,
+      a: `${reachable.toLocaleString()} Florida contractor contact records, each with a researched phone number, email or contact form: ${phone.toLocaleString()} with a phone number, ${email.toLocaleString()} with an email and ${(product.contactFormCount ?? 0).toLocaleString()} with a contact form. Business name, trade, address and active-license details are included. Records without a contact method are excluded. A business may hold multiple licenses.`,
     },
     {
-      q: "Why does not every record have a phone number?",
-      a: `The Florida contractor license extract does not provide contact details. LeadHubData researches public business contact information and matches it to the licensed business, so the contactable subset is ${reachable.toLocaleString()} rather than the full ${product.leadCount.toLocaleString()} records.`,
+      q: "Does every record include a way to contact the business?",
+      a: "Yes. Every delivered contractor record includes a researched phone number, email or contact form. The available method varies by business. A website or street address alone does not qualify a record for this list.",
     },
     {
       q: "Does the list get updated?",

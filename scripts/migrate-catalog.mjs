@@ -18,6 +18,7 @@ await sql.query(`CREATE TABLE IF NOT EXISTS fl_food_filings (record_key text PRI
 await sql.query(`CREATE INDEX IF NOT EXISTS food_first_seen_idx ON fl_food_filings (first_seen)`);
 await sql.query(`CREATE OR REPLACE VIEW fl_food_available AS SELECT * FROM fl_food_filings WHERE plan_review_status <> 'Denied'`);
 await sql.query(`CREATE OR REPLACE VIEW fl_food_trucks AS SELECT * FROM fl_food_available WHERE facility_type = 'Mobile MFDV'`);
+await import("./migrate-contactable-catalog.mjs");
 
 const backup = `private-data/catalog-backup-${new Date().toISOString().replace(/[:.]/g, "-")}`;
 fs.mkdirSync(backup, { recursive: true });

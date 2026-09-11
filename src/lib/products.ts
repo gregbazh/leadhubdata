@@ -349,6 +349,7 @@ export type OneTimeProduct = {
   phoneCount?: number;
   emailCount?: number;
   uniqueEmailCount?: number;
+  contactFormCount?: number;
   updatedAt?: string;
   latestApplication?: string;
   countyCount?: number;
@@ -369,15 +370,15 @@ export const FL_COUNTIES = ["Alachua", "Baker", "Bay", "Bradford", "Brevard", "B
 // Inventory counts are populated by catalog.ts from the same tables as fulfillment.
 export const oneTimeProducts: OneTimeProduct[] = [
   {
-    id: "fl-contractors", name: "Florida Contractors — Active Licenses",
+    id: "fl-contractors", name: "Florida Contractors — Business Contacts",
     headline: "Florida contractor contacts, organized by trade",
-    description: "Current, active Florida certified contractor licenses with researched business contacts where available. Filter by trade, county, license date and expiration.",
+    description: "Active Florida contractors with a researched phone number, email or contact form on every record. Find businesses in your trade and territory, with license details for context.",
     price: 299, leadCount: 0, verifiedContactCount: 0,
-    fields: ["License Number", "Trade", "Business Name", "DBA", "Street Address", "City", "State", "ZIP", "County Code", "Originally Licensed", "License Expiration", "Days Until Expiry", "Website", "Email", "Phone", "Source Checked"],
-    table: "fl_contractors_current",
-    columns: ["license_number", "trade_code", "trade", "licensee_name", "dba_name", "address", "city", "state", "zip", "county_code", "originally_licensed", "license_expires", "days_until_expiry", "website", "email", "phone", "source_checked_at"],
+    fields: ["License Number", "Trade", "Business Name", "DBA", "Street Address", "City", "State", "ZIP", "County Code", "Originally Licensed", "License Expiration", "Days Until Expiry", "Website", "Email", "Phone", "Contact Form", "Contact Source", "Contact Checked", "License Source Checked"],
+    table: "fl_contractors_contactable",
+    columns: ["license_number", "trade_code", "trade", "licensee_name", "dba_name", "address", "city", "state", "zip", "county_code", "originally_licensed", "license_expires", "days_until_expiry", "website", "email", "phone", "contact_form_url", "contact_source_url", "contact_checked_at", "source_checked_at"],
     orderBy: "(coalesce(email,'') <> '' OR coalesce(phone,'') <> '') DESC, to_date(originally_licensed, 'MM/DD/YYYY') DESC NULLS LAST, license_number",
-    downloadName: "fl_active_contractors.csv",
+    downloadName: "fl_contractor_contacts.csv",
     sample: { rows: 100, column: "trade", label: "Which trade do you write?", options: ["Cert General", "Cert Building", "Cert Air", "Cert Roofing", "Cert Residential", "Cert Plumbing", "Cert Pool", "Cert Specialty", "Cert Underground", "Cert Mechanical", "Cert Solar", "Cert Pollutant", "Cert Metal"] },
   },
   {
