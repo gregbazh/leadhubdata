@@ -373,7 +373,7 @@ export const oneTimeProducts: OneTimeProduct[] = [
     id: "fl-contractors", name: "Florida Contractors — Business Contacts",
     headline: "Florida contractor contacts, organized by trade",
     description: "Active Florida contractors with a researched phone number, email or contact form on every record. Find businesses in your trade and territory, with license details for context.",
-    price: 299, leadCount: 0, verifiedContactCount: 0,
+    price: 99, leadCount: 0, verifiedContactCount: 0,
     fields: ["License Number", "Trade", "Business Name", "DBA", "Street Address", "City", "State", "ZIP", "County Code", "Originally Licensed", "License Expiration", "Days Until Expiry", "Website", "Email", "Phone", "Contact Form", "Contact Source", "Contact Checked", "License Source Checked"],
     table: "fl_contractors_contactable",
     columns: ["license_number", "trade_code", "trade", "licensee_name", "dba_name", "address", "city", "state", "zip", "county_code", "originally_licensed", "license_expires", "days_until_expiry", "website", "email", "phone", "contact_form_url", "contact_source_url", "contact_checked_at", "source_checked_at"],
